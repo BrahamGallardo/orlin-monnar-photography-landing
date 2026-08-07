@@ -1,0 +1,159 @@
+/* ==========================================================================
+   Orlin Monnar Photography — estilos propios
+   Se carga DESPUÉS de style.css. Es el único CSS que editamos:
+   style.css y theme-default.css pertenecen al template y no se tocan.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Alpine.js
+   -------------------------------------------------------------------------- */
+
+/* Oculta las plantillas hasta que Alpine toma control, para evitar el
+   parpadeo del marcado sin datos. */
+[x-cloak] {
+    display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   Estados de carga y error de las secciones dinámicas
+   -------------------------------------------------------------------------- */
+
+.omp-state {
+    padding: 60px 15px;
+    text-align: center;
+    color: #888;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
+.omp-state--error {
+    color: #b94a48;
+}
+
+/* --------------------------------------------------------------------------
+   SweetAlert2
+   -------------------------------------------------------------------------- */
+
+.omp-swal {
+    border-radius: 0;
+}
+
+.omp-swal .boxed-btn {
+    margin: 0 5px;
+}
+
+/* Variante de cancelar: mismo botón del template en tono neutro. */
+.boxed-btn-cancel {
+    background: transparent;
+    color: #666;
+    border-color: #ccc;
+}
+
+/* --------------------------------------------------------------------------
+   Formularios controlados por Alpine
+   -------------------------------------------------------------------------- */
+
+/* Botón de envío mientras la petición está en curso. */
+.omp-submitting {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Home
+   -------------------------------------------------------------------------- */
+
+/* El carrusel se puebla por API: se reserva su altura para que la página no
+   salte cuando llegan las fotografías. */
+.slider_area {
+    min-height: 900px;
+    background-color: #111;
+}
+
+@media (max-width: 767px) {
+    .slider_area {
+        min-height: 100vh;
+    }
+}
+
+.slider_area .single_slider .slider_text .slider_subtitle {
+    color: #fff;
+    font-size: 18px;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+/* Botones contiguos en hero y llamadas a la acción. */
+.video_service_btn .boxed-btn3 + .boxed-btn3,
+.section_title .boxed-btn3 + .boxed-btn3 {
+    margin-left: 15px;
+}
+
+@media (max-width: 575px) {
+    .video_service_btn .boxed-btn3 + .boxed-btn3,
+    .section_title .boxed-btn3 + .boxed-btn3 {
+        margin-left: 0;
+        margin-top: 15px;
+    }
+}
+
+.omp-intro {
+    padding: 120px 0 90px;
+}
+
+.omp-cta {
+    padding: 90px 0 120px;
+    background-color: #f8f8f8;
+}
+
+/* Título de la fotografía sobre el hover de la grilla destacada. */
+.gallery_area .single_photography .hover .hover_inner h3 {
+    margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Fotografías
+   -------------------------------------------------------------------------- */
+
+/* El marco define la proporción y la imagen lo rellena recortando por el
+   centro: así la retícula queda uniforme aunque las fotografías vengan en
+   horizontal, vertical o cuadrado. */
+.gallery_area .single_photography .thumb {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+}
+
+.gallery_area .single_photography .thumb img,
+.omp-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Navegadores sin aspect-ratio: altura fija equivalente. */
+@supports not (aspect-ratio: 4 / 3) {
+    .gallery_area .single_photography .thumb {
+        height: 320px;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Marca
+   -------------------------------------------------------------------------- */
+
+/* El logo es una firma horizontal: se controla por altura y el ancho sigue su
+   proporción. El archivo dobla la resolución necesaria a esta escala, así que
+   se ve nítido en pantallas retina. */
+.logo img {
+    max-height: 55px;
+    width: auto;
+}
+
+@media (max-width: 991px) {
+    .logo img {
+        max-height: 42px;
+    }
+}

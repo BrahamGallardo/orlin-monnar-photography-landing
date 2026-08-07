@@ -1,0 +1,15 @@
+# Configuración local con claves y URLs del entorno.
+# Se versiona únicamente config.example.js.
+js/app/config.js
+
+# Sistema operativo
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Editores
+.vscode/
+.idea/
+
+# Dependencias (la landing no requiere build; npm solo se usa para bajar librerías)
+node_modules/
