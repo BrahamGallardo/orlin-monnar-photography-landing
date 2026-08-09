@@ -110,7 +110,9 @@ El HTML que se arma a mano se escapa con `escapeHtml` de `domHelpers.js`.
 
 **Imágenes.** Siempre `srcset` con los tres derivados + `loading="lazy"`: `thumb` en grids y carruseles, `medium` en galería, `large` solo en lightbox y en el hero por encima de 1600 px. Las fotografías se encuadran con `object-fit: cover` sobre un marco 4:3; el logo y los iconos quedan fuera de esa regla.
 
-**Textos.** Todos en `js/app/content.js`, en inglés. Lo marcado como `PENDING` debe reemplazarse antes de publicar.
+**Textos.** Todos en `js/app/content.js`, en inglés. Los avisos de contenido provisional viven en comentarios `TODO`, no en la pantalla.
+
+**Formularios.** Validación local antes de pedir el token de reCAPTCHA, para no gastar una llamada con el formulario incompleto; `sending` bloquea reenvíos porque el endpoint admite 5 por minuto por IP; los errores propios y los `validationErrors` de la API se muestran en el mismo bloque. El badge de reCAPTCHA se oculta con `captchaService.hideBadge()` **solo** en las páginas que incluyen el aviso legal con los enlaces a las políticas de Google: sin ese texto, ocultarlo incumple sus términos.
 
 ---
 
@@ -146,7 +148,7 @@ Cuando se carguen las fotos definitivas desde el panel, se borran `img/provision
 | L1 — Base Alpine.js | Completo |
 | L2 — Home | Completo (falta contenido del cliente) |
 | L3 — About | Completo (falta biografía y retrato del fotógrafo) |
-| L4 — Contact | Pendiente |
+| L4 — Contact | Completo |
 | L5 — Gallery | Pendiente |
 | L6 — Investment | Pendiente |
 | L7 — Agendar cita | Pendiente |

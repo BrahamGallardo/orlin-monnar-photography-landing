@@ -96,6 +96,22 @@ class CaptchaService {
 
         document.head.appendChild(style);
     }
+
+    /**
+     * Oculta el badge de reCAPTCHA.
+     * @returns {void}
+     * @remarks
+     * Google solo permite ocultarlo si la página muestra el aviso con los
+     * enlaces a su política de privacidad y a sus términos. Por eso lo invocan
+     * únicamente las páginas que incluyen ese texto junto al formulario.
+     */
+    hideBadge() {
+        const style = document.createElement('style');
+        style.id = 'recaptcha-hidden-badge';
+        style.innerHTML = '.grecaptcha-badge { visibility: hidden; }';
+
+        document.head.appendChild(style);
+    }
 }
 
 // La clave se define en js/app/config.js.

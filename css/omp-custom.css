@@ -384,6 +384,54 @@ header {
     background-image: url(../img/provisional/quinceanera-01-large.webp);
 }
 
+/* --------------------------------------------------------------------------
+   Formularios
+   -------------------------------------------------------------------------- */
+
+.omp-contact-lead {
+    color: #707070;
+    font-size: 16px;
+    margin: -10px 0 30px;
+}
+
+/* Errores de validación, propios y de la API. */
+.omp-form-errors {
+    margin-top: 20px;
+    padding: 16px 20px;
+    background: #FDF3F3;
+    border-left: 2px solid #B94A48;
+}
+
+.omp-form-errors ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.omp-form-errors li {
+    color: #B94A48;
+    font-size: 15px;
+    line-height: 26px;
+    list-style: disc;
+}
+
+/* Aviso de reCAPTCHA: su presencia es lo que permite ocultar el badge. */
+.omp-form-note {
+    margin-top: 18px;
+    margin-bottom: 0;
+    font-size: 13px;
+    line-height: 22px;
+    color: #909090;
+}
+
+.omp-form-note a {
+    color: #707070;
+    text-decoration: underline;
+}
+
+.contact_form .boxed-btn:disabled {
+    cursor: not-allowed;
+}
+
 /* Enlaces de texto dentro de los párrafos: sustituyen a los botones. */
 .section_title p a {
     color: #2C2C2C;
