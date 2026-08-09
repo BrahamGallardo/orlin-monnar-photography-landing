@@ -12,6 +12,7 @@ document.addEventListener('alpine:init', () => {
         photos: [],
         content: window.SITE_CONTENT.home,
         states: window.SITE_CONTENT.states,
+        business: window.SITE_CONTENT.business,
 
         // Screens wider than this justify loading the large derivative.
         largeHeroBreakpoint: 1600,
@@ -22,6 +23,14 @@ document.addEventListener('alpine:init', () => {
          */
         get heroPhotos() {
             return this.photos.slice(0, 5);
+        },
+
+        /**
+         * Photographs shown in the Instagram strip.
+         * @returns {Array<Object>} Last six featured photographs.
+         */
+        get instagramPhotos() {
+            return this.photos.slice(-6);
         },
 
         /**
@@ -53,11 +62,13 @@ document.addEventListener('alpine:init', () => {
                     autoplayHoverPause: true,
                     autoplaySpeed: 800,
                     navText: ['<i class="ti-angle-left"></i>', '<i class="ti-angle-right"></i>'],
-                    nav: false,
-                    dots: false,
+                    // Sin botones de acción, la navegación del carrusel es la única
+                    // señal de que hay más fotografías: se muestra en todos los tamaños.
+                    nav: true,
+                    dots: true,
                     responsive: {
-                        0: { items: 1, nav: false },
-                        1600: { items: 1, nav: true }
+                        0: { items: 1, nav: false, dots: true },
+                        768: { items: 1, nav: true, dots: true }
                     }
                 });
 
@@ -82,18 +93,14 @@ document.addEventListener('alpine:init', () => {
             }
 
             container.innerHTML = this.heroPhotos.map(photo => `
-                <div class="single_slider d-flex align-items-center black_overlay"
+                <div class="single_slider d-flex align-items-end black_overlay"
                      style="background-image: url('${this.heroImage(photo)}')">
                     <div class="container">
-                        <div class="row align-items-center">
-                            <div class="col-xl-12 col-md-12">
-                                <div class="slider_text text-center">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="slider_text omp-hero-caption">
                                     <h3>${escapeHtml(this.content.heroTitle)}</h3>
-                                    <p class="slider_subtitle">${escapeHtml(this.content.heroSubtitle)}</p>
-                                    <div class="video_service_btn">
-                                        <a href="gallery.html" class="boxed-btn3">View Gallery</a>
-                                        <a href="booking.html" class="boxed-btn3">Book a Session</a>
-                                    </div>
+                                    <p>${escapeHtml(this.content.heroSubtitle)}</p>
                                 </div>
                             </div>
                         </div>

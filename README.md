@@ -89,6 +89,8 @@ El origen del dev server debe estar en `Cors:AllowedOrigins` de `appsettings.Dev
 
 Estas reglas salieron de romper cosas y no son opcionales.
 
+**La fotografía manda.** La interfaz no compite con las imágenes: **no hay botones de llamada a la acción**. Se navega por el menú y se interactúa con las fotografías (lightbox, enlace a la categoría). El header es transparente y flota sobre la imagen; al hacer scroll solo insinúa un fondo oscuro translúcido con desenfoque. Los velos sobre las fotos son degradados que sostienen la legibilidad del menú y del pie, nunca capas uniformes que apaguen la imagen completa. Toda esta regla vive en el bloque "Cromo mínimo" de `omp-custom.css`.
+
 **No se toca el template.** `css/style.css`, `css/theme-default.css` y `js/main.js` quedan intactos. Los estilos propios van en `omp-custom.css`, cargado después; el JavaScript propio, en `js/app/`. Así el template puede reemplazarse sin rehacer el trabajo.
 
 **Un módulo Alpine por página.** Vive en `js/app/pages/<pagina>Page.js`, se registra dentro de `alpine:init` con `Alpine.data('<pagina>Page', ...)` y se monta con `x-data` + `x-init="init()"`. Los módulos **no hacen `fetch`**: llaman a los servicios de `js/app/`.
@@ -143,12 +145,14 @@ Cuando se carguen las fotos definitivas desde el panel, se borran `img/provision
 |---|---|
 | L1 — Base Alpine.js | Completo |
 | L2 — Home | Completo (falta contenido del cliente) |
-| L3 — About | Pendiente |
+| L3 — About | Completo (falta biografía y retrato del fotógrafo) |
 | L4 — Contact | Pendiente |
 | L5 — Gallery | Pendiente |
 | L6 — Investment | Pendiente |
 | L7 — Agendar cita | Pendiente |
 
-Pendientes transversales: textos e imágenes finales, enlaces de redes sociales (`href="#"`), favicon con la marca y la ubicación real del iframe de Google Maps (hoy apunta al DFW metroplex, tomado de sisu-luxury-events).
+Pendientes transversales: textos e imágenes finales, testimonios reales autorizados, favicon con la marca y la ubicación exacta del iframe de Google Maps (hoy apunta al DFW metroplex).
+
+Datos ya definitivos: teléfono, correo y los perfiles de Facebook, Instagram y TikTok, centralizados en `SITE_CONTENT.business` y enlazados en el encabezado y el pie de las siete páginas. El icono de TikTok va como SVG inline porque el template trae Font Awesome 4.7, que no lo incluye.
 
 Referencia completa: `Plan de Arquitectura y Roadmap Técnico - Orlin Monnar Photography.docx` (v1.2).

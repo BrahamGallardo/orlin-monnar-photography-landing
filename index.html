@@ -66,9 +66,9 @@
                         <div class="col-xl-3 col-lg-3 d-none d-lg-block">
                             <div class="social_links">
                                 <ul>
-                                    <li><a href="#"> <i class="fa fa-facebook"></i> </a></li>
-                                    <li><a href="#"> <i class="fa fa-twitter"></i> </a></li>
-                                    <li><a href="#"> <i class="fa fa-instagram"></i> </a></li>
+                                    <li><a href="https://www.facebook.com/orlinmonnarphotography" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa fa-facebook"></i> </a></li>
+                                    <li><a href="https://www.instagram.com/orlinmonnar.photography" target="_blank" rel="noopener" aria-label="Instagram"> <i class="fa fa-instagram"></i> </a></li>
+                                    <li><a href="https://www.tiktok.com/@orlinmonnar.photography" target="_blank" rel="noopener" aria-label="TikTok"> <svg class="omp-icon-tiktok" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.6 5.82a4.28 4.28 0 0 1-1.05-2.82h-3.1v11.6a2.59 2.59 0 1 1-1.85-2.48V9.02a5.66 5.66 0 1 0 4.95 5.6V8.7a7.3 7.3 0 0 0 4.27 1.37V7a4.3 4.3 0 0 1-3.22-1.18z"/></svg> </a></li>
                                 </ul>
                             </div>
                         </div>
@@ -104,8 +104,9 @@
                         <div class="section_title text-center">
                             <h3 x-text="content.introTitle"></h3>
                             <p x-text="content.introText"></p>
-                            <div class="mt-30">
-                                <a href="about.html" class="boxed-btn3">About Orlin</a>
+                            <!-- El logo hace de firma, como la sección de firma del template. -->
+                            <div class="singnature_thumb">
+                                <img src="img/logo-omp.png" alt="Orlin Monnar Photography &amp; Films">
                             </div>
                         </div>
                     </div>
@@ -153,34 +154,213 @@
                 </div>
             </div>
 
-            <div class="container">
-                <div class="row">
-                    <div class="col-12 text-center mt-50">
-                        <a href="gallery.html" class="boxed-btn3">See the full gallery</a>
+        </div>
+        <!-- featured_gallery_end -->
+
+        <!-- films_area_start -->
+        <div class="wild_photography">
+            <div class="container-fluid p-0">
+                <div class="row no-gutters align-items-center">
+                    <div class="col-lg-6">
+                        <!-- TODO: sustituir por un fotograma del trabajo de video del cliente. -->
+                        <div class="wildlife_photo omp-photo omp-photo--split">
+                            <img src="img/provisional/quinceanera-04-medium.webp"
+                                 srcset="img/provisional/quinceanera-04-thumb.webp 500w,
+                                         img/provisional/quinceanera-04-medium.webp 1200w"
+                                 sizes="(max-width: 991px) 100vw, 50vw"
+                                 alt="Celebration captured on photography and film"
+                                 loading="lazy">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="section_title omp-split-text">
+                            <h3 x-text="content.filmsTitle"></h3>
+                            <p x-text="content.filmsText"></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- featured_gallery_end -->
+        <!-- films_area_end -->
 
-        <!-- cta_area_start -->
-        <div class="omp-cta">
+        <!-- services_area_start -->
+        <div class="team_area">
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-xl-8 col-lg-9">
+                    <div class="col-xl-7 col-lg-7">
+                        <div class="section_title text-center mb-50">
+                            <h3 x-text="content.servicesTitle"></h3>
+                            <p x-text="content.servicesSubtitle"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TODO: enlazar cada tarjeta a su categoría real de la galería
+                     cuando existan los slugs (L5), en lugar de a gallery.html. -->
+                <!-- .border_bottom es el contenedor bajo el que el template anida
+                     todo el CSS de single_team; su línea se anula en omp-custom.css. -->
+                <div class="border_bottom">
+                <div class="row">
+                    <div class="col-xl-4 col-lg-4 col-md-6">
+                        <div class="single_team">
+                            <a href="gallery.html">
+                                <div class="team_thumb omp-photo">
+                                    <img src="img/provisional/quinceanera-07-medium.webp"
+                                         srcset="img/provisional/quinceanera-07-thumb.webp 500w,
+                                                 img/provisional/quinceanera-07-medium.webp 1200w"
+                                         sizes="(max-width: 767px) 100vw, 33vw"
+                                         alt="Quinceañera session" loading="lazy">
+                                </div>
+                            </a>
+                            <div class="team_info text-center">
+                                <h3>Quinceañeras</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6">
+                        <div class="single_team">
+                            <a href="gallery.html">
+                                <div class="team_thumb omp-photo">
+                                    <img src="img/provisional/wedding-03-medium.webp"
+                                         srcset="img/provisional/wedding-03-thumb.webp 500w,
+                                                 img/provisional/wedding-03-medium.webp 1200w"
+                                         sizes="(max-width: 767px) 100vw, 33vw"
+                                         alt="Wedding session" loading="lazy">
+                                </div>
+                            </a>
+                            <div class="team_info text-center">
+                                <h3>Weddings</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6">
+                        <div class="single_team">
+                            <a href="gallery.html">
+                                <div class="team_thumb omp-photo">
+                                    <img src="img/provisional/portrait-01-medium.webp"
+                                         srcset="img/provisional/portrait-01-thumb.webp 500w,
+                                                 img/provisional/portrait-01-medium.webp 1200w"
+                                         sizes="(max-width: 767px) 100vw, 33vw"
+                                         alt="Portrait session" loading="lazy">
+                                </div>
+                            </a>
+                            <div class="team_info text-center">
+                                <h3>Portraits</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <!-- services_area_end -->
+
+        <!-- testimonial_area_start -->
+        <div class="testimonial_area">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-10">
                         <div class="section_title text-center">
-                            <h3 x-text="content.ctaTitle"></h3>
-                            <p x-text="content.ctaText"></p>
-                            <div class="mt-30">
-                                <a href="booking.html" class="boxed-btn3" x-text="content.ctaButton"></a>
-                                <a href="contact.html" class="boxed-btn3">Contact</a>
+                            <h3 x-text="content.testimonialsTitle"></h3>
+                        </div>
+                        <!-- TODO: sustituir por testimonios reales con autorización del
+                             cliente. Los textos van en el HTML y no en content.js porque
+                             Owl Carousel clona estos nodos (ver pluginBridge.js). -->
+                        <div class="testimonial_active owl-carousel">
+                            <div class="single_testmonial text-center">
+                                <p>Working with Orlin was easy from the first call. He knew
+                                    exactly where to be and we ended up with photographs we
+                                    keep coming back to.</p>
+                                <div class="author_name d-flex align-items-center justify-content-center">
+                                    <span>- Client name</span>
+                                </div>
+                            </div>
+                            <div class="single_testmonial text-center">
+                                <p>He made my daughter feel comfortable the whole session.
+                                    The photographs look like her, not like poses.</p>
+                                <div class="author_name d-flex align-items-center justify-content-center">
+                                    <span>- Client name</span>
+                                </div>
+                            </div>
+                            <div class="single_testmonial text-center">
+                                <p>We received the gallery sooner than expected and the film
+                                    captured details we had not even noticed that day.</p>
+                                <div class="author_name d-flex align-items-center justify-content-center">
+                                    <span>- Client name</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- cta_area_end -->
+        <!-- testimonial_area_end -->
+
+        <!-- contact_info_area_start -->
+        <div class="contact_info_area">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-5">
+                        <div class="cotact_info">
+                            <div class="section_title">
+                                <h3 x-text="content.contactTitle"></h3>
+                                <p x-text="content.contactText"></p>
+                            </div>
+                            <div class="address_info">
+                                <h4>Studio</h4>
+                                <ul class="Address">
+                                    <li x-text="business.serviceArea"></li>
+                                    <li><a :href="business.phoneLink" x-text="business.phoneDisplay"></a></li>
+                                    <li><a :href="'mailto:' + business.email" x-text="business.email"></a></li>
+                                </ul>
+                                <div class="socail_links">
+                                    <ul>
+                                <li><a href="https://www.facebook.com/orlinmonnarphotography" target="_blank" rel="noopener" aria-label="Facebook"><i class="ti-facebook"></i></a></li>
+                                <li><a href="https://www.instagram.com/orlinmonnar.photography" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa fa-instagram"></i></a></li>
+                                <li><a href="https://www.tiktok.com/@orlinmonnar.photography" target="_blank" rel="noopener" aria-label="TikTok"><svg class="omp-icon-tiktok" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.6 5.82a4.28 4.28 0 0 1-1.05-2.82h-3.1v11.6a2.59 2.59 0 1 1-1.85-2.48V9.02a5.66 5.66 0 1 0 4.95 5.6V8.7a7.3 7.3 0 0 0 4.27 1.37V7a4.3 4.3 0 0 1-3.22-1.18z"/></svg></a></li>
+                            </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <!-- El template original sirve el mapa en esta columna. -->
+                        <div class="omp-map">
+                            <iframe loading="lazy"
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d354125.1662953405!2d-97.22916265231494!3d32.791601781654435!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x864e82b81f3a3a2d%3A0x53724d9a808b8ce5!2sDallas-Fort%20Worth%20metroplex%2C%20Texas%2C%20EE.%20UU.!5e0!3m2!1ses!2smx!4v1765410425642!5m2!1ses!2smx"
+                                allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- contact_info_area_end -->
+
+        <!-- instagram_area_start -->
+        <div class="omp-instagram-heading">
+            <div class="container">
+                <div class="section_title text-center">
+                    <h3 x-text="content.instagramTitle"></h3>
+                    <p><a :href="business.instagram" target="_blank" rel="noopener"
+                          x-text="'@orlinmonnar.photography'"></a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TODO: sustituir por las publicaciones reales del perfil. -->
+        <div class="instragram_area">
+            <template x-for="photo in instagramPhotos" :key="photo.id">
+                <div class="single_instagram omp-photo">
+                    <img :src="thumb(photo)" :alt="alt(photo)" loading="lazy">
+                    <div class="ovrelay">
+                        <a :href="business.instagram" target="_blank" rel="noopener">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </template>
+        </div>
+        <!-- instagram_area_end -->
 
     </div>
 
@@ -199,21 +379,9 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
                     <div class="col-xl-5 col-md-4">
                         <div class="socail_links">
                             <ul>
-                                <li>
-                                    <a href="#">
-                                        <i class="ti-facebook"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="ti-twitter-alt"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-instagram"></i>
-                                    </a>
-                                </li>
+                                <li><a href="https://www.facebook.com/orlinmonnarphotography" target="_blank" rel="noopener" aria-label="Facebook"><i class="ti-facebook"></i></a></li>
+                                <li><a href="https://www.instagram.com/orlinmonnar.photography" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa fa-instagram"></i></a></li>
+                                <li><a href="https://www.tiktok.com/@orlinmonnar.photography" target="_blank" rel="noopener" aria-label="TikTok"><svg class="omp-icon-tiktok" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.6 5.82a4.28 4.28 0 0 1-1.05-2.82h-3.1v11.6a2.59 2.59 0 1 1-1.85-2.48V9.02a5.66 5.66 0 1 0 4.95 5.6V8.7a7.3 7.3 0 0 0 4.27 1.37V7a4.3 4.3 0 0 1-3.22-1.18z"/></svg></a></li>
                             </ul>
                         </div>
                     </div>

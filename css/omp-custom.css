@@ -60,51 +60,370 @@
 }
 
 /* --------------------------------------------------------------------------
+   Cromo mínimo: la fotografía manda
+
+   Regla de diseño del sitio: la interfaz no compite con las imágenes. No hay
+   botones de llamada a la acción; se navega por el menú y se interactúa con
+   las fotografías.
+   -------------------------------------------------------------------------- */
+
+/* El header flota sobre la imagen en lugar de ocupar su propia banda. */
+header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 99;
+}
+
+/* Transparente en todos los tamaños: el template lo pinta sólido por debajo
+   de 992px y casi blanco al hacer scroll. */
+.header-area .main-header-area,
+.header-area .main-header-area.sticky {
+    background: transparent;
+    box-shadow: none;
+}
+
+/* Al hacer scroll el fondo se insinúa apenas para sostener la lectura del
+   menú; nunca un bloque sólido. */
+.header-area .main-header-area.sticky {
+    background: rgba(20, 20, 20, 0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* Menú legible sobre fotografías claras sin recurrir a una caja de fondo. */
+.main-menu ul#navigation > li > a,
+.slicknav_menu .slicknav_nav a {
+    color: #fff;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55);
+}
+
+.logo img {
+    filter: drop-shadow(0 1px 10px rgba(0, 0, 0, 0.45));
+}
+
+/* Botón de menú móvil: solo las tres barras, sin caja ni borde. */
+.slicknav_menu .slicknav_btn,
+.slicknav_menu .slicknav_nav .slicknav_btn {
+    border: none;
+    background: transparent;
+}
+
+.slicknav_menu .slicknav_icon-bar {
+    background-color: #fff;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* El desplegable móvil comparte el mismo vidrio oscuro del header. */
+.slicknav_menu .slicknav_nav {
+    background: rgba(20, 20, 20, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* Las páginas interiores dejan aire para el header flotante. */
+.bradcam_area {
+    padding-top: 120px;
+}
+
+/* El bradcam del template apoya el degradado en su parte inferior; aquí el
+   velo se concentra arriba, donde flota el menú. */
+.bradcam_area.black_overlay::before {
+    background: linear-gradient(to bottom,
+                rgba(0, 0, 0, 0.5) 0%,
+                rgba(0, 0, 0, 0.25) 35%,
+                rgba(0, 0, 0, 0.35) 100%);
+    opacity: 1;
+}
+
+.bradcam_area .bradcam_text p {
+    color: #fff;
+    font-size: 16px;
+    letter-spacing: 1px;
+    margin: 14px 0 0;
+    opacity: 0.85;
+}
+
+/* --------------------------------------------------------------------------
    Home
    -------------------------------------------------------------------------- */
 
-/* El carrusel se puebla por API: se reserva su altura para que la página no
-   salte cuando llegan las fotografías. */
+/* El hero ocupa la ventana: la primera impresión es la fotografía. También
+   reserva su altura para que la página no salte al llegar los datos. */
 .slider_area {
-    min-height: 900px;
     background-color: #111;
 }
 
-@media (max-width: 767px) {
-    .slider_area {
-        min-height: 100vh;
-    }
+.slider_area,
+.slider_area .single_slider {
+    min-height: 100vh;
+    height: 100vh;
 }
 
-.slider_area .single_slider .slider_text .slider_subtitle {
-    color: #fff;
-    font-size: 18px;
+/* El velo uniforme del template apaga la fotografía entera. Se sustituye por
+   un degradado que solo sostiene la legibilidad del menú y del pie. */
+.slider_area .single_slider.black_overlay::before {
+    background: linear-gradient(to bottom,
+                rgba(0, 0, 0, 0.45) 0%,
+                rgba(0, 0, 0, 0.12) 25%,
+                rgba(0, 0, 0, 0) 45%,
+                rgba(0, 0, 0, 0.55) 100%);
+    opacity: 1;
+}
+
+/* Pie del hero: identidad y servicios en tono discreto, sin botones. */
+.omp-hero-caption {
+    padding-bottom: 90px;
+}
+
+.slider_area .single_slider .omp-hero-caption h3 {
+    font-size: 28px;
+    line-height: 1.3;
     letter-spacing: 1px;
-    margin-bottom: 30px;
-    opacity: 0.9;
+    margin-bottom: 6px;
 }
 
-/* Botones contiguos en hero y llamadas a la acción. */
-.video_service_btn .boxed-btn3 + .boxed-btn3,
-.section_title .boxed-btn3 + .boxed-btn3 {
-    margin-left: 15px;
+.omp-hero-caption p {
+    color: #fff;
+    font-size: 15px;
+    letter-spacing: 1px;
+    margin-bottom: 0;
+    opacity: 0.85;
 }
 
-@media (max-width: 575px) {
-    .video_service_btn .boxed-btn3 + .boxed-btn3,
-    .section_title .boxed-btn3 + .boxed-btn3 {
-        margin-left: 0;
-        margin-top: 15px;
+.omp-hero-caption h3,
+.omp-hero-caption p {
+    text-shadow: 0 1px 16px rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 767px) {
+    .omp-hero-caption {
+        padding-bottom: 60px;
+    }
+
+    .slider_area .single_slider .omp-hero-caption h3 {
+        font-size: 22px;
     }
 }
 
+/* Mismo aire que el photography_skill_area del template, al que sustituye. */
 .omp-intro {
-    padding: 120px 0 90px;
+    padding: 90px 0 96px;
 }
 
-.omp-cta {
-    padding: 90px 0 120px;
-    background-color: #f8f8f8;
+/* El logo actúa como firma al cierre del texto de presentación. */
+.omp-intro .singnature_thumb {
+    margin-top: 35px;
+}
+
+.omp-intro .singnature_thumb img {
+    max-width: 220px;
+    height: auto;
+}
+
+/* --------------------------------------------------------------------------
+   Navegación de los carruseles
+   -------------------------------------------------------------------------- */
+
+/* Solo el trazo de la flecha: sin caja, sin borde y sin color de marca. */
+.owl-carousel .owl-nav div {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: transparent;
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 22px;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+}
+
+.owl-carousel .owl-nav div.owl-prev {
+    left: 30px;
+}
+
+.owl-carousel .owl-nav div.owl-next {
+    right: 30px;
+    left: auto;
+}
+
+.owl-carousel:hover .owl-nav div:hover {
+    background: transparent;
+    border: none;
+    color: #fff;
+}
+
+/* Puntos del hero: marcas mínimas sobre la fotografía. */
+.slider_area .owl-dots {
+    position: absolute;
+    right: 30px;
+    bottom: 40px;
+    display: flex;
+}
+
+.slider_area .owl-dots .owl-dot span {
+    width: 6px;
+    height: 6px;
+    margin: 0 4px;
+    display: block;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.45);
+    transition: background 0.3s ease;
+}
+
+.slider_area .owl-dots .owl-dot.active span {
+    background: #fff;
+}
+
+/* --------------------------------------------------------------------------
+   Secciones de contenido
+   -------------------------------------------------------------------------- */
+
+/* Los fondos del template son de un azul frío que no acompaña al dorado del
+   logo; se neutralizan conservando el contraste entre secciones. */
+.wild_photography,
+.testimonial_area {
+    background: #FAFAFA;
+}
+
+/* Bloques a media página: la imagen ocupa su mitad completa. */
+.omp-photo--split {
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+}
+
+/* El template ya define padding-left: 113px en este bloque; aquí solo el resto. */
+.wild_photography .section_title {
+    padding-top: 60px;
+    padding-bottom: 60px;
+    padding-right: 60px;
+}
+
+@media (max-width: 767px) {
+    .wild_photography .section_title {
+        padding-right: 20px;
+    }
+}
+
+/* Tarjetas de servicios: el template anida su CSS bajo .border_bottom, cuyo
+   borde no hace falta porque el cambio de fondo ya separa las secciones. */
+.team_area .border_bottom {
+    border-bottom: none;
+}
+
+.team_area .border_bottom .single_team .team_thumb {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+}
+
+/* Testimonios: sin miniatura de autor, el desplazamiento del nombre sobra, y
+   las citas subrayadas del template no encajan con el tono del sitio. */
+.testimonial_area .single_testmonial p {
+    text-decoration: none;
+    /* El margen del template contaba con el título dentro de cada slide; aquí
+       el título es único y vive fuera del carrusel. */
+    margin-top: 10px;
+}
+
+.testimonial_area .single_testmonial .author_name span {
+    margin-left: 0;
+}
+
+/* Franja de Instagram: piezas cuadradas. */
+.omp-instagram-heading {
+    padding: 90px 0 40px;
+}
+
+.instragram_area .single_instagram {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+}
+
+/* En móvil el template las pone a ancho completo: seis pantallas seguidas. */
+@media (max-width: 767px) {
+    .instragram_area .single_instagram {
+        width: 50%;
+    }
+}
+
+/* Datos de contacto del Home. El template no da padding superior a esta
+   sección porque en su orden original venía precedida de team_area. */
+.contact_info_area {
+    padding-top: 100px;
+}
+
+.contact_info_area .address_info .Address li a {
+    color: inherit;
+}
+
+.contact_info_area .address_info .Address li a:hover {
+    text-decoration: underline;
+}
+
+.omp-map iframe {
+    width: 100%;
+    height: 420px;
+    border: 0;
+    display: block;
+}
+
+/* --------------------------------------------------------------------------
+   About
+   -------------------------------------------------------------------------- */
+
+/* Fondo de la cabecera de About. Es una fotografía provisional. */
+.omp-bradcam-about {
+    background-image: url(../img/provisional/quinceanera-01-large.webp);
+}
+
+.omp-steps {
+    padding: 90px 0 100px;
+}
+
+.omp-step {
+    padding-right: 30px;
+    margin-bottom: 40px;
+}
+
+/* La numeración ordena la lectura sin recurrir a iconos ajenos al sitio. */
+.omp-step__number {
+    display: block;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: #B9B9B9;
+    margin-bottom: 14px;
+}
+
+.omp-step h4 {
+    font-size: 22px;
+    font-weight: 300;
+    color: #2C2C2C;
+    margin-bottom: 12px;
+}
+
+.omp-step p {
+    font-size: 16px;
+    line-height: 28px;
+    color: #707070;
+    margin-bottom: 0;
+}
+
+/* Enlaces de texto dentro de los párrafos: sustituyen a los botones. */
+.section_title p a {
+    color: #2C2C2C;
+    text-decoration: underline;
+}
+
+.section_title p a:hover {
+    color: #707070;
+}
+
+/* Icono de TikTok: Font Awesome 4.7 del template no lo incluye. */
+.omp-icon-tiktok {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+    vertical-align: -0.15em;
 }
 
 /* Título de la fotografía sobre el hover de la grilla destacada. */
