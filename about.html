@@ -107,14 +107,13 @@
             <div class="container-fluid p-0">
                 <div class="row no-gutters align-items-center">
                     <div class="col-lg-6">
-                        <!-- TODO: sustituir por el retrato de Orlin. Esta es una fotografía
-                             de su trabajo, no del fotógrafo. -->
+                        <!-- TODO: fotografía provisional; sustituir por la definitiva. -->
                         <div class="wildlife_photo omp-photo omp-photo--split">
-                            <img src="img/provisional/wedding-01-medium.webp"
-                                 srcset="img/provisional/wedding-01-thumb.webp 500w,
-                                         img/provisional/wedding-01-medium.webp 1200w"
+                            <img src="img/provisional/orlin-front-medium.webp"
+                                 srcset="img/provisional/orlin-front-thumb.webp 500w,
+                                         img/provisional/orlin-front-medium.webp 720w"
                                  sizes="(max-width: 991px) 100vw, 50vw"
-                                 alt="Wedding session photographed by Orlin Monnar"
+                                 alt="Orlin Monnar photographing an event"
                                  loading="lazy">
                         </div>
                     </div>
@@ -156,30 +155,46 @@
         </div>
         <!-- statement_area_end -->
 
-        <!-- steps_area_start -->
-        <div class="omp-steps">
+        <!-- team_area  -->
+        <div class="team_area">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-xl-7 col-lg-7">
                         <div class="section_title text-center mb-50">
-                            <h3 x-text="content.stepsTitle"></h3>
+                            <h3 x-text="content.teamTitle"></h3>
+                            <p x-text="content.teamSubtitle"></p>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <template x-for="(step, index) in content.steps" :key="step.title">
-                        <div class="col-lg-4 col-md-6">
-                            <div class="omp-step">
-                                <span class="omp-step__number" x-text="String(index + 1).padStart(2, '0')"></span>
-                                <h4 x-text="step.title"></h4>
-                                <p x-text="step.text"></p>
+
+                <!-- TODO: sustituir por un retrato frontal y confirmar el rol.
+                     .border_bottom es el contenedor bajo el que el template anida
+                     todo el CSS de single_team; su línea se anula en omp-custom.css. -->
+                <div class="border_bottom">
+                    <div class="row justify-content-center">
+                        <template x-for="member in content.team" :key="member.role">
+                            <div class="col-xl-4 col-lg-5 col-md-6">
+                                <div class="single_team">
+                                    <div class="team_thumb omp-photo">
+                                        <img src="img/provisional/orlin-front2-medium.webp"
+                                             srcset="img/provisional/orlin-front2-thumb.webp 500w,
+                                                     img/provisional/orlin-front2-medium.webp 720w"
+                                             sizes="(max-width: 767px) 100vw, 33vw"
+                                             alt="Orlin Monnar photographing an event"
+                                             loading="lazy">
+                                    </div>
+                                    <div class="team_info text-center">
+                                        <h3 x-text="member.name"></h3>
+                                        <p x-text="member.role"></p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </template>
+                        </template>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- steps_area_end -->
+        <!-- /team_area  -->
 
         <!-- testimonial_area_start -->
         <div class="testimonial_area">
@@ -189,15 +204,19 @@
                         <div class="section_title text-center">
                             <h3>Client words</h3>
                         </div>
-                        <!-- TODO: sustituir por testimonios reales con autorización del
-                             cliente. Los textos van en el HTML y no en content.js porque
-                             Owl Carousel clona estos nodos (ver pluginBridge.js). -->
+                        <!-- TODO: sustituir por testimonios reales con autorización del cliente,
+                             incluidas las miniaturas: son fotos de stock del template.
+                             Los textos van en el HTML y no en content.js porque Owl
+                             Carousel clona estos nodos (ver pluginBridge.js). -->
                         <div class="testimonial_active owl-carousel">
                             <div class="single_testmonial text-center">
                                 <p>Working with Orlin was easy from the first call. He knew
                                     exactly where to be and we ended up with photographs we
                                     keep coming back to.</p>
                                 <div class="author_name d-flex align-items-center justify-content-center">
+                                    <div class="thumb">
+                                        <img src="img/comment/comment_1.png" alt="">
+                                    </div>
                                     <span>- Client name</span>
                                 </div>
                             </div>
@@ -205,6 +224,9 @@
                                 <p>He made my daughter feel comfortable the whole session.
                                     The photographs look like her, not like poses.</p>
                                 <div class="author_name d-flex align-items-center justify-content-center">
+                                    <div class="thumb">
+                                        <img src="img/comment/comment_2.png" alt="">
+                                    </div>
                                     <span>- Client name</span>
                                 </div>
                             </div>
@@ -212,6 +234,9 @@
                                 <p>We received the gallery sooner than expected and the film
                                     captured details we had not even noticed that day.</p>
                                 <div class="author_name d-flex align-items-center justify-content-center">
+                                    <div class="thumb">
+                                        <img src="img/comment/comment_3.png" alt="">
+                                    </div>
                                     <span>- Client name</span>
                                 </div>
                             </div>
@@ -300,7 +325,7 @@
                 </div>
             </div>
             <div class="single_instagram omp-photo">
-                <img src="img/provisional/metal-print-01-thumb.webp" alt="Photograph printed on metal" loading="lazy">
+                <img src="img/provisional/orlin-portrait-thumb.webp" alt="Orlin Monnar at work during an event" loading="lazy">
                 <div class="ovrelay">
                     <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
                 </div>

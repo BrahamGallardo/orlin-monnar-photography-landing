@@ -68,12 +68,11 @@ window.SITE_CONTENT = {
         statementText: 'Each session is planned in advance and photographed without rushing, '
             + 'so the images feel like the day rather than a set of poses.',
 
-        // TODO: confirmar que estos tres pasos reflejan su proceso real.
-        stepsTitle: 'From the first call to your gallery',
-        steps: [
-            { title: 'Planning', text: 'We talk through the date, the location and what matters most to you.' },
-            { title: 'The session', text: 'Photography and film on the day, working around the celebration.' },
-            { title: 'Delivery', text: 'An edited gallery, ready to share and to print.' }
+        // TODO: confirmar el rol exacto y conseguir un retrato frontal.
+        teamTitle: 'Behind every session',
+        teamSubtitle: 'One photographer, from the first call to the final gallery',
+        team: [
+            { name: 'Orlin Monnar', role: 'Photographer & filmmaker' }
         ]
     },
 

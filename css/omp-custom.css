@@ -316,8 +316,7 @@ header {
     overflow: hidden;
 }
 
-/* Testimonios: sin miniatura de autor, el desplazamiento del nombre sobra, y
-   las citas subrayadas del template no encajan con el tono del sitio. */
+/* Testimonios: las citas subrayadas del template no encajan con el tono. */
 .testimonial_area .single_testmonial p {
     text-decoration: none;
     /* El margen del template contaba con el título dentro de cada slide; aquí
@@ -325,8 +324,17 @@ header {
     margin-top: 10px;
 }
 
-.testimonial_area .single_testmonial .author_name span {
-    margin-left: 0;
+/* El template redondea el marco de la miniatura pero no recorta la imagen:
+   sin overflow la foto se seguiría viendo cuadrada. */
+.testimonial_area .single_testmonial .author_name .thumb {
+    overflow: hidden;
+    flex: 0 0 42px;
+}
+
+.testimonial_area .single_testmonial .author_name .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* Franja de Instagram: piezas cuadradas. */
@@ -374,38 +382,6 @@ header {
 /* Fondo de la cabecera de About. Es una fotografía provisional. */
 .omp-bradcam-about {
     background-image: url(../img/provisional/quinceanera-01-large.webp);
-}
-
-.omp-steps {
-    padding: 90px 0 100px;
-}
-
-.omp-step {
-    padding-right: 30px;
-    margin-bottom: 40px;
-}
-
-/* La numeración ordena la lectura sin recurrir a iconos ajenos al sitio. */
-.omp-step__number {
-    display: block;
-    font-size: 14px;
-    letter-spacing: 3px;
-    color: #B9B9B9;
-    margin-bottom: 14px;
-}
-
-.omp-step h4 {
-    font-size: 22px;
-    font-weight: 300;
-    color: #2C2C2C;
-    margin-bottom: 12px;
-}
-
-.omp-step p {
-    font-size: 16px;
-    line-height: 28px;
-    color: #707070;
-    margin-bottom: 0;
 }
 
 /* Enlaces de texto dentro de los párrafos: sustituyen a los botones. */
