@@ -78,7 +78,20 @@ window.SITE_CONTENT = {
 
     gallery: {
         title: 'Gallery',
-        subtitle: 'Sessions organized by occasion'
+        subtitle: 'Sessions organized by occasion',
+
+        // TODO: replace with the photographer's own description of his albums.
+        intro: 'Each album gathers one kind of session. If you have a date in mind, '
+            + 'you can <a href="booking.html">book a session</a> or '
+            + '<a href="contact.html">get in touch</a>.',
+
+        photoCountOne: 'photograph',
+        photoCountMany: 'photographs',
+        emptyAlbum: 'This album has no photographs yet.',
+
+        notFoundTitle: 'Album not found',
+        notFoundText: 'This album is no longer published.',
+        backToAlbums: 'See all albums'
     },
 
     investment: {

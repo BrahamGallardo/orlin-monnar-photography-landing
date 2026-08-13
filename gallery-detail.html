@@ -83,14 +83,16 @@
     </header>
     <!-- header-end -->
 
-    <!-- bradcam_area  -->
-    <div class="bradcam_area breadcam_bg_2 black_overlay">
+    <div x-data="galleryDetailPage" x-init="init()">
+
+        <!-- bradcam_area  -->
+        <div class="bradcam_area black_overlay omp-bradcam-album" :style="bradcamStyle()">
             <div class="container">
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="bradcam_text text-center">
-                            <h3>Albums</h3>
-                            <p>Photography / Baby</p>
+                            <h3 x-text="title"></h3>
+                            <p x-text="subtitle"></p>
                         </div>
                     </div>
                 </div>
@@ -98,192 +100,56 @@
         </div>
         <!-- / bradcam_area  -->
 
-    <!-- gallery_area  -->
-    <div class="gallery_area baby_gallery_wrap">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-xl-7 col-lg-7">
-                    <div class="section_title text-center mb-50">
-                        <h3>My world class photography</h3>
-                        <p>Whether you’re about to create a website for the first time, or you’re looking 
-                            for a theme that provides advanced capabilities, we have got them in 
-                            Blacksilver theme.</p>
-                    </div>
+        <!-- gallery_area  -->
+        <div class="gallery_area baby_gallery_wrap">
+            <div class="container">
+                <!-- Menú de álbumes. Clase propia y no .portfolio-menu: el
+                     template no la estila y main.js le engancha un filtro de
+                     Isotope sobre esta misma grilla. -->
+                <div class="omp-album-menu text-center mb-50" x-cloak>
+                    <template x-for="item in categories" :key="item.id">
+                        <button type="button"
+                                :class="{ 'active': item.slug === slug }"
+                                @click="select(item.slug)"
+                                x-text="item.name"></button>
+                    </template>
+                </div>
+
+                <p class="omp-state" x-show="loading" x-text="states.loading"></p>
+                <p class="omp-state" x-show="notice" x-text="notice" x-cloak></p>
+                <p class="omp-state" x-cloak
+                   x-show="!loading && !notFound && !photos.length"
+                   x-text="content.emptyAlbum"></p>
+
+                <div class="omp-state" x-cloak x-show="!loading && notFound">
+                    <p x-text="content.notFoundText"></p>
+                    <p><a href="gallery.html" x-text="content.backToAlbums"></a></p>
                 </div>
             </div>
-        </div>
-        <div class="container-fluid p-0">
-            <div class="row no-gutters grid">
-                        <div class="single_gallery grid-item large_img ">
-                                <a class="img-pop-up  thumb" href="img/baby/1.png" >
-                                    <img src="img/baby/1.png" alt="">
-                                </a>
-                            </div>
-                        <div class="single_gallery grid-item mid_img">
-                                <a class="img-pop-up thumb" href="img/baby/2.png" >
-                                    <img src="img/baby/2.png" alt="">
-                                </a>
-                            </div>
-                        <div class="single_gallery grid-item small_img">
-                                <a class="img-pop-up thumb" href="img/baby/3.png" >
-                                    <img src="img/baby/3.png" alt="">
-                                </a>
-                            </div>
-                        <div class="single_gallery grid-item small_img">
-                                <a class="img-pop-up thumb" href="img/baby/4.png" >
-                                    <img src="img/baby/4.png" alt="">
-                                </a>
-                            </div>
-                        <div class="single_gallery grid-item large_img">
-                                <a class="img-pop-up thumb" href="img/baby/5.png" >
-                                    <img src="img/baby/5.png" alt="">
-                                </a>
-                            </div>
-                        <div class="single_gallery grid-item mid_img">
-                                <a class="img-pop-up thumb" href="img/baby/6.png" >
-                                    <img src="img/baby/6.png" alt="">
-                                </a>
-                            </div>
-            </div>
-        </div>
-    </div>
-    <!-- /gallery_area  -->
 
-    <div class="next_prev_post">
-        <div class="container">
-            <div class="row align-items-center border_bottom">
-                <div class="col-xl-3 col-lg-3 col-md-3">
-                    <div class="post_lisk text-left">
-                        <a href="#">
-                             <img src="img/arrow/1.svg" alt=""> <span>Prev</span>
-                        </a>
-                        <p>Nature Capture</p>
-                    </div>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6">
-                    <div class="socical_button">
-                        <ul>
-                            <li>
-                                <a href="#"> <i class="fa fa-facebook"></i> Facebook </a>
-                            </li>
-                            <li>
-                                <a href="#"> <i class="fa fa-twitter"></i> Twitter </a>
-                            </li>
-                            <li>
-                                <a href="#"> <i class="fa fa-pinterest"></i> pinterest </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-3 col-md-3">
-                    <div class="post_lisk text-right">
-                        <a href="#">
-                              <span>Next</span> <img src="img/arrow/2.svg" alt="">
-                        </a>
-                        <p>Family Time</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- contact_info_area  -->
-    <div class="contact_info_area">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-5">
-                    <div class="cotact_info">
-                        <div class="section_title">
-                                <h3>Contact Us</h3>
-                                <p>Whether you’re about to create a website for the first time or you’re looking.</p>
+            <div class="container-fluid p-0">
+                <!-- Isotope solo reposiciona sus nodos y Magnific abre un overlay
+                     aparte: ninguno los clona, así que x-for es seguro aquí. -->
+                <div class="row no-gutters grid" id="album-grid" x-cloak>
+                    <template x-for="photo in photos" :key="photo.id">
+                        <div class="single_gallery grid-item" :class="sizeClass(photo)">
+                            <a class="thumb popup-image"
+                               :href="large(photo)"
+                               :data-title="photo.title || ''">
+                                <img :src="medium(photo)"
+                                     :srcset="srcset(photo)"
+                                     sizes="(max-width: 767px) 100vw, 40vw"
+                                     :alt="alt(photo)"
+                                     loading="lazy">
+                            </a>
                         </div>
-                        <div class="address_info">
-                            <h4>Address</h4>
-                            <ul class="Address" >
-                                <li>
-                                        200/D, Green lane, Kings street, New York
-                                </li>
-                                <li>
-                                        +10 787 367 2567
-                                </li>
-                                <li>
-                                        <a href="#">contact08@halen.com</a>
-                                </li>
-                            </ul>
-                            <div class="socail_links">
-                                    <ul>
-                                <li><a href="https://www.facebook.com/orlinmonnarphotography" target="_blank" rel="noopener" aria-label="Facebook"><i class="ti-facebook"></i></a></li>
-                                <li><a href="https://www.instagram.com/orlinmonnar.photography" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa fa-instagram"></i></a></li>
-                                <li><a href="https://www.tiktok.com/@orlinmonnar.photography" target="_blank" rel="noopener" aria-label="TikTok"><svg class="omp-icon-tiktok" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.6 5.82a4.28 4.28 0 0 1-1.05-2.82h-3.1v11.6a2.59 2.59 0 1 1-1.85-2.48V9.02a5.66 5.66 0 1 0 4.95 5.6V8.7a7.3 7.3 0 0 0 4.27 1.37V7a4.3 4.3 0 0 1-3.22-1.18z"/></svg></a></li>
-                            </ul>
-                                </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-7">
-                        <div class="d-sm-block">
-                                
-</div>
+                    </template>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- /contact_info_area  -->
+        <!-- /gallery_area  -->
 
-
-    <!-- instragram_area  -->
-    <div class="instragram_area">
-        <div class="single_instagram">
-            <img src="img/instragram/1.png" alt="">
-            <div class="ovrelay">
-                <a href="#">
-                    <i class="fa fa-instagram"></i>
-                </a>
-            </div>
-        </div>
-        <div class="single_instagram">
-            <img src="img/instragram/2.png" alt="">
-            <div class="ovrelay">
-                <a href="#">
-                    <i class="fa fa-instagram"></i>
-                </a>
-            </div>
-        </div>
-        <div class="single_instagram">
-            <img src="img/instragram/3.png" alt="">
-            <div class="ovrelay">
-                <a href="#">
-                    <i class="fa fa-instagram"></i>
-                </a>
-            </div>
-        </div>
-        <div class="single_instagram">
-            <img src="img/instragram/4.png" alt="">
-            <div class="ovrelay">
-                <a href="#">
-                    <i class="fa fa-instagram"></i>
-                </a>
-            </div>
-        </div>
-        <div class="single_instagram">
-            <img src="img/instragram/5.png" alt="">
-            <div class="ovrelay">
-                <a href="#">
-                    <i class="fa fa-instagram"></i>
-                </a>
-            </div>
-        </div>
-        <div class="single_instagram">
-            <img src="img/instragram/6.png" alt="">
-            <div class="ovrelay">
-                <a href="#">
-                    <i class="fa fa-instagram"></i>
-                </a>
-            </div>
-        </div>
     </div>
-    <!-- /instragram_area  -->
 
     <!-- footer start -->
     <footer class="footer">
@@ -342,6 +208,8 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <script src="js/app/mediaHelpers.js"></script>
     <script src="js/app/domHelpers.js"></script>
     <script src="js/app/pluginBridge.js"></script>
+    <script src="js/app/galleryService.js"></script>
+    <script src="js/app/pages/galleryDetailPage.js"></script>
     <script defer src="js/vendor/alpine.min.js"></script>
 
 </body>

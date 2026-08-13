@@ -15,6 +15,8 @@ window.PLACEHOLDER_PHOTOS = [
         thumbUrl: 'img/provisional/quinceanera-02-thumb.webp',
         mediumUrl: 'img/provisional/quinceanera-02-medium.webp',
         largeUrl: 'img/provisional/quinceanera-02-large.webp',
+        width: 2500,
+        height: 1667,
         displayOrder: 1,
         isFeatured: true
     },
@@ -25,6 +27,8 @@ window.PLACEHOLDER_PHOTOS = [
         thumbUrl: 'img/provisional/quinceanera-04-thumb.webp',
         mediumUrl: 'img/provisional/quinceanera-04-medium.webp',
         largeUrl: 'img/provisional/quinceanera-04-large.webp',
+        width: 2500,
+        height: 1667,
         displayOrder: 2,
         isFeatured: true
     },
@@ -35,6 +39,8 @@ window.PLACEHOLDER_PHOTOS = [
         thumbUrl: 'img/provisional/quinceanera-03-thumb.webp',
         mediumUrl: 'img/provisional/quinceanera-03-medium.webp',
         largeUrl: 'img/provisional/quinceanera-03-large.webp',
+        width: 2500,
+        height: 1667,
         displayOrder: 3,
         isFeatured: true
     },
@@ -45,6 +51,8 @@ window.PLACEHOLDER_PHOTOS = [
         thumbUrl: 'img/provisional/quinceanera-05-thumb.webp',
         mediumUrl: 'img/provisional/quinceanera-05-medium.webp',
         largeUrl: 'img/provisional/quinceanera-05-large.webp',
+        width: 2500,
+        height: 1667,
         displayOrder: 4,
         isFeatured: true
     },
@@ -55,6 +63,8 @@ window.PLACEHOLDER_PHOTOS = [
         thumbUrl: 'img/provisional/quinceanera-01-thumb.webp',
         mediumUrl: 'img/provisional/quinceanera-01-medium.webp',
         largeUrl: 'img/provisional/quinceanera-01-large.webp',
+        width: 2500,
+        height: 1667,
         displayOrder: 5,
         isFeatured: true
     },
@@ -65,6 +75,8 @@ window.PLACEHOLDER_PHOTOS = [
         thumbUrl: 'img/provisional/wedding-01-thumb.webp',
         mediumUrl: 'img/provisional/wedding-01-medium.webp',
         largeUrl: 'img/provisional/wedding-01-large.webp',
+        width: 1500,
+        height: 1000,
         displayOrder: 6,
         isFeatured: true
     },
@@ -75,6 +87,8 @@ window.PLACEHOLDER_PHOTOS = [
         thumbUrl: 'img/provisional/wedding-02-thumb.webp',
         mediumUrl: 'img/provisional/wedding-02-medium.webp',
         largeUrl: 'img/provisional/wedding-02-large.webp',
+        width: 1500,
+        height: 1000,
         displayOrder: 7,
         isFeatured: true
     },
@@ -85,6 +99,8 @@ window.PLACEHOLDER_PHOTOS = [
         thumbUrl: 'img/provisional/wedding-03-thumb.webp',
         mediumUrl: 'img/provisional/wedding-03-medium.webp',
         largeUrl: 'img/provisional/wedding-03-large.webp',
+        width: 1500,
+        height: 2250,
         displayOrder: 8,
         isFeatured: true
     },
@@ -95,6 +111,8 @@ window.PLACEHOLDER_PHOTOS = [
         thumbUrl: 'img/provisional/portrait-01-thumb.webp',
         mediumUrl: 'img/provisional/portrait-01-medium.webp',
         largeUrl: 'img/provisional/portrait-01-large.webp',
+        width: 1500,
+        height: 1000,
         displayOrder: 9,
         isFeatured: true
     },
@@ -105,6 +123,8 @@ window.PLACEHOLDER_PHOTOS = [
         thumbUrl: 'img/provisional/quinceanera-06-thumb.webp',
         mediumUrl: 'img/provisional/quinceanera-06-medium.webp',
         largeUrl: 'img/provisional/quinceanera-06-large.webp',
+        width: 2500,
+        height: 1000,
         displayOrder: 10,
         isFeatured: true
     },
@@ -115,6 +135,8 @@ window.PLACEHOLDER_PHOTOS = [
         thumbUrl: 'img/provisional/quinceanera-07-thumb.webp',
         mediumUrl: 'img/provisional/quinceanera-07-medium.webp',
         largeUrl: 'img/provisional/quinceanera-07-large.webp',
+        width: 1500,
+        height: 2250,
         displayOrder: 11,
         isFeatured: true
     },
@@ -125,6 +147,8 @@ window.PLACEHOLDER_PHOTOS = [
         thumbUrl: 'img/provisional/metal-print-01-thumb.webp',
         mediumUrl: 'img/provisional/metal-print-01-medium.webp',
         largeUrl: 'img/provisional/metal-print-01-large.webp',
+        width: 1500,
+        height: 1004,
         displayOrder: 12,
         isFeatured: true
     },
@@ -135,6 +159,8 @@ window.PLACEHOLDER_PHOTOS = [
         thumbUrl: 'img/provisional/metal-print-02-thumb.webp',
         mediumUrl: 'img/provisional/metal-print-02-medium.webp',
         largeUrl: 'img/provisional/metal-print-02-large.webp',
+        width: 1500,
+        height: 1004,
         displayOrder: 13,
         isFeatured: true
     },
@@ -145,6 +171,8 @@ window.PLACEHOLDER_PHOTOS = [
         thumbUrl: 'img/provisional/metal-print-03-thumb.webp',
         mediumUrl: 'img/provisional/metal-print-03-medium.webp',
         largeUrl: 'img/provisional/metal-print-03-large.webp',
+        width: 1500,
+        height: 1900,
         displayOrder: 14,
         isFeatured: true
     },
@@ -155,7 +183,52 @@ window.PLACEHOLDER_PHOTOS = [
         thumbUrl: 'img/provisional/metal-print-04-thumb.webp',
         mediumUrl: 'img/provisional/metal-print-04-medium.webp',
         largeUrl: 'img/provisional/metal-print-04-large.webp',
+        width: 1500,
+        height: 2234,
         displayOrder: 15,
         isFeatured: true
+    }
+];
+
+/**
+ * Provisional categories shaped like GalleryCategoryDto.
+ *
+ * gallery.html renders categories, not photographs, so the fallback needs this
+ * shape. They are NOT navigable: gallery-detail.html has no fallback by design,
+ * so a link would always land on "album not found". galleryPage omits the href
+ * while the fallback is in use.
+ *
+ * Negative ids keep them from ever colliding with real records.
+ */
+window.PLACEHOLDER_CATEGORIES = [
+    {
+        id: -101,
+        name: 'Quinceañeras',
+        slug: 'quinceaneras',
+        description: null,
+        displayOrder: 1,
+        coverPhoto: window.PLACEHOLDER_PHOTOS[0],
+        photoCount: 8,
+        photos: []
+    },
+    {
+        id: -102,
+        name: 'Weddings',
+        slug: 'weddings',
+        description: null,
+        displayOrder: 2,
+        coverPhoto: window.PLACEHOLDER_PHOTOS[5],
+        photoCount: 3,
+        photos: []
+    },
+    {
+        id: -103,
+        name: 'Portraits & Prints',
+        slug: 'portraits',
+        description: null,
+        displayOrder: 3,
+        coverPhoto: window.PLACEHOLDER_PHOTOS[8],
+        photoCount: 4,
+        photos: []
     }
 ];

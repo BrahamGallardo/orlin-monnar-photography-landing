@@ -114,6 +114,40 @@
             if (window.WOW) {
                 new window.WOW().init();
             }
-        }
+        },
+
+        /**
+         * Reinicia Isotope tras sustituir el conjunto completo de elementos.
+         * @param {string} selector - Selector de la grilla.
+         * @returns {void}
+         * @remarks
+         * 'reloadItems' reindexa conservando las posiciones del conjunto
+         * anterior: al cambiar de álbum quedan huecos de los elementos que ya
+         * no existen. Destruir e inicializar es lo único que recalcula desde
+         * cero. Se usa solo al reemplazar el conjunto entero; para añadidos
+         * incrementales sigue sirviendo refreshIsotope.
+         */
+        resetIsotope: function (selector) {
+            const $grid = $(selector);
+
+            if (!$grid.length) {
+                return;
+            }
+
+            if ($grid.data('isotope')) {
+                $grid.isotope('destroy');
+            }
+
+            $grid.isotope({
+                itemSelector: '.grid-item',
+                percentPosition: true,
+                masonry: { columnWidth: 1 }
+            });
+
+            // Sin esperar a las imágenes, el masonry calcula las alturas en cero.
+            $grid.imagesLoaded(function () {
+                $grid.isotope('layout');
+            });
+        },
     };
 })(jQuery);

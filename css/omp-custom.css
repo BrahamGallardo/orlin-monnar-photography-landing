@@ -495,6 +495,91 @@ header {
     width: auto;
 }
 
+/* --------------------------------------------------------------------------
+   Galería
+   -------------------------------------------------------------------------- */
+
+/* Cabeceras. La del índice es una fotografía provisional; la del álbum la
+   pone el módulo desde coverPhoto y esta solo es el respaldo. */
+.omp-bradcam-gallery {
+    background-image: url(../img/provisional/wedding-02-large.webp);
+}
+
+.omp-bradcam-album {
+    background-color: #111;
+    background-position: center;
+    background-size: cover;
+}
+
+/* El nombre del álbum solo aparece en :hover, y en táctil no hay :hover: sin
+   esto el nombre nunca se ve y visibility:hidden impide tocar el enlace. */
+@media (hover: none) {
+    .gallery_area .single_photography .hover {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0%);
+    }
+}
+
+/* Portada de una categoría sin fotografías activas (coverPhoto null). */
+.omp-cover-empty {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+    background: #EFEFEF;
+    color: #909090;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+/* Menú de álbumes: texto, sin caja ni color de marca. */
+.omp-album-menu button {
+    padding: 6px 18px;
+    border: none;
+    border-bottom: 1px solid transparent;
+    background: transparent;
+    color: #909090;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.omp-album-menu button:hover,
+.omp-album-menu button.active {
+    color: #2C2C2C;
+}
+
+.omp-album-menu button.active {
+    border-bottom-color: #2C2C2C;
+}
+
+/* Mosaico. El template estira la imagen a 100% × 100% de un marco de 530px:
+   sin object-fit las verticales salen deformadas. */
+.baby_gallery_wrap .single_gallery img {
+    display: block;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Por debajo de 768px el template pasa el marco a altura automática: ahí la
+   fotografía manda su propia proporción y no hay nada que recortar. */
+@media (max-width: 767px) {
+    .baby_gallery_wrap .single_gallery img {
+        height: auto;
+    }
+}
+
+/* Enlace al índice desde el estado de álbum inexistente. */
+.omp-state a {
+    color: #2C2C2C;
+    text-decoration: underline;
+}
+
 @media (max-width: 991px) {
     .logo img {
         max-height: 42px;
