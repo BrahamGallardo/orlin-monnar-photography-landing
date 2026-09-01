@@ -1,27 +1,27 @@
 /**
- * Puente entre el contenido que renderiza Alpine y los plugins jQuery de Halen.
+ * Bridge between the content rendered by Alpine and Halen's jQuery plugins.
  *
- * main.js inicializa los plugins sobre el DOM inicial y no indexa nodos
- * insertados después: todo contenido que llegue por API debe registrarse aquí,
- * dentro de un $nextTick, una vez que los nodos existen.
+ * main.js initializes the plugins on the initial DOM and does not index nodes
+ * inserted later: any content that arrives from the API must be registered here,
+ * inside a $nextTick, once the nodes exist.
  *
- * REGLA según lo que hace cada plugin con sus nodos:
+ * RULE based on what each plugin does with its nodes:
  *
- * - Owl Carousel los CLONA (con loop activo) y los elimina al destruirse. Su
- *   contenedor lleva x-ignore y se puebla como HTML plano: si Alpine gestionara
- *   ese subárbol, los clones perderían el scope de x-for y cada binding
- *   fallaría con "photo is not defined".
- * - Isotope solo los reposiciona y Magnific Popup abre un overlay aparte:
- *   ninguno rompe los bindings, así que ahí x-for es seguro.
+ * - Owl Carousel clones them (with loop enabled) and removes them when destroyed.
+ *   Its container carries x-ignore and is populated as plain HTML: if Alpine
+ *   managed that subtree, the clones would lose the x-for scope and each binding
+ *   would fail with "photo is not defined".
+ * - Isotope only repositions nodes and Magnific Popup opens a separate overlay:
+ *   neither breaks bindings, so x-for is safe there.
  */
 (function ($) {
     'use strict';
 
     window.pluginBridge = {
         /**
-         * Inicializa Owl Carousel sobre un contenedor recién poblado.
-         * @param {string} selector - Selector del contenedor.
-         * @param {Object} options - Opciones de Owl Carousel.
+         * Initializes Owl Carousel on a newly populated container.
+         * @param {string} selector - Container selector.
+         * @param {Object} options - Owl Carousel options.
          * @returns {void}
          */
         initCarousel: function (selector, options) {
@@ -31,7 +31,7 @@
                 return;
             }
 
-            // Destruir la instancia previa permite recargar datos sin duplicar el DOM.
+            // Destroying the previous instance allows reloading data without duplicating the DOM.
             if ($el.hasClass('owl-loaded')) {
                 $el.trigger('destroy.owl.carousel');
                 $el.removeClass('owl-loaded owl-hidden').find('.owl-stage-outer').children().unwrap();
@@ -41,8 +41,8 @@
         },
 
         /**
-         * Inicializa o re-lanza el layout de Isotope tras insertar elementos.
-         * @param {string} selector - Selector de la grilla.
+         * Initializes or re-runs the Isotope layout after inserting elements.
+         * @param {string} selector - Grid selector.
          * @returns {void}
          */
         refreshIsotope: function (selector) {
@@ -62,16 +62,16 @@
                 $grid.isotope('reloadItems');
             }
 
-            // Sin esperar a las imágenes, el masonry calcula las alturas en cero.
+            // Without waiting for the images, the masonry calculates zero heights.
             $grid.imagesLoaded(function () {
                 $grid.isotope('layout');
             });
         },
 
         /**
-         * Aplica un filtro de Isotope.
-         * @param {string} selector - Selector de la grilla.
-         * @param {string} filterValue - Valor del filtro (por ejemplo '.bodas' o '*').
+         * Applies an Isotope filter.
+         * @param {string} selector - Grid selector.
+         * @param {string} filterValue - Filter value (for example '.weddings' or '*').
          * @returns {void}
          */
         filterIsotope: function (selector, filterValue) {
@@ -83,13 +83,13 @@
         },
 
         /**
-         * Registra el lightbox de Magnific Popup sobre un contenedor dinámico.
-         * @param {string} containerSelector - Contenedor presente desde la carga inicial.
-         * @param {string} itemSelector - Selector de los enlaces de imagen.
+         * Registers the Magnific Popup lightbox on a dynamic container.
+         * @param {string} containerSelector - Container present from the initial load.
+         * @param {string} itemSelector - Image link selector.
          * @returns {void}
          * @remarks
-         * Se usa 'delegate' porque es la única variante que sigue funcionando
-         * cuando Alpine reemplaza los nodos hijos.
+         * 'delegate' is used because it is the only variant that continues to work
+         * when Alpine replaces the child nodes.
          */
         initLightbox: function (containerSelector, itemSelector) {
             const $container = $(containerSelector);
@@ -107,7 +107,7 @@
         },
 
         /**
-         * Re-evalúa las animaciones de WOW.js sobre los nodos nuevos.
+         * Re-evaluates WOW.js animations on the new nodes.
          * @returns {void}
          */
         refreshWow: function () {
@@ -117,15 +117,15 @@
         },
 
         /**
-         * Reinicia Isotope tras sustituir el conjunto completo de elementos.
-         * @param {string} selector - Selector de la grilla.
+         * Resets Isotope after replacing the complete set of elements.
+         * @param {string} selector - Grid selector.
          * @returns {void}
          * @remarks
-         * 'reloadItems' reindexa conservando las posiciones del conjunto
-         * anterior: al cambiar de álbum quedan huecos de los elementos que ya
-         * no existen. Destruir e inicializar es lo único que recalcula desde
-         * cero. Se usa solo al reemplazar el conjunto entero; para añadidos
-         * incrementales sigue sirviendo refreshIsotope.
+         * 'reloadItems' reindexes while preserving the previous positions of the
+         * original set: when switching albums, gaps remain where the old elements
+         * used to be. Destroying and reinitializing is the only thing that recalculates
+         * from scratch. It is used only when replacing the full set; for incremental
+         * additions, refreshIsotope still applies.
          */
         resetIsotope: function (selector) {
             const $grid = $(selector);
@@ -144,24 +144,24 @@
                 masonry: { columnWidth: 1 }
             });
 
-            // Sin esperar a las imágenes, el masonry calcula las alturas en cero.
+            // Without waiting for the images, the masonry calculates zero heights.
             $grid.imagesLoaded(function () {
                 $grid.isotope('layout');
             });
         },
 
                 /**
-         * Inicializa nice-select sobre un combo poblado por Alpine.
-         * @param {string} selector - Selector del elemento select.
-         * @param {string} value - Valor que debe quedar seleccionado.
-         * @param {Function} onChange - Callback con el valor elegido.
+         * Initializes nice-select on a combo populated by Alpine.
+         * @param {string} selector - Select element selector.
+         * @param {string} value - Value that should remain selected.
+         * @param {Function} onChange - Callback with the selected value.
          * @returns {void}
          * @remarks
-         * El plugin clona las opciones al inicializarse y escribe el valor con
-         * trigger('change') de jQuery, que no dispara los listeners nativos:
-         * x-model nunca se enteraría del cambio, así que el valor se devuelve
-         * por callback. Debe llamarse dentro de un $nextTick, con las opciones
-         * de x-for ya en el DOM.
+         * The plugin clones the options when initializing and writes the value with
+         * jQuery's trigger('change'), which does not fire native listeners:
+         * x-model would never know about the change, so the value is returned via
+         * callback. It must be called inside a $nextTick, with the x-for options
+         * already in the DOM.
          */
         initSelect: function (selector, value, onChange) {
             const $el = $(selector);
@@ -170,11 +170,11 @@
                 return;
             }
 
-            // El valor se aplica antes de clonar: nice-select lee la opción
-            // marcada en ese momento para pintar el texto visible.
+            // The value is set before cloning: nice-select reads the selected option
+            // at that moment to render the visible label.
             $el.val(value === null || value === undefined ? '' : String(value));
 
-            // 'update' reconstruye el clon cuando la lista ya se había pintado.
+            // 'update' rebuilds the clone when the list had already been rendered.
             if ($el.next('.nice-select').length) {
                 $el.niceSelect('update');
             } else {
@@ -189,16 +189,16 @@
         },
 
         /**
-         * Inicializa el datepicker de gijgo sobre un input ya renderizado.
-         * @param {string} selector - Selector del input.
-         * @param {Object} options - Opciones del datepicker.
-         * @param {Function} onChange - Callback con la fecha elegida.
+         * Initializes the gijgo datepicker on an input already rendered.
+         * @param {string} selector - Input selector.
+         * @param {Object} options - Datepicker options.
+         * @param {Function} onChange - Callback with the chosen date.
          * @returns {void}
          * @remarks
-         * gijgo envuelve el input y notifica con triggerHandler('change'), que
-         * tampoco alcanza a x-model: el input no lleva binding de Alpine y el
-         * valor viaja por el callback. Se destruye la instancia previa para no
-         * duplicar el envoltorio si el campo se vuelve a montar.
+         * gijgo wraps the input and notifies via triggerHandler('change'), which
+         * also does not reach x-model: the input has no Alpine binding and the
+         * value travels through the callback. The previous instance is destroyed to
+         * avoid duplicating the wrapper if the field is mounted again.
          */
         initDatepicker: function (selector, options, onChange) {
             const $el = $(selector);
@@ -218,6 +218,28 @@
                     onChange($el.val());
                 });
             }
+        },
+
+                /**
+         * Clears the value of a gijgo datepicker.
+         * @param {string} selector - Selector of the input.
+         * @returns {void}
+         * @remarks
+         * The plugin exposes no clearing method: it re-reads the value of the
+         * input itself when it opens, so emptying the input leaves the calendar
+         * with no selection. It lives here and not in the page module to keep
+         * every plugin-owned node behind the bridge, and it uses val() instead
+         * of destroy() so the wrapper and the callback registered in
+         * initDatepicker survive.
+         */
+        clearDatepicker: function (selector) {
+            const $el = $(selector);
+
+            if (!$el.length) {
+                return;
+            }
+
+            $el.val('');
         },
     };
 })(jQuery);
