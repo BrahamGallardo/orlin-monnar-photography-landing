@@ -104,7 +104,8 @@ window.SITE_CONTENT = {
 
     booking: {
         title: 'Book a Session',
-        subtitle: 'Choose a package and a date, and we will confirm by email'
+        subtitle: 'Choose a package and a date, and we will confirm by email',
+        loadError: 'Packages are not available right now. Please try again later.'
     },
 
     contact: {

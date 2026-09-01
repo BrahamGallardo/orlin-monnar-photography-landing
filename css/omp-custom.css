@@ -414,6 +414,41 @@ header {
     list-style: disc;
 }
 
+/* Mensaje de validación bajo cada campo. */
+.omp-field-error {
+    margin: 6px 0 0;
+    font-size: 13px;
+    line-height: 20px;
+    color: #B94A48;
+}
+
+/* El combo del tema mide 40px y los inputs del formulario 48px: se igualan
+   para que la fila no quede escalonada. */
+.form-contact .default-select,
+.form-contact .default-select .nice-select {
+    height: 48px;
+    line-height: 46px;
+}
+
+.form-contact .default-select .nice-select {
+    background: transparent;
+    border: 1px solid #E5E6E9;
+    font-size: 13px;
+    padding-left: 18px;
+}
+
+.form-contact .default-select .nice-select .list .option.selected {
+    color: #2C2C2C;
+}
+
+/* gijgo envuelve el input en un div propio: el icono se centra sobre los
+   48px del campo. */
+.form-contact .gj-datepicker-md [role="right-icon"] {
+    top: 12px;
+    right: 12px;
+    font-size: 16px;
+}
+
 /* Aviso de reCAPTCHA: su presencia es lo que permite ocultar el badge. */
 .omp-form-note {
     margin-top: 18px;

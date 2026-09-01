@@ -149,5 +149,75 @@
                 $grid.isotope('layout');
             });
         },
+
+                /**
+         * Inicializa nice-select sobre un combo poblado por Alpine.
+         * @param {string} selector - Selector del elemento select.
+         * @param {string} value - Valor que debe quedar seleccionado.
+         * @param {Function} onChange - Callback con el valor elegido.
+         * @returns {void}
+         * @remarks
+         * El plugin clona las opciones al inicializarse y escribe el valor con
+         * trigger('change') de jQuery, que no dispara los listeners nativos:
+         * x-model nunca se enteraría del cambio, así que el valor se devuelve
+         * por callback. Debe llamarse dentro de un $nextTick, con las opciones
+         * de x-for ya en el DOM.
+         */
+        initSelect: function (selector, value, onChange) {
+            const $el = $(selector);
+
+            if (!$el.length) {
+                return;
+            }
+
+            // El valor se aplica antes de clonar: nice-select lee la opción
+            // marcada en ese momento para pintar el texto visible.
+            $el.val(value === null || value === undefined ? '' : String(value));
+
+            // 'update' reconstruye el clon cuando la lista ya se había pintado.
+            if ($el.next('.nice-select').length) {
+                $el.niceSelect('update');
+            } else {
+                $el.niceSelect();
+            }
+
+            if (typeof onChange === 'function') {
+                $el.off('change.ompSelect').on('change.ompSelect', function () {
+                    onChange($el.val());
+                });
+            }
+        },
+
+        /**
+         * Inicializa el datepicker de gijgo sobre un input ya renderizado.
+         * @param {string} selector - Selector del input.
+         * @param {Object} options - Opciones del datepicker.
+         * @param {Function} onChange - Callback con la fecha elegida.
+         * @returns {void}
+         * @remarks
+         * gijgo envuelve el input y notifica con triggerHandler('change'), que
+         * tampoco alcanza a x-model: el input no lleva binding de Alpine y el
+         * valor viaja por el callback. Se destruye la instancia previa para no
+         * duplicar el envoltorio si el campo se vuelve a montar.
+         */
+        initDatepicker: function (selector, options, onChange) {
+            const $el = $(selector);
+
+            if (!$el.length) {
+                return;
+            }
+
+            if ($el.attr('data-datepicker') === 'true') {
+                $el.datepicker('destroy');
+            }
+
+            $el.datepicker(options);
+
+            if (typeof onChange === 'function') {
+                $el.off('change.ompDatepicker').on('change.ompDatepicker', function () {
+                    onChange($el.val());
+                });
+            }
+        },
     };
 })(jQuery);

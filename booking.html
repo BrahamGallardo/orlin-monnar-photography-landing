@@ -97,20 +97,130 @@
             <!-- / bradcam_area  -->
 
     <!-- ================ booking section start ================= -->
-    <section class="omp-section">
+        <!-- ================ booking section start ================= -->
+    <section class="contact-section" x-data="bookingPage">
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <h2 class="contact-title">Book a Session</h2>
-                    <!-- TODO (L7): formulario de cita con datepicker y POST /api/booking. -->
-                    <p class="omp-state">Choose a package and a date, and we will confirm by email.</p>
+                    <h2 class="contact-title" x-text="content.title"></h2>
+                    <p class="omp-contact-lead" x-text="content.subtitle"></p>
+                </div>
+
+                <div class="col-lg-8">
+                    <p class="omp-state" x-show="loading" x-text="states.loading"></p>
+                    <p class="omp-state omp-state--error" x-cloak x-show="!loading && notice"
+                       x-text="notice"></p>
+
+                    <!-- Los maxlength replican los StringLength del DTO, para que el
+                         límite se note antes de que la API rechace el envío. -->
+                    <form class="form-contact contact_form" id="bookingForm" novalidate x-cloak
+                          x-show="!loading" @submit.prevent="submit()">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <!-- .default-select es la clase que estiliza nice-select en el
+                                         tema. Sin el id "default-select": main.js lo usa como
+                                         disparador y arrancaría el plugin sobre un combo vacío,
+                                         antes de que Alpine pinte las opciones. -->
+                                    <div class="default-select">
+                                        <select name="packageId" id="packageId">
+                                            <option value="">Select a package</option>
+                                            <template x-for="package_ in packages" :key="package_.id">
+                                                <option :value="package_.id" x-text="package_.name"></option>
+                                            </template>
+                                        </select>
+                                    </div>
+                                    <p class="omp-field-error" x-cloak x-show="errors.packageId"
+                                       x-text="errors.packageId"></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <!-- Sin x-model: gijgo escribe el valor con jQuery y Alpine
+                                         no vería el cambio. El módulo lo recibe por callback. -->
+                                    <input class="form-control" name="appointmentDate" id="appointmentDate"
+                                           type="text" placeholder="Session date (dd/mm/yyyy)"
+                                           autocomplete="off">
+                                    <p class="omp-field-error" x-cloak x-show="errors.appointmentDate"
+                                       x-text="errors.appointmentDate"></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input class="form-control" name="fullName" id="fullName" type="text"
+                                           placeholder="Full name" maxlength="150"
+                                           x-model="form.fullName" @blur="validateField('fullName')">
+                                    <p class="omp-field-error" x-cloak x-show="errors.fullName"
+                                       x-text="errors.fullName"></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input class="form-control" name="email" id="email" type="email"
+                                           placeholder="Email address" maxlength="255"
+                                           x-model="form.email" @blur="validateField('email')">
+                                    <p class="omp-field-error" x-cloak x-show="errors.email"
+                                       x-text="errors.email"></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input class="form-control" name="phone" id="phone" type="tel"
+                                           placeholder="Phone number" maxlength="20"
+                                           x-model="form.phone" @blur="validateField('phone')">
+                                    <p class="omp-field-error" x-cloak x-show="errors.phone"
+                                       x-text="errors.phone"></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input class="form-control" name="location" id="location" type="text"
+                                           placeholder="Location (optional)" maxlength="250"
+                                           x-model="form.location" @blur="validateField('location')">
+                                    <p class="omp-field-error" x-cloak x-show="errors.location"
+                                       x-text="errors.location"></p>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <textarea class="form-control w-100" name="notes" id="notes"
+                                              cols="30" rows="7" placeholder="Notes (optional)"
+                                              maxlength="2000" x-model="form.notes"
+                                              @blur="validateField('notes')"></textarea>
+                                    <p class="omp-field-error" x-cloak x-show="errors.notes"
+                                       x-text="errors.notes"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <button type="submit" class="button button-contactForm boxed-btn"
+                                    :class="{ 'omp-submitting': sending }" :disabled="sending"
+                                    x-text="sending ? states.sending : 'Request session'"></button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-lg-3 offset-lg-1">
+                    <div class="media contact-info">
+                        <span class="contact-info__icon"><i class="ti-tablet"></i></span>
+                        <div class="media-body">
+                            <h3><a href="tel:+14698476937">+1 (469) 847-6937</a></h3>
+                            <p>Prefer to talk it through first?</p>
+                        </div>
+                    </div>
+                    <div class="media contact-info">
+                        <span class="contact-info__icon"><i class="ti-home"></i></span>
+                        <div class="media-body">
+                            <h3>Dallas–Fort Worth metroplex</h3>
+                            <p>Ask about availability for your location</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
     <!-- ================ booking section end ================= -->
-    
-    <!-- footer start -->
     <footer class="footer">
             <div class="copy-right_text">
                 <div class="container">
@@ -171,6 +281,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <script src="js/app/captchaService.js"></script>
     <script src="js/app/packageService.js"></script>
     <script src="js/app/bookingService.js"></script>
+    <script src="js/app/pages/bookingPage.js"></script>
     <script defer src="js/vendor/alpine.min.js"></script>
 
 </body>
