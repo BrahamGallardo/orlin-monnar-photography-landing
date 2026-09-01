@@ -96,7 +96,10 @@ window.SITE_CONTENT = {
 
     investment: {
         title: 'Investment',
-        subtitle: 'Session packages and pricing'
+        subtitle: 'Session packages and pricing',
+        // TODO: confirmar con el cliente el texto del botón de reserva.
+        ctaLabel: 'Book this package',
+        loadError: 'Packages are not available right now. Please try again later.'
     },
 
     booking: {
