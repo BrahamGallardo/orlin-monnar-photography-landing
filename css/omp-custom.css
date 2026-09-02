@@ -199,6 +199,10 @@
     --omp-dur-reveal: 800ms;
     --omp-dur-enlace: 350ms;
     --omp-dur-zoom: 700ms;
+    /* Desplazamiento de la aparición: corto, la referencia no empuja el bloque. */
+    --omp-reveal-shift: 24px;
+    /* Zoom de las fotografías: apenas perceptible, muy por debajo del 1.2 del template. */
+    --omp-zoom-escala: 1.04;
 }
 
 /* --------------------------------------------------------------------------
@@ -382,6 +386,157 @@ hr {
        que el bloque quede alineado a la izquierda con el resto. */
     margin-right: calc(var(--omp-track-rotulo) * -1);
     color: var(--omp-color-titulo);
+}
+
+/* --------------------------------------------------------------------------
+   MOVIMIENTO
+   Aparición al entrar en viewport, zoom de las fotografías y fundido de
+   entrada de página.
+
+   Todo el estado inicial cuelga de .omp-motion, que motion.js pone en <html>
+   solo si va a animar. Sin JavaScript, sin IntersectionObserver o con
+   prefers-reduced-motion la clase no existe y el contenido se ve en su estado
+   final: es el mismo criterio de [x-cloak].
+
+   Solo se animan opacity y transform. Nada de width, height ni box-shadow.
+   -------------------------------------------------------------------------- */
+
+/* Fundido de entrada de página.
+
+   El velo es un pseudo-elemento del documento que se desvanece, no una
+   opacidad sobre el contenido: la fotografía se pinta a opacidad plena desde
+   el primer fotograma, así que el LCP se registra igual que sin animación.
+   No intercepta el puntero en ningún momento y no necesita marcado. */
+.omp-motion::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 9999;
+    pointer-events: none;
+    background-color: var(--omp-color-fondo);
+    animation: omp-page-in 420ms var(--omp-ease-suave) both;
+}
+
+@keyframes omp-page-in {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   Aparición al entrar en viewport
+
+   Se marca con data-omp-reveal y el valor elige la variante. El retardo llega
+   como variable, escrita por motion.js: explícita con data-omp-reveal-delay o
+   calculada por posición dentro de un contenedor con data-omp-reveal-stagger.
+   -------------------------------------------------------------------------- */
+
+.omp-motion [data-omp-reveal] {
+    opacity: 0;
+    transition: opacity var(--omp-dur-reveal) var(--omp-ease-reveal),
+                transform var(--omp-dur-reveal) var(--omp-ease-reveal);
+    transition-delay: var(--omp-reveal-delay, 0ms);
+}
+
+/* Entra subiendo. Es la variante por defecto del sitio. */
+.omp-motion [data-omp-reveal="up"] {
+    transform: translateY(var(--omp-reveal-shift));
+}
+
+/* Entra bajando. Para lo que cuelga de una cabecera. */
+.omp-motion [data-omp-reveal="down"] {
+    transform: translateY(calc(var(--omp-reveal-shift) * -1));
+}
+
+/* Entra asentándose. Para fotografías, donde un desplazamiento se nota más. */
+.omp-motion [data-omp-reveal="scale"] {
+    transform: scale(1.02);
+}
+
+/* data-omp-reveal sin valor —o con "fade"— es solo fundido. */
+
+.omp-motion [data-omp-reveal].omp-revealed {
+    opacity: 1;
+    transform: none;
+}
+
+/* --------------------------------------------------------------------------
+   Zoom lento de las fotografías
+
+   El marco recorta y solo se mueve la imagen. La utilidad sirve para marcos
+   propios; debajo se re-templa el zoom que el template ya trae, que a 1.2 en
+   medio segundo compite con la fotografía en lugar de acompañarla.
+   -------------------------------------------------------------------------- */
+
+.omp-zoom {
+    overflow: hidden;
+}
+
+.omp-zoom img {
+    transition: transform var(--omp-dur-zoom) var(--omp-ease-suave);
+}
+
+/* Solo donde hay puntero: en táctil el :hover se queda pegado tras el toque. */
+@media (hover: hover) {
+    .omp-zoom:hover img,
+    .omp-zoom:focus-within img {
+        transform: scale(var(--omp-zoom-escala));
+    }
+}
+
+/* Zoom del template, a los tokens propios. Se repite la forma exacta de sus
+   selectores porque esta hoja carga después y así gana sin !important. */
+.gallery_area .single_photography .thumb img,
+.team_area .border_bottom .single_team .team_thumb img {
+    transition: transform var(--omp-dur-zoom) var(--omp-ease-suave);
+}
+
+.gallery_area .single_photography:hover .thumb img,
+.team_area .border_bottom .single_team:hover .team_thumb img {
+    transform: scale(var(--omp-zoom-escala));
+}
+
+@media (hover: none) {
+    .gallery_area .single_photography:hover .thumb img,
+    .team_area .border_bottom .single_team:hover .team_thumb img {
+        transform: none;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Menos movimiento
+
+   motion.js ya no añade .omp-motion con esta preferencia activa, así que nada
+   de lo de arriba llega a aplicarse. Este bloque es el segundo cinturón: cubre
+   el caso de que la clase quede puesta y neutraliza el zoom, que es puro CSS
+   y no depende de motion.js.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .omp-motion::before {
+        display: none;
+    }
+
+    .omp-motion [data-omp-reveal] {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .omp-zoom img,
+    .gallery_area .single_photography .thumb img,
+    .team_area .border_bottom .single_team .team_thumb img {
+        transition: none;
+    }
+
+    .omp-zoom:hover img,
+    .omp-zoom:focus-within img,
+    .gallery_area .single_photography:hover .thumb img,
+    .team_area .border_bottom .single_team:hover .team_thumb img {
+        transform: none;
+    }
 }
 
 

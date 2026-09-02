@@ -45,6 +45,7 @@ Orlin Monnar Photography Landing/
         ├── alertService.js     avisos con SweetAlert2
         ├── mediaHelpers.js     resolución de rutas y srcset
         ├── domHelpers.js       escape de HTML
+        ├── motion.js           aparición al hacer scroll (IntersectionObserver)
         ├── pluginBridge.js     puente con los plugins jQuery
         ├── content.js          todos los textos del sitio
         ├── placeholderPhotos.js  fallback mientras la galería esté vacía
@@ -99,6 +100,52 @@ Estas reglas salieron de romper cosas y no son opcionales.
 
 **Plugins jQuery y contenido dinámico.** `main.js` los inicializa sobre el DOM inicial y no indexa nada posterior. Por eso todo contenido que llegue de la API se registra desde `pluginBridge`, dentro de un `$nextTick`. Y hay que distinguir según lo que el plugin haga con sus nodos:
 
+**Movimiento.** Nada entra de golpe: los bloques aparecen con un desplazamiento corto y un
+fundido largo, y las fotografías hacen un zoom mínimo al pasar el cursor. Lo resuelve
+`js/app/motion.js` con un único `IntersectionObserver` nativo —sin dependencias— y las
+utilidades del bloque `MOVIMIENTO` de `omp-custom.css`. WOW.js sigue cargado por el template
+pero **no se usa para lo nuevo**: `motion.js` ignora cualquier elemento con la clase `.wow`
+para que ningún nodo lo animen los dos.
+
+`motion.js` es el **único script propio que va en el `<head>`**, justo después de
+`omp-custom.css`. Rompe a propósito el orden de carga de más abajo: la clase `omp-motion`
+que pone en `<html>` tiene que existir antes del primer pintado, o el contenido se vería y
+se ocultaría después. Es la misma razón de `[x-cloak]`.
+
+Para marcar un elemento:
+
+| Atributo | Dónde | Efecto |
+|---|---|---|
+| `data-omp-reveal="up"` | elemento | Aparece subiendo. Es la variante habitual. |
+| `data-omp-reveal="down"` | elemento | Aparece bajando. Para lo que cuelga de una cabecera. |
+| `data-omp-reveal="scale"` | elemento | Aparece asentándose. Para fotografías. |
+| `data-omp-reveal` | elemento | Sin valor, solo fundido. |
+| `data-omp-reveal-delay="200"` | elemento | Retardo propio, en milisegundos. Manda sobre el escalonado. |
+| `data-omp-reveal-stagger="90"` | contenedor | Escalona a sus descendientes marcados según su posición. El valor es el paso en ms; sin valor, 90. A partir del séptimo el retardo deja de crecer. |
+
+```html
+<div class="row" data-omp-reveal-stagger="90">
+    <div class="col-md-4" data-omp-reveal="up">…</div>
+    <div class="col-md-4" data-omp-reveal="up">…</div>
+    <div class="col-md-4" data-omp-reveal="up">…</div>
+</div>
+```
+
+Para el zoom, la clase `omp-zoom` en el marco (recorta) con la imagen dentro. Los marcos que
+ya trae el template —`.gallery_area .single_photography .thumb` y
+`.team_area .single_team .team_thumb`— no la necesitan: su zoom ya está re-templado a los
+tokens propios.
+
+Contenido que llega de la API: `ompMotion.observe(selector)` dentro del mismo `$nextTick`
+donde se registran los plugins. Es idempotente, así que puede llamarse cada vez que se
+repuebla el contenedor. `ompMotion.reveal(selector)` fuerza el estado final y
+`ompMotion.isDisabled()` dice si no se va a animar nada.
+
+**Degradación.** El estado oculto cuelga de `.omp-motion`, y `motion.js` solo pone esa clase
+si va a animar. Sin JavaScript, sin `IntersectionObserver` o con `prefers-reduced-motion`
+activo, la clase no existe: todo se ve en su estado final, sin una sola transición. Nunca se
+oculta nada desde CSS puro.
+
 - **Owl Carousel los clona** (con `loop`) y los elimina al destruirse. Su contenedor lleva `x-ignore` y se puebla como HTML plano (ver `renderHeroSlides` en `homePage.js`). Si Alpine gestionara ese subárbol, los clones perderían el scope de `x-for` y cada binding fallaría con `photo is not defined`.
 - **Isotope y Magnific Popup no clonan.** Ahí `x-for` es seguro; Magnific se registra con `delegate` sobre un contenedor que sí existe desde la carga.
 
@@ -152,6 +199,7 @@ Cuando se carguen las fotos definitivas desde el panel, se borran `img/provision
 | L5 — Gallery | Pendiente |
 | L6 — Investment | Pendiente |
 | L7 — Agendar cita | Pendiente |
+| D02 — Movimiento (base) | Completo |
 
 Pendientes transversales: textos e imágenes finales, testimonios reales autorizados, favicon con la marca y la ubicación exacta del iframe de Google Maps (hoy apunta al DFW metroplex).
 
