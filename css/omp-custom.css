@@ -4,6 +4,387 @@
    style.css y theme-default.css pertenecen al template y no se tocan.
    ========================================================================== */
 
+/* ==========================================================================
+   SISTEMA DE DISEÑO
+   Fuentes auto-hospedadas, variables, estilos base y utilidades.
+   Todo lo que va debajo de este bloque son componentes y ajustes del template.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Fuentes auto-hospedadas — fonts/omp/, sin peticiones externas
+   -------------------------------------------------------------------------- */
+
+/* Los archivos vienen de google-webfonts-helper, que entrega latin y latin-ext
+   fusionados en un solo woff2 por peso. Por eso hay una declaración por
+   peso/estilo en lugar de dos, y el unicode-range es la unión de ambos
+   subconjuntos: cubre el español completo, la puntuación tipográfica, los
+   símbolos de moneda y los diacríticos combinados. */
+
+/* Cormorant Garamond — display */
+@font-face {
+    font-family: 'Cormorant Garamond';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url('../fonts/omp/cormorant-garamond-v21-latin_latin-ext-300.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0100-02CC, U+02CE-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2000-206F, U+20A0-20C0, U+2113, U+2122, U+2191, U+2193, U+2212, U+2215, U+2C60-2C7F, U+A720-A7FF, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/omp/cormorant-garamond-v21-latin_latin-ext-regular.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0100-02CC, U+02CE-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2000-206F, U+20A0-20C0, U+2113, U+2122, U+2191, U+2193, U+2212, U+2215, U+2C60-2C7F, U+A720-A7FF, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/omp/cormorant-garamond-v21-latin_latin-ext-italic.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0100-02CC, U+02CE-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2000-206F, U+20A0-20C0, U+2113, U+2122, U+2191, U+2193, U+2212, U+2215, U+2C60-2C7F, U+A720-A7FF, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../fonts/omp/cormorant-garamond-v21-latin_latin-ext-500.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0100-02CC, U+02CE-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2000-206F, U+20A0-20C0, U+2113, U+2122, U+2191, U+2193, U+2212, U+2215, U+2C60-2C7F, U+A720-A7FF, U+FEFF, U+FFFD;
+}
+
+/* Jost — cuerpo y UI */
+@font-face {
+    font-family: 'Jost';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url('../fonts/omp/jost-v20-latin_latin-ext-300.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0100-02CC, U+02CE-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2000-206F, U+20A0-20C0, U+2113, U+2122, U+2191, U+2193, U+2212, U+2215, U+2C60-2C7F, U+A720-A7FF, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: 'Jost';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/omp/jost-v20-latin_latin-ext-regular.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0100-02CC, U+02CE-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2000-206F, U+20A0-20C0, U+2113, U+2122, U+2191, U+2193, U+2212, U+2215, U+2C60-2C7F, U+A720-A7FF, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: 'Jost';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../fonts/omp/jost-v20-latin_latin-ext-500.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0100-02CC, U+02CE-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2000-206F, U+20A0-20C0, U+2113, U+2122, U+2191, U+2193, U+2212, U+2215, U+2C60-2C7F, U+A720-A7FF, U+FEFF, U+FFFD;
+}
+
+/* Pinyon Script — acento */
+@font-face {
+    font-family: 'Pinyon Script';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/omp/pinyon-script-v24-latin_latin-ext-regular.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0100-02CC, U+02CE-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2000-206F, U+20A0-20C0, U+2113, U+2122, U+2191, U+2193, U+2212, U+2215, U+2C60-2C7F, U+A720-A7FF, U+FEFF, U+FFFD;
+}
+
+/* --------------------------------------------------------------------------
+   Respaldo del sistema
+
+   Con font-display: swap el texto se pinta antes de que llegue la woff2. Si el
+   respaldo tiene otras proporciones, el bloque se recoloca al cambiar la
+   fuente. Estas dos familias son fuentes del sistema con sus métricas
+   reescritas para ocupar prácticamente lo mismo que la fuente definitiva, de
+   modo que el intercambio no mueva la maquetación.
+   -------------------------------------------------------------------------- */
+
+@font-face {
+    font-family: 'OMP Display Fallback';
+    src: local('Georgia'), local('Times New Roman'), local('Times');
+    size-adjust: 88%;
+    ascent-override: 92%;
+    descent-override: 30%;
+    line-gap-override: 0%;
+}
+
+@font-face {
+    font-family: 'OMP UI Fallback';
+    src: local('Helvetica Neue'), local('Arial'), local('Liberation Sans');
+    size-adjust: 94%;
+    ascent-override: 100%;
+    descent-override: 30%;
+    line-gap-override: 0%;
+}
+
+/* --------------------------------------------------------------------------
+   Variables
+   -------------------------------------------------------------------------- */
+
+:root {
+    /* Color — muestreado del collage del cliente */
+    --omp-azul: #4E627D;
+    --omp-azul-profundo: #3A4A60;
+    --omp-nude: #CAAFA0;
+    --omp-gris-perla: #D7D9DD;
+    --omp-hueso: #FAFCF6;
+    --omp-niebla: #EBECED;
+
+    /* Roles de color */
+    --omp-color-titulo: var(--omp-azul);
+    --omp-color-texto: var(--omp-azul-profundo);
+    --omp-color-enlace: var(--omp-azul);
+    --omp-color-enlace-hover: var(--omp-azul-profundo);
+    --omp-color-borde: var(--omp-gris-perla);
+    /* Sobre fotografía el orden se invierte: manda el claro. */
+    --omp-color-titulo-sobre-foto: var(--omp-hueso);
+    --omp-color-fondo: var(--omp-hueso);
+    --omp-color-fondo-alt: var(--omp-niebla);
+    /* Decorativo. Contraste 2:1: nunca sobre texto. */
+    --omp-color-filete: var(--omp-nude);
+
+    /* Familias */
+    --omp-font-display: 'Cormorant Garamond', 'OMP Display Fallback', Georgia, 'Times New Roman', serif;
+    --omp-font-ui: 'Jost', 'OMP UI Fallback', 'Helvetica Neue', Arial, sans-serif;
+    --omp-font-script: 'Pinyon Script', 'OMP Display Fallback', Georgia, cursive;
+
+    /* Pesos */
+    --omp-peso-ligero: 300;
+    --omp-peso-normal: 400;
+    --omp-peso-medio: 500;
+
+    /* Escala tipográfica fluida: interpola entre 360px y 1440px de ancho */
+    --omp-fs-100: clamp(0.8125rem, 0.792rem + 0.09vw, 0.875rem);   /* 13 -> 14 */
+    --omp-fs-200: clamp(0.875rem, 0.854rem + 0.09vw, 0.9375rem);   /* 14 -> 15 */
+    --omp-fs-300: clamp(1rem, 0.979rem + 0.09vw, 1.0625rem);       /* 16 -> 17 */
+    --omp-fs-400: clamp(1.125rem, 1.083rem + 0.19vw, 1.25rem);     /* 18 -> 20 */
+    --omp-fs-500: clamp(1.375rem, 1.25rem + 0.56vw, 1.75rem);      /* 22 -> 28 */
+    --omp-fs-600: clamp(1.625rem, 1.417rem + 0.93vw, 2.25rem);     /* 26 -> 36 */
+    --omp-fs-700: clamp(2rem, 1.667rem + 1.48vw, 3rem);            /* 32 -> 48 */
+    --omp-fs-800: clamp(2.5rem, 2rem + 2.22vw, 4rem);              /* 40 -> 64 */
+
+    /* Interlineado */
+    --omp-lh-cuerpo: 1.7;
+    --omp-lh-titulo: 1.2;
+    --omp-lh-apretado: 1.1;
+
+    /* Tracking */
+    --omp-track-titulo: 0.15em;
+    --omp-track-rotulo: 0.25em;
+    --omp-track-ui: 0.05em;
+
+    /* Espaciado — base 8 */
+    --omp-space-1: 0.25rem;   /* 4   */
+    --omp-space-2: 0.5rem;    /* 8   */
+    --omp-space-3: 0.75rem;   /* 12  */
+    --omp-space-4: 1rem;      /* 16  */
+    --omp-space-5: 1.5rem;    /* 24  */
+    --omp-space-6: 2rem;      /* 32  */
+    --omp-space-7: 2.5rem;    /* 40  */
+    --omp-space-8: 3rem;      /* 48  */
+    --omp-space-9: 4rem;      /* 64  */
+    --omp-space-10: 5rem;     /* 80  */
+    --omp-space-11: 6rem;     /* 96  */
+    --omp-space-12: 7.5rem;   /* 120 */
+
+    /* Movimiento */
+    --omp-ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
+    --omp-ease-suave: cubic-bezier(0.4, 0, 0.2, 1);
+    --omp-dur-reveal: 800ms;
+    --omp-dur-enlace: 350ms;
+    --omp-dur-zoom: 700ms;
+}
+
+/* --------------------------------------------------------------------------
+   Estilos base
+
+   El template declara "Poppins" en cada componente, no solo en body: la
+   familia no se hereda donde ya hay una declaración propia. Por eso cada
+   selector del template que fija font-family se repite aquí con la misma
+   forma; al cargarse esta hoja después de style.css, gana sin !important.
+   -------------------------------------------------------------------------- */
+
+body {
+    font-family: var(--omp-font-ui);
+    font-size: var(--omp-fs-300);
+    font-weight: var(--omp-peso-ligero);
+    line-height: var(--omp-lh-cuerpo);
+    color: var(--omp-color-texto);
+    background-color: var(--omp-color-fondo);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Controles y componentes del template que declaran la familia por su cuenta. */
+button,
+input,
+optgroup,
+select,
+textarea,
+label,
+.boxed-btn,
+.boxed-btn2,
+.boxed-btn3,
+.boxed-btn3-white,
+.boxed-btn3-green-2,
+.boxed-btn4,
+.black_btn,
+.nice-select,
+.header-area .main-header-area .main-menu ul li a {
+    font-family: var(--omp-font-ui);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--omp-font-display);
+    font-weight: var(--omp-peso-ligero);
+    line-height: var(--omp-lh-titulo);
+    color: var(--omp-color-titulo);
+    letter-spacing: normal;
+}
+
+/* Títulos sobre fotografía: el color lo manda el fondo, no la paleta de marca.
+   El azul solo se sostiene sobre fondo claro; aquí el orden se invierte. */
+.slider_area .single_slider .slider_text h3,
+.bradcam_area h3 {
+    font-family: var(--omp-font-display);
+    color: var(--omp-color-titulo-sobre-foto);
+}
+
+h1 { font-size: var(--omp-fs-800); }
+h2 { font-size: var(--omp-fs-700); }
+h3 { font-size: var(--omp-fs-600); }
+h4 { font-size: var(--omp-fs-500); }
+h5 { font-size: var(--omp-fs-400); }
+h6 { font-size: var(--omp-fs-300); }
+
+/* Los títulos que el marcado escribe en mayúsculas piden aire entre letras:
+   sin tracking, la caja alta de Cormorant se lee apelmazada. */
+h1[class*="uppercase"], h2[class*="uppercase"],
+h3[class*="uppercase"], h4[class*="uppercase"],
+h5[class*="uppercase"], h6[class*="uppercase"],
+.text-uppercase h1, .text-uppercase h2, .text-uppercase h3,
+.text-uppercase h4, .text-uppercase h5, .text-uppercase h6 {
+    letter-spacing: var(--omp-track-titulo);
+}
+
+/* Los títulos de sección adoptan el registro script de la marca, a juego con
+   la firma del logo. Solo aquí: frases cortas, sobre fondo claro y a buen
+   cuerpo, que es donde Pinyon Script se sostiene. */
+.section_title h2,
+.section_title h3 {
+    font-family: var(--omp-font-script);
+    font-weight: var(--omp-peso-normal);
+    /* La script tiene un ojo mucho menor que Cormorant al mismo cuerpo: sube un
+       escalón de la escala para igualar la presencia óptica. */
+    font-size: var(--omp-fs-700);
+    line-height: 1.35;
+    letter-spacing: normal;
+    text-transform: none;
+    color: var(--omp-color-titulo);
+}
+
+/* Escape para los títulos que no caben en el registro script: por encima de
+   unas cinco palabras la script se lee mal y pide dos líneas. */
+.section_title.omp-heading-long h2,
+.section_title.omp-heading-long h3 {
+    font-family: var(--omp-font-display);
+    font-size: var(--omp-fs-600);
+    line-height: var(--omp-lh-titulo);
+}
+
+p {
+    font-family: var(--omp-font-ui);
+    font-size: var(--omp-fs-300);
+    font-weight: var(--omp-peso-ligero);
+    line-height: var(--omp-lh-cuerpo);
+    color: var(--omp-color-texto);
+}
+
+a {
+    color: var(--omp-color-enlace);
+    transition: color var(--omp-dur-enlace) var(--omp-ease-suave);
+}
+
+a:hover,
+a:focus {
+    color: var(--omp-color-enlace-hover);
+    text-decoration: none;
+}
+
+/* Foco visible para teclado, sin caja permanente con el ratón. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 1px solid var(--omp-azul);
+    outline-offset: 3px;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--omp-color-borde);
+}
+
+::-moz-selection {
+    background: var(--omp-azul);
+    color: var(--omp-hueso);
+}
+
+::selection {
+    background: var(--omp-azul);
+    color: var(--omp-hueso);
+}
+
+/* Quien pide menos movimiento no debe recibir ninguno. */
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --omp-dur-reveal: 1ms;
+        --omp-dur-enlace: 1ms;
+        --omp-dur-zoom: 1ms;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Utilidades tipográficas
+   -------------------------------------------------------------------------- */
+
+/* Registro script. Máximo tres apariciones por página y frases cortas: es un
+   acento, no un cuerpo de texto. Nunca en mayúsculas ni con tracking, que es
+   donde una script se vuelve ilegible. */
+.omp-script {
+    font-family: var(--omp-font-script);
+    font-weight: var(--omp-peso-normal);
+    font-size: var(--omp-fs-600);
+    line-height: var(--omp-lh-apretado);
+    letter-spacing: normal;
+    text-transform: none;
+    color: var(--omp-color-titulo);
+}
+
+/* Rótulo en versalitas. Jost no trae versalitas reales, así que se componen
+   ópticamente: caja alta a menor tamaño y tracking amplio. */
+.omp-eyebrow {
+    display: inline-block;
+    font-family: var(--omp-font-ui);
+    font-size: var(--omp-fs-100);
+    font-weight: var(--omp-peso-medio);
+    line-height: 1.4;
+    letter-spacing: var(--omp-track-rotulo);
+    text-transform: uppercase;
+    /* El tracking añade espacio también tras la última letra: se compensa para
+       que el bloque quede alineado a la izquierda con el resto. */
+    margin-right: calc(var(--omp-track-rotulo) * -1);
+    color: var(--omp-color-titulo);
+}
+
+
 /* --------------------------------------------------------------------------
    Alpine.js
    -------------------------------------------------------------------------- */
