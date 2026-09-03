@@ -149,6 +149,25 @@
     /* Decorativo. Contraste 2:1: nunca sobre texto. */
     --omp-color-filete: var(--omp-nude);
 
+    /* Estado. El rojo se desatura hacia la paleta: un error no debe gritar
+       más fuerte que la fotografía. El éxito no estrena color, usa el azul
+       de marca, que es lo que el sistema ya entiende como afirmación. */
+    --omp-rojo: #A65A5A;
+    --omp-color-error: var(--omp-rojo);
+    --omp-color-error-fondo: #F7F0EF;
+    --omp-color-exito: var(--omp-azul);
+
+    /* Azul rebajado hacia el gris perla: rótulos en reposo y cromo del
+       calendario. No es un color de marca, es la voz baja del sistema. */
+    --omp-azul-tenue: #8C99A9;
+
+    /* Controles. 48px es el alto de campo del template (style.css:3120):
+       se conserva para no descuadrar las filas ya maquetadas. */
+    --omp-campo-alto: 3rem;
+    --omp-campo-rotulo-alto: 1.375rem;
+    --omp-color-campo-linea: var(--omp-gris-perla);
+    --omp-color-campo-rotulo: var(--omp-azul-tenue);
+
     /* Familias */
     --omp-font-display: 'Cormorant Garamond', 'OMP Display Fallback', Georgia, 'Times New Roman', serif;
     --omp-font-ui: 'Jost', 'OMP UI Fallback', 'Helvetica Neue', Arial, sans-serif;
@@ -625,44 +644,225 @@ a:focus-visible .omp-link-quiet::after {
    -------------------------------------------------------------------------- */
 
 .omp-state {
-    padding: 60px 15px;
+    padding: var(--omp-space-11) var(--omp-space-4);
     text-align: center;
-    color: #888;
-    font-size: 16px;
-    letter-spacing: 1px;
+    font-size: var(--omp-fs-100);
+    font-weight: var(--omp-peso-medio);
+    letter-spacing: var(--omp-track-rotulo);
+    text-transform: uppercase;
+    color: var(--omp-color-campo-rotulo);
 }
 
 .omp-state--error {
-    color: #b94a48;
+    color: var(--omp-color-error);
+}
+
+/* --------------------------------------------------------------------------
+   BOTONES DEL SISTEMA
+
+   Rectangulares, sin redondeo, en versalitas. Primario: azul macizo que se
+   vacía al pasar el cursor. Secundario: el mismo trazo, hueco de origen.
+   .omp-btn es el nombre del sistema; .boxed-btn es el del template y ya está
+   escrito en los formularios y en alertService, así que comparten la regla en
+   vez de duplicarla. El color va con !important porque style.css:397 lo
+   declara así y no hay forma de ganarle sin igualarlo.
+   -------------------------------------------------------------------------- */
+
+.omp-btn,
+.boxed-btn {
+    display: inline-block;
+    padding: var(--omp-space-4) var(--omp-space-8);
+    border: 1px solid var(--omp-azul);
+    border-radius: 0;
+    background: var(--omp-azul);
+    font-family: var(--omp-font-ui);
+    font-size: var(--omp-fs-100);
+    font-weight: var(--omp-peso-medio);
+    line-height: 1.4;
+    letter-spacing: var(--omp-track-rotulo);
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--omp-hueso) !important;
+    cursor: pointer;
+    transition: background-color var(--omp-dur-enlace) var(--omp-ease-suave),
+                border-color var(--omp-dur-enlace) var(--omp-ease-suave),
+                color var(--omp-dur-enlace) var(--omp-ease-suave);
+}
+
+.omp-btn:hover,
+.omp-btn:focus,
+.boxed-btn:hover,
+.boxed-btn:focus {
+    background: transparent;
+    border-color: var(--omp-azul);
+    color: var(--omp-azul) !important;
+}
+
+/* Secundario: la inversión del primario, y su hover lo devuelve al macizo.
+   .boxed-btn-cancel es la clase que alertService pasa a SweetAlert2. */
+.omp-btn--ghost,
+.boxed-btn-cancel {
+    background: transparent;
+    color: var(--omp-azul) !important;
+}
+
+.omp-btn--ghost:hover,
+.omp-btn--ghost:focus,
+.boxed-btn-cancel:hover,
+.boxed-btn-cancel:focus {
+    background: var(--omp-azul);
+    color: var(--omp-hueso) !important;
+}
+
+/* style.css:410 anula el outline del botón. Se repone, porque sin él el
+   recorrido con teclado se pierde justo en el control que envía. */
+.omp-btn:focus-visible,
+.boxed-btn:focus-visible {
+    outline: 1px solid var(--omp-azul);
+    outline-offset: 3px;
+}
+
+.omp-btn:disabled,
+.boxed-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.omp-btn:disabled:hover,
+.boxed-btn:disabled:hover {
+    background: var(--omp-azul);
+    color: var(--omp-hueso) !important;
+}
+
+/* Botón mientras la petición está en curso. El texto lo cambia x-text; aquí
+   solo se añade el giro, que nace de la propia tinta del botón. */
+.omp-submitting {
+    position: relative;
+    padding-right: var(--omp-space-9);
+    opacity: 0.75;
+    pointer-events: none;
+}
+
+.omp-submitting::after {
+    position: absolute;
+    content: "";
+    top: 50%;
+    right: var(--omp-space-6);
+    width: 14px;
+    height: 14px;
+    margin-top: -7px;
+    border: 1px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: omp-spin 700ms linear infinite;
+}
+
+@keyframes omp-spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .omp-submitting::after {
+        animation: none;
+        border-top-color: currentColor;
+        opacity: 0.4;
+    }
 }
 
 /* --------------------------------------------------------------------------
    SweetAlert2
+
+   alertService pasa .omp-swal al popup y .boxed-btn a los botones, así que el
+   aviso ya hereda el botón del sistema. Aquí se lleva el resto del diálogo a
+   la tipografía y la paleta: título en display, cuerpo en la UI, iconos
+   repintados —los de SweetAlert son bordes y barras, no imágenes—.
    -------------------------------------------------------------------------- */
 
 .omp-swal {
     border-radius: 0;
+    border: 1px solid var(--omp-color-borde);
+    background: var(--omp-color-fondo);
+    font-family: var(--omp-font-ui);
+}
+
+.omp-swal .swal2-title {
+    font-family: var(--omp-font-display);
+    font-size: var(--omp-fs-600);
+    font-weight: var(--omp-peso-ligero);
+    line-height: var(--omp-lh-titulo);
+    letter-spacing: normal;
+    color: var(--omp-color-titulo);
+}
+
+.omp-swal .swal2-html-container {
+    font-size: var(--omp-fs-200);
+    font-weight: var(--omp-peso-ligero);
+    line-height: var(--omp-lh-cuerpo);
+    letter-spacing: var(--omp-track-ui);
+    color: var(--omp-color-texto);
+}
+
+/* La lista de validationError() llega como viñetas dentro de este contenedor. */
+.omp-swal .swal2-html-container .text-left {
+    display: inline-block;
+    text-align: left;
+}
+
+.omp-swal .swal2-actions {
+    margin-top: var(--omp-space-6);
+    gap: var(--omp-space-2);
 }
 
 .omp-swal .boxed-btn {
     margin: 0 5px;
 }
 
-/* Variante de cancelar: mismo botón del template en tono neutro. */
-.boxed-btn-cancel {
-    background: transparent;
-    color: #666;
-    border-color: #ccc;
+/* Éxito: el azul de marca, no el verde de la librería. */
+.omp-swal .swal2-icon.swal2-success {
+    border-color: var(--omp-azul);
+    color: var(--omp-azul);
 }
 
-/* --------------------------------------------------------------------------
-   Formularios controlados por Alpine
-   -------------------------------------------------------------------------- */
+.omp-swal .swal2-icon.swal2-success .swal2-success-ring {
+    border-color: rgba(78, 98, 125, 0.3);
+}
 
-/* Botón de envío mientras la petición está en curso. */
-.omp-submitting {
-    opacity: 0.6;
-    pointer-events: none;
+.omp-swal .swal2-icon.swal2-success [class^="swal2-success-line"] {
+    background-color: var(--omp-azul);
+}
+
+/* Error: el rojo desaturado del sistema. */
+.omp-swal .swal2-icon.swal2-error {
+    border-color: var(--omp-color-error);
+    color: var(--omp-color-error);
+}
+
+.omp-swal .swal2-icon.swal2-error [class^="swal2-x-mark-line"] {
+    background-color: var(--omp-color-error);
+}
+
+/* Aviso —el límite de peticiones—: el nude, que advierte sin alarmar. */
+.omp-swal .swal2-icon.swal2-warning,
+.omp-swal .swal2-icon.swal2-info,
+.omp-swal .swal2-icon.swal2-question {
+    border-color: var(--omp-nude);
+    color: var(--omp-nude);
+}
+
+/* Aviso breve en esquina: mismo lenguaje, sin el peso del diálogo. */
+.omp-swal--toast {
+    padding: var(--omp-space-3) var(--omp-space-4);
+    box-shadow: 0 8px 24px rgba(58, 74, 96, 0.14);
+}
+
+.omp-swal--toast .swal2-title {
+    font-family: var(--omp-font-ui);
+    font-size: var(--omp-fs-200);
+    letter-spacing: var(--omp-track-ui);
+}
+
+.omp-swal--toast .swal2-timer-progress-bar {
+    background: var(--omp-azul);
 }
 
 /* --------------------------------------------------------------------------
@@ -1247,7 +1447,7 @@ header {
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
-    max-height: 82vh;
+    max-height: var(--omp-hero-alto);
 }
 
 .omp-category__photo img {
@@ -1284,17 +1484,17 @@ header {
     pointer-events: none;
     background: linear-gradient(to right,
         rgba(0, 0, 0, 0.82) 0%,
-        rgba(0, 0, 0, 0.74) 30%,
-        rgba(0, 0, 0, 0.34) 56%,
-        rgba(0, 0, 0, 0) 80%);
+        rgba(0, 0, 0, 0.74) 15%,
+        rgba(0, 0, 0, 0.34) 28%,
+        rgba(0, 0, 0, 0) 40%);
 }
 
 .omp-category--flip .omp-category__photo::after {
     background: linear-gradient(to left,
         rgba(0, 0, 0, 0.82) 0%,
-        rgba(0, 0, 0, 0.74) 30%,
-        rgba(0, 0, 0, 0.34) 56%,
-        rgba(0, 0, 0, 0) 80%);
+        rgba(0, 0, 0, 0.74) 15%,
+        rgba(0, 0, 0, 0.34) 28%,
+        rgba(0, 0, 0, 0) 40%);
 }
 
 /* Centrado por flex y no por translate: data-omp-reveal escribe transform en
@@ -1801,77 +2001,200 @@ header {
 }
 
 /* --------------------------------------------------------------------------
-   Formularios
+   FORMULARIOS
+
+   Un solo sistema para contact.html y booking.html. El campo pierde la caja
+   del template y se queda en una línea inferior de gris perla; la etiqueta,
+   en versalitas, descansa sobre esa línea y sube al recibir foco o contenido.
+   El foco marca la línea en azul de marca.
+
+   La línea de foco se dobla con un box-shadow interior en lugar de engrosar
+   el borde: cambiar border-width movería el campo un píxel en cada foco.
    -------------------------------------------------------------------------- */
 
-.omp-contact-lead {
-    color: #707070;
-    font-size: 16px;
-    margin: -10px 0 30px;
+.contact-title {
+    font-size: var(--omp-fs-600);
+    font-weight: var(--omp-peso-ligero);
+    letter-spacing: normal;
+    margin-bottom: var(--omp-space-3);
 }
 
-/* Errores de validación, propios y de la API. */
+.omp-contact-lead {
+    max-width: 56ch;
+    margin: 0 0 var(--omp-space-8);
+    font-size: var(--omp-fs-300);
+    color: var(--omp-color-campo-rotulo);
+}
+
+/* --- Campo -------------------------------------------------------------- */
+
+/* El padding superior es el hueco donde aterriza la etiqueta al flotar. */
+.form-contact .omp-field {
+    position: relative;
+    padding-top: var(--omp-campo-rotulo-alto);
+    margin-bottom: var(--omp-space-6);
+}
+
+.form-contact .omp-field .form-control {
+    height: var(--omp-campo-alto);
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid var(--omp-color-campo-linea);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    font-family: var(--omp-font-ui);
+    font-size: var(--omp-fs-300);
+    font-weight: var(--omp-peso-ligero);
+    letter-spacing: var(--omp-track-ui);
+    color: var(--omp-color-texto);
+    transition: border-color var(--omp-dur-enlace) var(--omp-ease-suave),
+                box-shadow var(--omp-dur-enlace) var(--omp-ease-suave);
+}
+
+/* El template fija height: 100% !important en el textarea (style.css:3143):
+   solo se le gana con la misma arma. */
+.form-contact .omp-field textarea.form-control {
+    height: auto !important;
+    padding-top: var(--omp-space-3);
+    line-height: var(--omp-lh-cuerpo);
+    resize: vertical;
+}
+
+/* El marcador de posición sobra: la etiqueta ya dice qué es el campo. Se deja
+   en blanco —no se borra— porque :placeholder-shown es lo que decide si la
+   etiqueta está flotada. Solo el datepicker conserva texto, para el formato. */
+.form-contact .omp-field .form-control::placeholder {
+    color: transparent;
+}
+
+.form-contact .omp-field .form-control:focus {
+    border-bottom-color: var(--omp-azul);
+    box-shadow: inset 0 -1px 0 0 var(--omp-azul);
+}
+
+/* --- Etiqueta ------------------------------------------------------------ */
+
+.omp-field__label {
+    position: absolute;
+    left: 0;
+    top: var(--omp-campo-rotulo-alto);
+    display: flex;
+    align-items: center;
+    height: var(--omp-campo-alto);
+    max-width: 100%;
+    margin: 0;
+    font-family: var(--omp-font-ui);
+    font-size: var(--omp-fs-200);
+    font-weight: var(--omp-peso-normal);
+    letter-spacing: var(--omp-track-rotulo);
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    color: var(--omp-color-campo-rotulo);
+    /* No intercepta el clic: quien pulsa la etiqueta quiere el campo. */
+    pointer-events: none;
+    transition: top var(--omp-dur-enlace) var(--omp-ease-suave),
+                height var(--omp-dur-enlace) var(--omp-ease-suave),
+                font-size var(--omp-dur-enlace) var(--omp-ease-suave),
+                color var(--omp-dur-enlace) var(--omp-ease-suave);
+}
+
+/* En el textarea la etiqueta se apoya en la primera línea, no en el centro
+   de un bloque de nueve filas. */
+.form-contact .omp-field--area .omp-field__label {
+    height: auto;
+    padding-top: var(--omp-space-3);
+}
+
+/* Estado flotado: con foco, con contenido, o siempre en los campos que un
+   plugin gobierna (--static), donde :placeholder-shown no llega. */
+.omp-field .form-control:focus ~ .omp-field__label,
+.omp-field .form-control:not(:placeholder-shown) ~ .omp-field__label,
+.omp-field--static .omp-field__label {
+    top: 0;
+    height: var(--omp-campo-rotulo-alto);
+    padding-top: 0;
+    font-size: var(--omp-fs-100);
+    color: var(--omp-azul);
+}
+
+/* Relleno sin foco: la etiqueta se queda arriba pero baja la voz. */
+.omp-field .form-control:not(:placeholder-shown):not(:focus) ~ .omp-field__label {
+    color: var(--omp-color-campo-rotulo);
+}
+
+/* --- Estado de error ----------------------------------------------------- */
+
+.form-contact .omp-field--error .form-control,
+.form-contact .omp-field--error .nice-select {
+    border-bottom-color: var(--omp-color-error);
+}
+
+.form-contact .omp-field--error .form-control:focus {
+    box-shadow: inset 0 -1px 0 0 var(--omp-color-error);
+}
+
+.omp-field--error .omp-field__label,
+.omp-field--error .form-control:focus ~ .omp-field__label {
+    color: var(--omp-color-error);
+}
+
+/* --- Estado deshabilitado ------------------------------------------------ */
+
+.form-contact .omp-field .form-control:disabled,
+.form-contact .omp-field .form-control[readonly] {
+    border-bottom-style: dotted;
+    color: var(--omp-color-campo-rotulo);
+    cursor: not-allowed;
+}
+
+/* --- Estado cargando ----------------------------------------------------- */
+
+/* Mientras la petición viaja, el formulario se retira sin desaparecer: sigue
+   legible, deja de ser operable. El botón lleva su propio giro. */
+.omp-form--busy .omp-field {
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+/* --- Mensajes ------------------------------------------------------------ */
+
+/* Resumen de errores propios y de la API (contact.html). */
 .omp-form-errors {
-    margin-top: 20px;
-    padding: 16px 20px;
-    background: #FDF3F3;
-    border-left: 2px solid #B94A48;
+    margin-top: var(--omp-space-5);
+    padding: var(--omp-space-4) var(--omp-space-5);
+    background: var(--omp-color-error-fondo);
+    border-left: 2px solid var(--omp-color-error);
 }
 
 .omp-form-errors ul {
     margin: 0;
-    padding-left: 18px;
+    padding-left: var(--omp-space-4);
 }
 
 .omp-form-errors li {
-    color: #B94A48;
-    font-size: 15px;
-    line-height: 26px;
     list-style: disc;
+    font-size: var(--omp-fs-200);
+    line-height: var(--omp-lh-cuerpo);
+    color: var(--omp-color-error);
 }
 
-/* Mensaje de validación bajo cada campo. */
+/* Mensaje de validación bajo cada campo (booking.html). */
 .omp-field-error {
-    margin: 6px 0 0;
-    font-size: 13px;
-    line-height: 20px;
-    color: #B94A48;
-}
-
-/* El combo del tema mide 40px y los inputs del formulario 48px: se igualan
-   para que la fila no quede escalonada. */
-.form-contact .default-select,
-.form-contact .default-select .nice-select {
-    height: 48px;
-    line-height: 46px;
-}
-
-.form-contact .default-select .nice-select {
-    background: transparent;
-    border: 1px solid #E5E6E9;
-    font-size: 13px;
-    padding-left: 18px;
-}
-
-.form-contact .default-select .nice-select .list .option.selected {
-    color: #2C2C2C;
-}
-
-/* gijgo envuelve el input en un div propio: el icono se centra sobre los
-   48px del campo. */
-.form-contact .gj-datepicker-md [role="right-icon"] {
-    top: 12px;
-    right: 12px;
-    font-size: 16px;
+    margin: var(--omp-space-2) 0 0;
+    font-size: var(--omp-fs-100);
+    line-height: 1.5;
+    letter-spacing: var(--omp-track-ui);
+    color: var(--omp-color-error);
 }
 
 /* Aviso de reCAPTCHA: su presencia es lo que permite ocultar el badge. */
 .omp-form-note {
-    margin-top: 18px;
-    margin-bottom: 0;
-    font-size: 13px;
-    line-height: 22px;
-    color: var(--omp-color-titulo);
+    margin: var(--omp-space-5) 0 0;
+    font-size: var(--omp-fs-100);
+    line-height: 1.7;
+    color: var(--omp-color-campo-rotulo);
 }
 
 .omp-form-note a {
@@ -1879,8 +2202,159 @@ header {
     text-decoration: underline;
 }
 
-.contact_form .boxed-btn:disabled {
-    cursor: not-allowed;
+/* --- Selector (nice-select) ---------------------------------------------- */
+
+/* El plugin sustituye el <select> por un <div tabindex="0">: hereda la línea
+   del campo, pero su foco y su lista se repintan aquí. */
+.form-contact .omp-field .default-select,
+.form-contact .omp-field .nice-select {
+    float: none;
+    width: 100%;
+    height: var(--omp-campo-alto);
+    line-height: calc(var(--omp-campo-alto) - 1px);
+}
+
+.form-contact .omp-field .nice-select {
+    padding: 0 var(--omp-space-6) 0 0;
+    border: 0;
+    border-bottom: 1px solid var(--omp-color-campo-linea);
+    border-radius: 0;
+    background: transparent;
+    font-size: var(--omp-fs-300);
+    font-weight: var(--omp-peso-ligero);
+    letter-spacing: var(--omp-track-ui);
+    color: var(--omp-color-texto);
+    transition: border-color var(--omp-dur-enlace) var(--omp-ease-suave),
+                box-shadow var(--omp-dur-enlace) var(--omp-ease-suave);
+}
+
+.form-contact .omp-field .nice-select.open {
+    border-bottom-color: var(--omp-azul);
+    box-shadow: inset 0 -1px 0 0 var(--omp-azul);
+}
+
+/* nice-select.css:17 apaga el outline. Se repone: el combo es focusable. */
+.form-contact .omp-field .nice-select:focus-visible {
+    outline: 1px solid var(--omp-azul);
+    outline-offset: 3px;
+}
+
+.form-contact .omp-field .nice-select::after {
+    right: 0;
+    color: var(--omp-color-campo-rotulo);
+}
+
+.form-contact .omp-field .nice-select .list {
+    width: 100%;
+    margin-top: 0;
+    padding: var(--omp-space-2) 0;
+    border: 1px solid var(--omp-color-borde);
+    border-radius: 0;
+    background: var(--omp-color-fondo);
+    box-shadow: 0 12px 32px rgba(58, 74, 96, 0.12);
+}
+
+.form-contact .omp-field .nice-select .list .option {
+    padding: 0 var(--omp-space-4);
+    font-size: var(--omp-fs-200);
+    font-weight: var(--omp-peso-ligero);
+    line-height: 2.2;
+    min-height: 0;
+    color: var(--omp-color-texto);
+}
+
+.form-contact .omp-field .nice-select .list .option:hover,
+.form-contact .omp-field .nice-select .list .option.focus,
+.form-contact .omp-field .nice-select .list .option.selected {
+    background: var(--omp-color-fondo-alt);
+    color: var(--omp-azul);
+}
+
+.form-contact .omp-field .nice-select .list .option.selected {
+    font-weight: var(--omp-peso-medio);
+}
+
+/* --- Fecha (gijgo) ------------------------------------------------------- */
+
+/* gijgo envuelve el input en un div propio; el icono se centra sobre los
+   48px del campo, ya sin caja que lo separe del borde derecho. */
+.form-contact .omp-field .gj-datepicker-md [role="right-icon"] {
+    top: 14px;
+    right: 0;
+    font-size: var(--omp-fs-200);
+    color: var(--omp-color-campo-rotulo);
+}
+
+/* El calendario, a la paleta y la tipografía del sistema. gijgo.css solo trae
+   el tema Material —de ahí los sufijos -md—, que llega con azul de Material,
+   Roboto y esquinas redondas: se sustituyen los tres. */
+.gj-picker-md {
+    font-family: var(--omp-font-ui);
+    font-size: var(--omp-fs-200);
+    letter-spacing: var(--omp-track-ui);
+    color: var(--omp-color-texto);
+    border: 1px solid var(--omp-color-borde);
+    border-radius: 0;
+    background: var(--omp-color-fondo);
+    box-shadow: 0 12px 32px rgba(58, 74, 96, 0.12);
+}
+
+.gj-picker-md.datepicker [role="header"] {
+    background: var(--omp-azul);
+    color: rgba(250, 252, 241, 0.65);
+}
+
+.gj-picker-md.datepicker [role="header"] [role="date"] {
+    font-family: var(--omp-font-display);
+    font-weight: var(--omp-peso-ligero);
+    color: var(--omp-hueso);
+}
+
+.gj-picker-md div[role="navigator"] div[role="period"] {
+    font-family: var(--omp-font-display);
+    font-size: var(--omp-fs-400);
+    font-weight: var(--omp-peso-ligero);
+    color: var(--omp-color-titulo);
+}
+
+.gj-picker-md table thead {
+    font-size: var(--omp-fs-100);
+    letter-spacing: var(--omp-track-rotulo);
+    text-transform: uppercase;
+    color: var(--omp-color-campo-rotulo);
+}
+
+/* Cuadrado, no círculo: el sistema no redondea nada. */
+.gj-picker-md table tr td.gj-cursor-pointer div:hover,
+.gj-picker-md table tr td.focused div {
+    background: var(--omp-color-fondo-alt);
+    border-radius: 0;
+    color: var(--omp-azul);
+}
+
+.gj-picker-md table tr td.today div {
+    color: var(--omp-nude);
+    font-weight: var(--omp-peso-medio);
+}
+
+.gj-picker-md table tr td.selected.gj-cursor-pointer div {
+    background: var(--omp-azul);
+    border-radius: 0;
+    color: var(--omp-hueso);
+}
+
+.gj-picker-md table tr td.other-month div,
+.gj-picker-md table tr td.disabled div {
+    color: var(--omp-gris-perla);
+}
+
+.gj-picker-md [role="footer"] button.gj-button-md {
+    font-family: var(--omp-font-ui);
+    font-size: var(--omp-fs-100);
+    font-weight: var(--omp-peso-medio);
+    letter-spacing: var(--omp-track-rotulo);
+    text-transform: uppercase;
+    color: var(--omp-azul);
 }
 
 /* Enlaces de texto dentro de los párrafos: sustituyen a los botones. */

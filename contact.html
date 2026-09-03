@@ -118,37 +118,46 @@
                     <!-- Los maxlength replican los StringLength del DTO, para que el
                          límite se note antes de que la API rechace el envío. -->
                     <form class="form-contact contact_form" id="contactForm" novalidate
+                          :class="{ 'omp-form--busy': sending }" :aria-busy="sending"
                           @submit.prevent="submit()">
                         <div class="row">
                             <div class="col-12">
-                                <div class="form-group">
+                                <!-- El marcador de posición queda en blanco a propósito: es lo
+                                     que consulta :placeholder-shown para decidir si la etiqueta
+                                     está flotada. La etiqueta ya dice qué pide el campo. -->
+                                <div class="form-group omp-field omp-field--area">
                                     <textarea class="form-control w-100" name="message" id="message"
-                                              cols="30" rows="9" placeholder="Your message"
+                                              cols="30" rows="9" placeholder=" "
                                               maxlength="2000" x-model="form.message"></textarea>
+                                    <label class="omp-field__label" for="message">Your message</label>
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="form-group">
+                                <div class="form-group omp-field">
                                     <input class="form-control" name="name" id="name" type="text"
-                                           placeholder="Your name" maxlength="150" x-model="form.name">
+                                           placeholder=" " maxlength="150" x-model="form.name">
+                                    <label class="omp-field__label" for="name">Your name</label>
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="form-group">
+                                <div class="form-group omp-field">
                                     <input class="form-control" name="email" id="email" type="email"
-                                           placeholder="Email address" maxlength="255" x-model="form.email">
+                                           placeholder=" " maxlength="255" x-model="form.email">
+                                    <label class="omp-field__label" for="email">Email address</label>
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="form-group">
+                                <div class="form-group omp-field">
                                     <input class="form-control" name="phone" id="phone" type="tel"
-                                           placeholder="Phone (optional)" maxlength="20" x-model="form.phone">
+                                           placeholder=" " maxlength="20" x-model="form.phone">
+                                    <label class="omp-field__label" for="phone">Phone (optional)</label>
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="form-group">
+                                <div class="form-group omp-field">
                                     <input class="form-control" name="subject" id="subject" type="text"
-                                           placeholder="Subject" maxlength="200" x-model="form.subject">
+                                           placeholder=" " maxlength="200" x-model="form.subject">
+                                    <label class="omp-field__label" for="subject">Subject</label>
                                 </div>
                             </div>
                         </div>

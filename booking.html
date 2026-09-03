@@ -115,10 +115,15 @@
                     <!-- Los maxlength replican los StringLength del DTO, para que el
                          límite se note antes de que la API rechace el envío. -->
                     <form class="form-contact contact_form" id="bookingForm" novalidate x-cloak x-show="!loading"
+                        :class="{ 'omp-form--busy': sending }" :aria-busy="sending"
                         @submit.prevent="submit()">
                         <div class="row">
                             <div class="col-sm-6">
-                                <div class="form-group">
+                                <!-- nice-select sustituye el <select> por un <div>: no hay
+                                     :placeholder-shown que consultar, así que la etiqueta nace
+                                     flotada (--static). El combo ya dice "Select a package". -->
+                                <div class="form-group omp-field omp-field--static"
+                                    :class="{ 'omp-field--error': errors.packageId }">
                                     <!-- .default-select es la clase que estiliza nice-select en el
                                          tema. Sin el id "default-select": main.js lo usa como
                                          disparador y arrancaría el plugin sobre un combo vacío,
@@ -131,59 +136,75 @@
                                             </template>
                                         </select>
                                     </div>
+                                    <label class="omp-field__label" for="packageId">Package</label>
                                     <p class="omp-field-error" x-cloak x-show="errors.packageId"
                                         x-text="errors.packageId"></p>
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="form-group">
+                                <!-- gijgo envuelve el input en un div propio y rompe la relación
+                                     de hermanos con la etiqueta: también --static. El marcador de
+                                     posición se conserva porque aquí sí dice algo, el formato. -->
+                                <div class="form-group omp-field omp-field--static"
+                                    :class="{ 'omp-field--error': errors.appointmentDate }">
                                     <!-- Sin x-model: gijgo escribe el valor con jQuery y Alpine
                                          no vería el cambio. El módulo lo recibe por callback. -->
                                     <input class="form-control" name="appointmentDate" id="appointmentDate" type="text"
-                                        placeholder="Session date (dd/mm/yyyy)" autocomplete="off">
+                                        placeholder="dd/mm/yyyy" autocomplete="off">
+                                    <label class="omp-field__label" for="appointmentDate">Session date</label>
                                     <p class="omp-field-error" x-cloak x-show="errors.appointmentDate"
                                         x-text="errors.appointmentDate"></p>
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="form-group">
+                                <div class="form-group omp-field"
+                                    :class="{ 'omp-field--error': errors.fullName }">
                                     <input class="form-control" name="fullName" id="fullName" type="text"
-                                        placeholder="Full name" maxlength="150" x-model="form.fullName"
+                                        placeholder=" " maxlength="150" x-model="form.fullName"
                                         @blur="validateField('fullName')">
+                                    <label class="omp-field__label" for="fullName">Full name</label>
                                     <p class="omp-field-error" x-cloak x-show="errors.fullName"
                                         x-text="errors.fullName"></p>
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="form-group">
+                                <div class="form-group omp-field"
+                                    :class="{ 'omp-field--error': errors.email }">
                                     <input class="form-control" name="email" id="email" type="email"
-                                        placeholder="Email address" maxlength="255" x-model="form.email"
+                                        placeholder=" " maxlength="255" x-model="form.email"
                                         @blur="validateField('email')">
+                                    <label class="omp-field__label" for="email">Email address</label>
                                     <p class="omp-field-error" x-cloak x-show="errors.email" x-text="errors.email"></p>
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="form-group">
+                                <div class="form-group omp-field"
+                                    :class="{ 'omp-field--error': errors.phone }">
                                     <input class="form-control" name="phone" id="phone" type="tel"
-                                        placeholder="Phone number" maxlength="20" x-model="form.phone"
+                                        placeholder=" " maxlength="20" x-model="form.phone"
                                         @blur="validateField('phone')">
+                                    <label class="omp-field__label" for="phone">Phone number</label>
                                     <p class="omp-field-error" x-cloak x-show="errors.phone" x-text="errors.phone"></p>
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="form-group">
+                                <div class="form-group omp-field"
+                                    :class="{ 'omp-field--error': errors.location }">
                                     <input class="form-control" name="location" id="location" type="text"
-                                        placeholder="Location (optional)" maxlength="250" x-model="form.location"
+                                        placeholder=" " maxlength="250" x-model="form.location"
                                         @blur="validateField('location')">
+                                    <label class="omp-field__label" for="location">Location (optional)</label>
                                     <p class="omp-field-error" x-cloak x-show="errors.location"
                                         x-text="errors.location"></p>
                                 </div>
                             </div>
                             <div class="col-12">
-                                <div class="form-group">
+                                <div class="form-group omp-field omp-field--area"
+                                    :class="{ 'omp-field--error': errors.notes }">
                                     <textarea class="form-control w-100" name="notes" id="notes" cols="30" rows="7"
-                                        placeholder="Notes (optional)" maxlength="2000" x-model="form.notes"
+                                        placeholder=" " maxlength="2000" x-model="form.notes"
                                         @blur="validateField('notes')"></textarea>
+                                    <label class="omp-field__label" for="notes">Notes (optional)</label>
                                     <p class="omp-field-error" x-cloak x-show="errors.notes" x-text="errors.notes"></p>
                                 </div>
                             </div>

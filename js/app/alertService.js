@@ -88,6 +88,10 @@ class AlertService {
             showConfirmButton: false,
             timer: options.timer || 3000,
             timerProgressBar: true,
+            // El toast no hereda defaultConfig —no tiene botones— pero sí
+            // necesita la clase del sistema para no salir con el estilo de
+            // fábrica de SweetAlert.
+            customClass: { popup: 'omp-swal omp-swal--toast' },
             ...options
         });
     }
