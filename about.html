@@ -94,9 +94,9 @@
             <div class="container">
                 <div class="row">
                     <div class="col-xl-12">
-                        <div class="bradcam_text text-center">
-                            <h3 x-text="content.title"></h3>
-                            <p x-text="content.lead"></p>
+                        <div class="bradcam_text text-center" data-omp-reveal-stagger="120">
+                            <h3 x-text="content.title" data-omp-reveal="up"></h3>
+                            <p x-text="content.lead" data-omp-reveal="up"></p>
                         </div>
                     </div>
                 </div>
@@ -104,113 +104,114 @@
         </div>
         <!-- / bradcam_area  -->
 
-        <!-- bio_area_start -->
-        <div class="wild_photography">
-            <div class="container-fluid p-0">
-                <div class="row no-gutters align-items-center">
-                    <div class="col-lg-6">
+        <!-- lede_start
+             Retrato dominante y una sola columna de texto. La fotografía manda
+             sobre el texto: ocupa cinco columnas contra seis, y el hueco de una
+             columna entre ambos es lo que mantiene la medida de lectura. -->
+        <section class="omp-about-lede">
+            <div class="container">
+                <div class="row align-items-center" data-omp-reveal-stagger="140">
+                    <div class="col-lg-5">
                         <!-- TODO: fotografía provisional; sustituir por la definitiva. -->
-                        <div class="wildlife_photo omp-photo omp-photo--split">
-                            <img src="img/provisional/orlin-front-medium.webp"
-                                 srcset="img/provisional/orlin-front-thumb.webp 500w,
-                                         img/provisional/orlin-front-medium.webp 720w"
-                                 sizes="(max-width: 991px) 100vw, 50vw"
+                        <div class="omp-about-lede__photo omp-photo omp-zoom"
+                             data-omp-reveal="scale">
+                            <img src="img/provisional/orlin-portrait-medium.webp"
+                                 srcset="img/provisional/orlin-portrait-thumb.webp 500w,
+                                         img/provisional/orlin-portrait-medium.webp 720w"
+                                 sizes="(max-width: 991px) 100vw, 40vw"
+                                 alt="Orlin Monnar at work during an event"
+                                 loading="lazy">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 offset-lg-1">
+                        <div class="omp-about-text" data-omp-reveal="up">
+                            <h2 class="omp-about-heading" x-text="content.bioTitle"></h2>
+                            <p x-text="content.bioText"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- lede_end -->
+
+        <!-- statement_start
+             La pieza central de la página: una cita en itálica y, debajo, el
+             único uso del registro script de todo el documento. -->
+        <section class="omp-about-statement">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-8 col-lg-10">
+                        <figure class="omp-about-quote" data-omp-reveal-stagger="160">
+                            <p class="omp-eyebrow omp-about-quote__label"
+                               x-text="content.statementTitle" data-omp-reveal="up"></p>
+                            <blockquote data-omp-reveal="up">
+                                <p x-text="content.statementText"></p>
+                            </blockquote>
+                            <figcaption class="omp-script omp-about-signature"
+                                        x-text="content.signature" data-omp-reveal="up"></figcaption>
+                        </figure>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- statement_end -->
+
+        <!-- role_start -->
+        <section class="omp-about-role">
+            <div class="container">
+                <div class="row align-items-center justify-content-center"
+                     data-omp-reveal-stagger="140">
+                    <div class="col-lg-5 col-md-8 order-lg-2">
+                        <!-- TODO: sustituir por un retrato frontal y confirmar el rol. -->
+                        <div class="omp-about-role__photo omp-photo omp-zoom"
+                             data-omp-reveal="scale">
+                            <img src="img/provisional/orlin-front2-medium.webp"
+                                 srcset="img/provisional/orlin-front2-thumb.webp 500w,
+                                         img/provisional/orlin-front2-medium.webp 720w"
+                                 sizes="(max-width: 991px) 100vw, 40vw"
                                  alt="Orlin Monnar photographing an event"
                                  loading="lazy">
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="section_title">
-                            <h3 x-text="content.bioTitle"></h3>
-                            <p x-text="content.bioText"></p>
-                            <!-- Accesos a booking y contacto como enlaces de texto: la regla
-                                 de diseño del sitio no admite botones de llamada a la acción. -->
-                            <p>
-                                Every celebration is different, so each session starts with a
-                                conversation. You can <a href="booking.html">book a session</a>
-                                or <a href="contact.html">send a message</a> with the details
-                                of your event.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- bio_area_end -->
-
-        <!-- statement_area_start -->
-        <div class="omp-intro">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-xl-8 col-lg-9">
-                        <div class="section_title text-center">
-                            <h3 x-text="content.statementTitle"></h3>
-                            <p x-text="content.statementText"></p>
-                            <!-- El logo hace de firma, como la sección de firma del template. -->
-                            <div class="singnature_thumb">
-                                <img src="img/logo-omp.png" alt="Orlin Monnar Photography &amp; Films">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- statement_area_end -->
-
-        <!-- team_area  -->
-        <div class="team_area">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-xl-7 col-lg-7">
-                        <div class="section_title text-center mb-50">
-                            <h3 x-text="content.teamTitle"></h3>
+                    <div class="col-lg-5 col-md-8 offset-lg-1 order-lg-1">
+                        <!-- El data-omp-reveal vive en este div y no dentro del
+                             x-for: motion.js barre el documento antes de que
+                             Alpine inserte los nodos de la plantilla, y un nodo
+                             marcado que llega tarde se queda oculto. Si algún
+                             día el equipo es más de una persona, hay que llamar
+                             a window.ompMotion.observe() desde un $nextTick,
+                             como hace homePage.js con las categorías. -->
+                        <div class="omp-about-text" data-omp-reveal="up">
+                            <h2 class="omp-about-heading" x-text="content.teamTitle"></h2>
                             <p x-text="content.teamSubtitle"></p>
+                            <template x-for="member in content.team" :key="member.role">
+                                <p class="omp-about-role__member">
+                                    <span class="omp-about-role__name" x-text="member.name"></span>
+                                    <span class="omp-eyebrow omp-about-role__role"
+                                          x-text="member.role"></span>
+                                </p>
+                            </template>
                         </div>
                     </div>
                 </div>
-
-                <!-- TODO: sustituir por un retrato frontal y confirmar el rol.
-                     .border_bottom es el contenedor bajo el que el template anida
-                     todo el CSS de single_team; su línea se anula en omp-custom.css. -->
-                <div class="border_bottom">
-                    <div class="row justify-content-center">
-                        <template x-for="member in content.team" :key="member.role">
-                            <div class="col-xl-4 col-lg-5 col-md-6">
-                                <div class="single_team">
-                                    <div class="team_thumb omp-photo">
-                                        <img src="img/provisional/orlin-front2-medium.webp"
-                                             srcset="img/provisional/orlin-front2-thumb.webp 500w,
-                                                     img/provisional/orlin-front2-medium.webp 720w"
-                                             sizes="(max-width: 767px) 100vw, 33vw"
-                                             alt="Orlin Monnar photographing an event"
-                                             loading="lazy">
-                                    </div>
-                                    <div class="team_info text-center">
-                                        <h3 x-text="member.name"></h3>
-                                        <p x-text="member.role"></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                </div>
             </div>
-        </div>
-        <!-- /team_area  -->
+        </section>
+        <!-- role_end -->
 
         <!-- testimonial_area_start -->
         <div class="testimonial_area">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-xl-10">
-                        <div class="section_title text-center">
-                            <h3>Client words</h3>
-                        </div>
+                        <h2 class="omp-about-heading omp-about-heading--center text-center"
+                            data-omp-reveal="up">Client words</h2>
                         <!-- TODO: sustituir por testimonios reales con autorización del cliente,
                              incluidas las miniaturas: son fotos de stock del template.
                              Los textos van en el HTML y no en content.js porque Owl
-                             Carousel clona estos nodos (ver pluginBridge.js). -->
-                        <div class="testimonial_active owl-carousel">
+                             Carousel clona estos nodos (ver pluginBridge.js).
+                             Por lo mismo, la aparición se marca en el contenedor y es un
+                             fundido sin transform: Owl escribe su propio translate3d. -->
+                        <div class="testimonial_active owl-carousel" data-omp-reveal>
                             <div class="single_testmonial text-center">
                                 <p>Working with Orlin was easy from the first call. He knew
                                     exactly where to be and we ended up with photographs we
@@ -249,90 +250,52 @@
         </div>
         <!-- testimonial_area_end -->
 
-        <!-- contact_info_area_start -->
-        <div class="contact_info_area">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-5">
-                        <div class="cotact_info">
-                            <div class="section_title">
-                                <h3>Get in touch</h3>
-                                <p>Tell us about your celebration and we will walk you through
-                                    the options.</p>
-                            </div>
-                            <div class="address_info">
-                                <h4>Studio</h4>
-                                <ul class="Address">
-                                    <li x-text="business.serviceArea"></li>
-                                    <li><a :href="business.phoneLink" x-text="business.phoneDisplay"></a></li>
-                                    <li><a :href="'mailto:' + business.email" x-text="business.email"></a></li>
-                                </ul>
-                                <div class="socail_links">
-                                    <ul>
-                                        <li><a href="https://www.facebook.com/orlinmonnarphotography" target="_blank" rel="noopener" aria-label="Facebook"><i class="ti-facebook"></i></a></li>
-                                        <li><a href="https://www.instagram.com/orlinmonnar.photography" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa fa-instagram"></i></a></li>
-                                        <li><a href="https://www.tiktok.com/@orlinmonnar.photography" target="_blank" rel="noopener" aria-label="TikTok"><svg class="omp-icon-tiktok" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.6 5.82a4.28 4.28 0 0 1-1.05-2.82h-3.1v11.6a2.59 2.59 0 1 1-1.85-2.48V9.02a5.66 5.66 0 1 0 4.95 5.6V8.7a7.3 7.3 0 0 0 4.27 1.37V7a4.3 4.3 0 0 1-3.22-1.18z"/></svg></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-7">
-                        <!-- El template original sirve el mapa en esta columna. -->
-                        <div class="omp-map">
-                            <iframe loading="lazy"
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d354125.1662953405!2d-97.22916265231494!3d32.791601781654435!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x864e82b81f3a3a2d%3A0x53724d9a808b8ce5!2sDallas-Fort%20Worth%20metroplex%2C%20Texas%2C%20EE.%20UU.!5e0!3m2!1ses!2smx!4v1765410425642!5m2!1ses!2smx"
-                                allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- contact_info_area_end -->
-
         <!-- instagram_area_start -->
-        <div class="omp-instagram-heading">
+        <section class="omp-about-follow">
             <div class="container">
-                <div class="section_title text-center">
-                    <h3>Follow the latest work</h3>
-                    <p><a :href="business.instagram" target="_blank" rel="noopener">@orlinmonnar.photography</a></p>
+                <div class="omp-about-follow__head text-center" data-omp-reveal="up">
+                    <h2 class="omp-about-heading omp-about-heading--center">Follow the latest work</h2>
+                    <p class="omp-about-follow__handle">
+                        <a class="omp-eyebrow omp-link-quiet" :href="business.instagram"
+                           target="_blank" rel="noopener">@orlinmonnar.photography</a>
+                    </p>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- TODO: sustituir por las publicaciones reales del perfil. -->
-        <div class="instragram_area">
-            <div class="single_instagram omp-photo">
+        <div class="instragram_area" data-omp-reveal-stagger="90">
+            <div class="single_instagram omp-photo" data-omp-reveal>
                 <img src="img/provisional/quinceanera-02-thumb.webp" alt="Quinceañera session" loading="lazy">
                 <div class="ovrelay">
                     <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
                 </div>
             </div>
-            <div class="single_instagram omp-photo">
+            <div class="single_instagram omp-photo" data-omp-reveal>
                 <img src="img/provisional/wedding-02-thumb.webp" alt="Wedding session" loading="lazy">
                 <div class="ovrelay">
                     <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
                 </div>
             </div>
-            <div class="single_instagram omp-photo">
+            <div class="single_instagram omp-photo" data-omp-reveal>
                 <img src="img/provisional/quinceanera-06-thumb.webp" alt="Quinceañera session" loading="lazy">
                 <div class="ovrelay">
                     <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
                 </div>
             </div>
-            <div class="single_instagram omp-photo">
+            <div class="single_instagram omp-photo" data-omp-reveal>
                 <img src="img/provisional/portrait-01-thumb.webp" alt="Portrait session" loading="lazy">
                 <div class="ovrelay">
                     <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
                 </div>
             </div>
-            <div class="single_instagram omp-photo">
+            <div class="single_instagram omp-photo" data-omp-reveal>
                 <img src="img/provisional/orlin-portrait-thumb.webp" alt="Orlin Monnar at work during an event" loading="lazy">
                 <div class="ovrelay">
                     <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
                 </div>
             </div>
-            <div class="single_instagram omp-photo">
+            <div class="single_instagram omp-photo" data-omp-reveal>
                 <img src="img/provisional/wedding-03-thumb.webp" alt="Bridal portrait" loading="lazy">
                 <div class="ovrelay">
                     <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
@@ -340,6 +303,8 @@
             </div>
         </div>
         <!-- instagram_area_end -->
+
+        
 
     </div>
 

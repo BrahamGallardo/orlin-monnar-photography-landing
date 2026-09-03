@@ -1653,11 +1653,209 @@ header {
 
 /* --------------------------------------------------------------------------
    About
+
+   Página editorial: un retrato dominante, una columna de texto estrecha y una
+   cita como pieza central. Ninguno de sus bloques usa .section_title, así que
+   ningún título hereda el registro script y la página lo reserva para su único
+   uso: la firma bajo la cita. Home y el resto del sitio no cambian.
    -------------------------------------------------------------------------- */
 
 /* Fondo de la cabecera de About. Es una fotografía provisional. */
 .omp-bradcam-about {
     background-image: url(../img/provisional/quinceanera-01-large.webp);
+}
+
+/* Ritmo vertical de la página: el mismo aire entre todos los bloques. */
+.omp-about-lede,
+.omp-about-statement,
+.omp-about-role,
+.omp-about-cta {
+    padding: var(--omp-space-11) 0;
+}
+
+.omp-about-follow {
+    padding: var(--omp-space-11) 0 var(--omp-space-6);
+}
+
+/* Un fondo por medio: la cita y los testimonios se apoyan en niebla y el resto
+   en hueso. La página alterna sin necesidad de filetes de separación. */
+.omp-about-statement {
+    background: var(--omp-color-fondo-alt);
+}
+
+/* Medida de lectura. Jost a --omp-fs-300 da entre 60 y 70 caracteres por línea
+   con este ancho; el interlineado generoso ya viene de la base (1.7). */
+.omp-about-text {
+    max-width: 64ch;
+}
+
+.omp-about-text p {
+    margin-bottom: var(--omp-space-5);
+}
+
+.omp-about-text p:last-child {
+    margin-bottom: 0;
+}
+
+/* Títulos de la página: fuera de .section_title heredan Cormorant de la regla
+   base, así que aquí solo se fija el ritmo y el filete que los precede. */
+.omp-about-heading {
+    margin: 0 0 var(--omp-space-5);
+    color: var(--omp-color-titulo);
+}
+
+/* Filete nude sobre el título. Es decorativo —contraste 2:1—: nunca lleva
+   texto encima ni separa dos secciones, solo abre el bloque. */
+.omp-about-heading::before {
+    content: "";
+    display: block;
+    width: 48px;
+    height: 1px;
+    margin-bottom: var(--omp-space-5);
+    background-color: var(--omp-color-filete);
+}
+
+.omp-about-heading--center::before {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* --- Retrato dominante --------------------------------------------------- */
+
+/* Los retratos provisionales vienen en 9:16: el marco los lleva a una vertical
+   de retrato y recorta por el centro, como el resto de fotografías del sitio. */
+.omp-about-lede__photo {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+}
+
+@supports not (aspect-ratio: 4 / 5) {
+    .omp-about-lede__photo {
+        height: 560px;
+    }
+}
+
+/* --- Cita y firma -------------------------------------------------------- */
+
+.omp-about-quote {
+    margin: 0;
+    text-align: center;
+}
+
+.omp-about-quote__label {
+    margin-bottom: var(--omp-space-5);
+    opacity: 0.7;
+}
+
+.omp-about-quote blockquote {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+/* Peso normal y no ligero: de Cormorant solo está auto-hospedada la itálica de
+   400 (ver fonts/omp/). Pedir 300 obligaría al navegador a inclinar la redonda
+   por su cuenta, que es justo lo que la tipografía propia viene a evitar.
+   La medida es más corta que la del cuerpo porque el cuerpo es mucho mayor. */
+.omp-about-quote blockquote p {
+    max-width: 30ch;
+    margin: 0 auto;
+    font-family: var(--omp-font-display);
+    font-style: italic;
+    font-weight: var(--omp-peso-normal);
+    font-size: var(--omp-fs-600);
+    line-height: 1.45;
+    color: var(--omp-color-titulo);
+}
+
+/* Único uso del registro script en la página. Sube un escalón sobre el cuerpo
+   que fija .omp-script, por el mismo motivo que los títulos de sección: el ojo
+   de Pinyon es mucho menor que el de Cormorant. */
+.omp-about-signature {
+    margin-top: var(--omp-space-6);
+    font-size: var(--omp-fs-700);
+}
+
+/* --- Rol ----------------------------------------------------------------- */
+
+.omp-about-role__photo {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+}
+
+@supports not (aspect-ratio: 3 / 4) {
+    .omp-about-role__photo {
+        height: 520px;
+    }
+}
+
+.omp-about-role__member {
+    margin: var(--omp-space-6) 0 0;
+}
+
+.omp-about-role__name {
+    display: block;
+    font-family: var(--omp-font-display);
+    font-size: var(--omp-fs-500);
+    line-height: var(--omp-lh-titulo);
+    color: var(--omp-color-titulo);
+}
+
+.omp-about-role__role {
+    margin-top: var(--omp-space-2);
+    opacity: 0.7;
+}
+
+/* --- Cierre -------------------------------------------------------------- */
+
+.omp-about-follow__handle {
+    margin: var(--omp-space-4) 0 0;
+}
+
+.omp-about-cta__text {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Los dos caminos, al mismo peso: ninguno es el principal. */
+.omp-about-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--omp-space-5) var(--omp-space-8);
+    margin: var(--omp-space-7) 0 0;
+}
+
+/* --- Adaptación ---------------------------------------------------------- */
+
+@media (max-width: 991px) {
+    /* En una columna el retrato se acorta: a 4/5 y ancho completo ocuparía
+       más de una pantalla de teléfono él solo. */
+    .omp-about-lede__photo {
+        aspect-ratio: 3 / 4;
+        margin-bottom: var(--omp-space-7);
+    }
+
+    .omp-about-role__photo {
+        margin-bottom: var(--omp-space-7);
+    }
+}
+
+@media (max-width: 767px) {
+    .omp-about-lede,
+    .omp-about-statement,
+    .omp-about-role,
+    .omp-about-cta {
+        padding: var(--omp-space-9) 0;
+    }
+
+    .omp-about-follow {
+        padding: var(--omp-space-9) 0 var(--omp-space-5);
+    }
+
+    .omp-about-quote blockquote p {
+        max-width: 24ch;
+    }
 }
 
 /* --------------------------------------------------------------------------

@@ -72,7 +72,7 @@ window.SITE_CONTENT = {
         contactCta: 'Book a session'
     },
 
-    // TODO: pedir a Orlin su biografía, su retrato y los años que lleva
+        // TODO: pedir a Orlin su biografía, su retrato y los años que lleva
     // fotografiando. Todo el texto de esta sección es provisional.
     about: {
         title: 'About',
@@ -85,16 +85,31 @@ window.SITE_CONTENT = {
             + 'camera: the small gestures, the way a family looks at each other, the details '
             + 'that get lost in the rush of the day.',
 
+        // Cita destacada de la página. El rótulo va encima, en versalitas, y la
+        // frase se compone en itálica: es la única pieza en ese registro.
         statementTitle: 'How the work gets done',
         statementText: 'Each session is planned in advance and photographed without rushing, '
             + 'so the images feel like the day rather than a set of poses.',
+
+        // Firma manuscrita bajo la cita: el único uso de Pinyon Script en la página.
+        signature: 'Orlin Monnar',
 
         // TODO: confirmar el rol exacto y conseguir un retrato frontal.
         teamTitle: 'Behind every session',
         teamSubtitle: 'One photographer, from the first call to the final gallery',
         team: [
             { name: 'Orlin Monnar', role: 'Photographer & filmmaker' }
-        ]
+        ],
+
+        // Cierre de la página. Los dos enlaces sustituyen a los botones, que la
+        // hoja de estilos no usa en ninguna página.
+        // TODO: confirm the wording of the two closing links with the client.
+        closingTitle: 'Get in touch',
+        closingText: 'Every celebration is different, so each session starts with a '
+            + 'conversation. Tell us the date and the details of your event and we will '
+            + 'walk you through the options.',
+        bookCta: 'Book a session',
+        contactCta: 'Send a message'
     },
 
     gallery: {
