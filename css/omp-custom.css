@@ -132,9 +132,9 @@
     --omp-azul: #4E627D;
     --omp-azul-profundo: #3A4A60;
     --omp-nude: #CAAFA0;
-    --omp-gris-perla: #D7D9DD;
-    --omp-hueso: #FAFCF6;
-    --omp-niebla: #EBECED;
+    --omp-gris-perla: #D7D9D6;
+    --omp-hueso: #FAFCF1;
+    --omp-niebla: #EBECE6;
 
     /* Roles de color */
     --omp-color-titulo: var(--omp-azul);
@@ -603,7 +603,9 @@ hr {
    las fotografías.
    -------------------------------------------------------------------------- */
 
-/* El header flota sobre la imagen en lugar de ocupar su propia banda. */
+/* The header floats over the photograph instead of occupying its own band.
+   Absolute positioning keeps it out of the flow, so switching to the sticky
+   state (position: fixed) never shifts the page content. */
 header {
     position: absolute;
     top: 0;
@@ -612,50 +614,209 @@ header {
     z-index: 99;
 }
 
-/* Transparente en todos los tamaños: el template lo pinta sólido por debajo
-   de 992px y casi blanco al hacer scroll. */
-.header-area .main-header-area,
-.header-area .main-header-area.sticky {
-    background: transparent;
+/* Resting state, over the hero: fully transparent, white ink.
+   The transition lives on the base rule on purpose. The template declares it
+   only on .sticky (style.css:1147), so removing the class would snap back
+   instantly. `transform` is deliberately excluded: .sticky pairs top:-70px
+   with translateY(70px), and animating it on removal would slide the header
+   70px upwards out of its resting position. */
+.header-area .main-header-area {
+    background-color: transparent;
     box-shadow: none;
+    border-bottom: 1px solid transparent;
+    transition: background-color var(--omp-dur-enlace) var(--omp-ease-suave),
+                border-color var(--omp-dur-enlace) var(--omp-ease-suave);
 }
 
-/* Al hacer scroll el fondo se insinúa apenas para sostener la lectura del
-   menú; nunca un bloque sólido. */
+/* Solid state. js/main.js:4-12 toggles .sticky on #sticky-header past 400px
+   of scroll; the template's script is left untouched.
+   No drop shadow: a 1px pearl-grey rule is the only separation allowed. */
 .header-area .main-header-area.sticky {
-    background: rgba(20, 20, 20, 0.35);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background-color: var(--omp-hueso);
+    box-shadow: none;
+    border-bottom-color: var(--omp-color-borde);
 }
 
-/* Menú legible sobre fotografías claras sin recurrir a una caja de fondo. */
-.main-menu ul#navigation > li > a,
-.slicknav_menu .slicknav_nav a {
-    color: #fff;
-    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55);
+/* The template drops the menu padding to 0 when sticky, shrinking the header
+   by 24px. Restoring it keeps the height identical across both states. */
+.header-area .main-header-area.sticky .main-menu {
+    padding: 12px 0;
 }
 
-.logo img {
-    filter: drop-shadow(0 1px 10px rgba(0, 0, 0, 0.45));
+/* --- Navigation typography ---------------------------------------------- */
+
+/* Jost in faux small caps. The self-hosted subsets from google-webfonts-helper
+   carry no `smcp` OpenType feature, so font-variant-caps would force the
+   browser to synthesise them by scaling capitals: thinner strokes and
+   inconsistent results across engines. Uppercase at --omp-fs-100 with wide
+   tracking is the deterministic equivalent. */
+.header-area .main-header-area .main-menu ul li {
+    margin: 0 var(--omp-space-2);
 }
 
-/* Botón de menú móvil: solo las tres barras, sin caja ni borde. */
+.header-area .main-header-area .main-menu ul li a,
+.omp-footer-nav ul li a {
+    font-family: var(--omp-font-ui);
+    font-size: var(--omp-fs-100);
+    font-weight: var(--omp-peso-normal);
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: var(--omp-track-rotulo);
+    position: relative;
+    display: inline-block;
+    padding-bottom: var(--omp-space-2);
+    text-shadow: none;
+    transition: color var(--omp-dur-enlace) var(--omp-ease-suave);
+}
+
+/* Nude rule growing from the centre. ::after and not ::before: style.css:1063
+   and :1069 already declare a:hover::before / a.active::before with
+   scaleX(1), but the base ::before rule carrying `content` does not exist in
+   the template, so those two are dead code and are left alone.
+   Inset on the right by exactly one tracking step, since letter-spacing adds
+   trailing space after the last glyph and would push the rule off-centre. */
+.header-area .main-header-area .main-menu ul li a::after,
+.omp-footer-nav ul li a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: var(--omp-track-rotulo);
+    bottom: 0;
+    height: 1px;
+    background-color: var(--omp-color-filete);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform var(--omp-dur-enlace) var(--omp-ease-suave);
+}
+
+.header-area .main-header-area .main-menu ul li a:hover::after,
+.header-area .main-header-area .main-menu ul li a.active::after,
+.omp-footer-nav ul li a:hover::after,
+.omp-footer-nav ul li a.active::after {
+    transform: scaleX(1);
+}
+
+/* --- Ink per state ------------------------------------------------------- */
+
+/* Over the photograph. No text shadow: the hero and bradcam overlays already
+   darken the top of the image, and the brief rules out hard shadows. */
+.header-area .main-header-area .main-menu ul li a,
+.header-area .main-header-area .social_links ul li a {
+    color: var(--omp-hueso);
+}
+
+.header-area .main-header-area .main-menu ul li a:hover,
+.header-area .main-header-area .main-menu ul li a.active,
+.header-area .main-header-area .social_links ul li a:hover {
+    color: var(--omp-hueso);
+}
+
+/* Solid: brand blue ink. */
+.header-area .main-header-area.sticky .main-menu ul li a,
+.header-area .main-header-area.sticky .social_links ul li a {
+    color: var(--omp-color-enlace);
+}
+
+.header-area .main-header-area.sticky .main-menu ul li a:hover,
+.header-area .main-header-area.sticky .main-menu ul li a.active,
+.header-area .main-header-area.sticky .social_links ul li a:hover {
+    color: var(--omp-color-enlace-hover);
+}
+
+.header-area .main-header-area .social_links ul li a {
+    font-size: var(--omp-fs-200);
+    transition: color var(--omp-dur-enlace) var(--omp-ease-suave);
+}
+
+/* --- Logotype ------------------------------------------------------------ */
+
+/* img/logo-omp.png is a gold signature on transparency. Over the hero it is
+   driven to pure white; over the bone background it returns to brand gold.
+   brightness(0) flattens every pixel to black while preserving alpha, and
+   invert(1) then lifts it to white. Replace both rules with a dedicated white
+   asset the day one exists. */
+.main-header-area .logo img {
+    filter: brightness(0) invert(1);
+    transition: filter var(--omp-dur-enlace) var(--omp-ease-suave);
+}
+
+.main-header-area.sticky .logo img {
+    filter: none;
+}
+
+/* --- Mobile menu (slicknav) ---------------------------------------------- */
+
+/* Only paint: the markup, the toggle and the open/close behaviour stay with
+   the template's plugin (js/main.js:22-29, prependTo .mobile_menu). */
+.slicknav_menu {
+    background: transparent;
+    padding: 0;
+}
+
 .slicknav_menu .slicknav_btn,
 .slicknav_menu .slicknav_nav .slicknav_btn {
-    border: none;
     background: transparent;
+    border: none;
+    border-radius: 0;
+    margin: 0;
+    padding: var(--omp-space-2);
 }
 
 .slicknav_menu .slicknav_icon-bar {
-    background-color: #fff;
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+    width: 22px;
+    height: 1px;
+    background-color: var(--omp-hueso);
+    box-shadow: none;
+    transition: background-color var(--omp-dur-enlace) var(--omp-ease-suave);
 }
 
-/* El desplegable móvil comparte el mismo vidrio oscuro del header. */
+.main-header-area.sticky .slicknav_menu .slicknav_icon-bar {
+    background-color: var(--omp-azul);
+}
+
+/* The panel reads as a sheet of the same bone paper as the solid header,
+   never as dark glass. Anchored below the button rather than at the
+   template's top:11px, which overlapped it. */
 .slicknav_menu .slicknav_nav {
-    background: rgba(20, 20, 20, 0.92);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    top: 100%;
+    width: 100%;
+    margin: var(--omp-space-3) 0 0;
+    padding: var(--omp-space-2) 0;
+    background-color: var(--omp-hueso);
+    border: 1px solid var(--omp-color-borde);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.slicknav_menu .slicknav_nav a {
+    display: block;
+    margin: 0;
+    padding: var(--omp-space-3) var(--omp-space-5);
+    font-family: var(--omp-font-ui);
+    font-size: var(--omp-fs-100);
+    font-weight: var(--omp-peso-normal);
+    text-transform: uppercase;
+    letter-spacing: var(--omp-track-rotulo);
+    color: var(--omp-color-enlace);
+    text-shadow: none;
+    border-bottom: 1px solid var(--omp-color-borde);
+    transition: color var(--omp-dur-enlace) var(--omp-ease-suave);
+}
+
+.slicknav_menu .slicknav_nav li:last-child a {
+    border-bottom: none;
+}
+
+.slicknav_menu .slicknav_nav a:hover {
+    background: transparent;
+    color: var(--omp-color-enlace-hover);
+}
+
+/* Stacked links cannot carry a centred rule under the word. The current page
+   is marked with a nude edge drawn as an inset shadow, so nothing shifts. */
+.slicknav_menu .slicknav_nav a.active {
+    color: var(--omp-color-enlace-hover);
+    box-shadow: inset 2px 0 0 var(--omp-color-filete);
 }
 
 /* Las páginas interiores dejan aire para el header flotante. */
@@ -819,7 +980,7 @@ header {
    logo; se neutralizan conservando el contraste entre secciones. */
 .wild_photography,
 .testimonial_area {
-    background: #FAFAFA;
+    background: var(--omp-niebla);
 }
 
 /* Bloques a media página: la imagen ocupa su mitad completa. */
@@ -1212,4 +1373,116 @@ header {
     padding: 8px 0;
     border-bottom: 1px solid #F2F2F2;
     text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+
+   Sober closing band: logotype, page links, social icons and the rights
+   notice. Mist ground so the page closes on a shift of tone rather than a
+   black slab; the whole palette hangs off the two variables below, so
+   switching to brand blue is a two-line change.
+   -------------------------------------------------------------------------- */
+
+.footer {
+    /* Swap these two for --omp-azul / --omp-hueso to close on brand blue. */
+    --omp-footer-fondo: var(--omp-color-fondo-alt);
+    --omp-footer-tinta: var(--omp-color-texto);
+
+    background: var(--omp-footer-fondo);
+}
+
+.omp-footer-top {
+    padding: var(--omp-space-10) 0 var(--omp-space-8);
+}
+
+/* The logotype closes the page at the same weight it opens it, one step down. */
+.omp-footer-logo img {
+    max-height: 46px;
+    width: auto;
+}
+
+.omp-footer-nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: right;
+}
+
+.omp-footer-nav ul li {
+    display: inline-block;
+    margin-left: var(--omp-space-6);
+}
+
+/* Typography and the centre-growing rule are shared with the header
+   navigation; only the ink is set here. */
+.omp-footer-nav ul li a {
+    color: var(--omp-color-enlace);
+}
+
+.omp-footer-nav ul li a:hover {
+    color: var(--omp-color-enlace-hover);
+}
+
+/* Rights notice. The template paints this band solid black over a 60px
+   padding; here it is a hairline over the same mist ground. */
+.footer .copy-right_text {
+    background: transparent;
+    border-top: 1px solid var(--omp-color-borde);
+    padding: var(--omp-space-5) 0;
+}
+
+.footer .copy-right_text .copy_right {
+    font-family: var(--omp-font-ui);
+    font-size: var(--omp-fs-100);
+    font-weight: var(--omp-peso-ligero);
+    letter-spacing: var(--omp-track-ui);
+    color: var(--omp-footer-tinta);
+}
+
+.footer .copy-right_text .copy_right a {
+    color: var(--omp-color-enlace);
+}
+
+/* Social icons: an outline, not a filled disc. The two !important below are
+   forced by the template, which sets `line-height: 41px !important`
+   (style.css:2443) and `color: #fff !important` on hover (style.css:2446).
+   Matching them is the only way to override without raising specificity. */
+.footer .socail_links ul li a {
+    width: 38px;
+    height: 38px;
+    line-height: 38px !important;
+    margin-left: var(--omp-space-3);
+    font-size: var(--omp-fs-100);
+    background: transparent;
+    border: 1px solid var(--omp-color-borde);
+    color: var(--omp-color-enlace);
+    transition: color var(--omp-dur-enlace) var(--omp-ease-suave),
+                background-color var(--omp-dur-enlace) var(--omp-ease-suave),
+                border-color var(--omp-dur-enlace) var(--omp-ease-suave);
+}
+
+.footer .socail_links ul li a:hover {
+    background: var(--omp-azul);
+    border-color: var(--omp-azul);
+    color: var(--omp-hueso) !important;
+}
+
+@media (max-width: 991px) {
+    .omp-footer-top {
+        padding: var(--omp-space-8) 0 var(--omp-space-6);
+        text-align: center;
+    }
+
+    .omp-footer-logo {
+        margin-bottom: var(--omp-space-6);
+    }
+
+    .omp-footer-nav ul {
+        text-align: center;
+    }
+
+    .omp-footer-nav ul li {
+        margin: 0 var(--omp-space-3) var(--omp-space-4);
+    }
 }
