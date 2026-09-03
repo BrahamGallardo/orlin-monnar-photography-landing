@@ -2406,25 +2406,25 @@ h3 {
 }
 
 /* line 145, ../../Arafath/CL/CL October/215. Photography/HTML/scss/_footer.scss */
-.footer .socail_links {
+.footer .social_links {
   text-align: right;
 }
 
 @media (max-width: 767px) {
   /* line 145, ../../Arafath/CL/CL October/215. Photography/HTML/scss/_footer.scss */
-  .footer .socail_links {
+  .footer .social_links {
     margin-top: 30px;
     text-align: center;
   }
 }
 
 /* line 153, ../../Arafath/CL/CL October/215. Photography/HTML/scss/_footer.scss */
-.footer .socail_links ul li {
+.footer .social_links ul li {
   display: inline-block;
 }
 
 /* line 156, ../../Arafath/CL/CL October/215. Photography/HTML/scss/_footer.scss */
-.footer .socail_links ul li a {
+.footer .social_links ul li a {
   font-size: 13px;
   color: #fff;
   width: 40px;
@@ -2442,7 +2442,7 @@ h3 {
 }
 
 /* line 169, ../../Arafath/CL/CL October/215. Photography/HTML/scss/_footer.scss */
-.footer .socail_links ul li a:hover {
+.footer .social_links ul li a:hover {
   color: #fff !important;
   background: #6EBFF9;
 }
@@ -3013,24 +3013,24 @@ h3 {
 }
 
 /* line 32, ../../Arafath/CL/CL October/215. Photography/HTML/scss/_contact_info.scss */
-.contact_info_area .cotact_info .address_info .socail_links {
+.contact_info_area .cotact_info .address_info .social_links {
   text-align: left;
 }
 
 @media (max-width: 767px) {
   /* line 32, ../../Arafath/CL/CL October/215. Photography/HTML/scss/_contact_info.scss */
-  .contact_info_area .cotact_info .address_info .socail_links {
+  .contact_info_area .cotact_info .address_info .social_links {
     margin-top: 30px;
   }
 }
 
 /* line 39, ../../Arafath/CL/CL October/215. Photography/HTML/scss/_contact_info.scss */
-.contact_info_area .cotact_info .address_info .socail_links ul li {
+.contact_info_area .cotact_info .address_info .social_links ul li {
   display: inline-block;
 }
 
 /* line 42, ../../Arafath/CL/CL October/215. Photography/HTML/scss/_contact_info.scss */
-.contact_info_area .cotact_info .address_info .socail_links ul li a {
+.contact_info_area .cotact_info .address_info .social_links ul li a {
   font-size: 13px;
   color: #fff;
   width: 40px;
@@ -3048,7 +3048,7 @@ h3 {
 }
 
 /* line 55, ../../Arafath/CL/CL October/215. Photography/HTML/scss/_contact_info.scss */
-.contact_info_area .cotact_info .address_info .socail_links ul li a:hover {
+.contact_info_area .cotact_info .address_info .social_links ul li a:hover {
   color: #fff !important;
   background: #6EBFF9;
 }

@@ -117,11 +117,7 @@
             </div>
 
             <!-- Pie del hero. Fuera de .slider_active para que Owl no lo clone. -->
-            <div class="omp-hero__footer">
-                <a class="omp-hero__scroll" href="#omp-intro">
-                    <span class="omp-hero__scroll-label" x-text="content.heroScrollLabel"></span>
-                    <span class="omp-hero__scroll-line" aria-hidden="true"></span>
-                </a>
+            <div class="omp-hero__footer">                
 
                 <div class="omp-hero__controls" x-show="heroCount > 1" x-cloak>
                     <button type="button" class="omp-hero__arrow" @click="heroPrev()"
@@ -208,6 +204,30 @@
 
         </div>
         <!-- featured_gallery_end -->
+
+        <!-- about_note_start -->
+        <div class="omp-about-note">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-7 col-lg-8">
+                        <div class="section_title text-center omp-heading-long"
+                             data-omp-reveal="up">
+                            <h3 x-text="content.aboutNoteTitle"></h3>
+                            <p x-text="content.aboutNoteText"></p>
+                        </div>
+                        <!-- El enlace vive fuera de .section_title: su regla
+                             `.section_title p a` impone subrayado y color propios
+                             y ganaría por especificidad a .omp-link-quiet. -->
+                        <p class="text-center omp-about-note__action"
+                           data-omp-reveal="up" data-omp-reveal-delay="140">
+                            <a class="omp-eyebrow omp-link-quiet" href="about.html"
+                               x-text="content.aboutNoteCta"></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- about_note_end -->
 
         <!-- films_area_start -->
         <div class="wild_photography">
@@ -414,7 +434,7 @@
                                     <li><a :href="business.phoneLink" x-text="business.phoneDisplay"></a></li>
                                     <li><a :href="'mailto:' + business.email" x-text="business.email"></a></li>
                                 </ul>
-                                <div class="socail_links">
+                                <div class="social_links">
                                     <ul>
                                 <li><a href="https://www.facebook.com/orlinmonnarphotography" target="_blank" rel="noopener" aria-label="Facebook"><i class="ti-facebook"></i></a></li>
                                 <li><a href="https://www.instagram.com/orlinmonnar.photography" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa fa-instagram"></i></a></li>
@@ -438,28 +458,56 @@
         <!-- contact_info_area_end -->
 
         <!-- instagram_area_start -->
-        <div class="omp-instagram-heading">
+        <section class="omp-instagram-heading">
             <div class="container">
-                <div class="section_title text-center">
+                <div class="section_title  text-center" data-omp-reveal="up">
                     <h3 x-text="content.instagramTitle"></h3>
-                    <p><a :href="business.instagram" target="_blank" rel="noopener"
-                          x-text="'@orlinmonnar.photography'"></a></p>
+                    <p class="omp-about-follow__handle">
+                        <a class="omp-eyebrow omp-link-quiet" :href="business.instagram"
+                           target="_blank" rel="noopener" x-text="'@orlinmonnar.photography'"></a>
+                    </p>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- TODO: sustituir por las publicaciones reales del perfil. -->
-        <div class="instragram_area">
-            <template x-for="photo in instagramPhotos" :key="photo.id">
-                <div class="single_instagram omp-photo">
-                    <img :src="thumb(photo)" :alt="alt(photo)" loading="lazy">
-                    <div class="ovrelay">
-                        <a :href="business.instagram" target="_blank" rel="noopener">
-                            <i class="fa fa-instagram"></i>
-                        </a>
-                    </div>
+        <div class="instragram_area" data-omp-reveal-stagger="90">
+            <div class="single_instagram omp-photo" data-omp-reveal>
+                <img src="img/provisional/quinceanera-02-thumb.webp" alt="Quinceañera session" loading="lazy">
+                <div class="ovrelay">
+                    <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
                 </div>
-            </template>
+            </div>
+            <div class="single_instagram omp-photo" data-omp-reveal>
+                <img src="img/provisional/wedding-02-thumb.webp" alt="Wedding session" loading="lazy">
+                <div class="ovrelay">
+                    <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="single_instagram omp-photo" data-omp-reveal>
+                <img src="img/provisional/quinceanera-06-thumb.webp" alt="Quinceañera session" loading="lazy">
+                <div class="ovrelay">
+                    <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="single_instagram omp-photo" data-omp-reveal>
+                <img src="img/provisional/portrait-01-thumb.webp" alt="Portrait session" loading="lazy">
+                <div class="ovrelay">
+                    <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="single_instagram omp-photo" data-omp-reveal>
+                <img src="img/provisional/orlin-portrait-thumb.webp" alt="Orlin Monnar at work during an event" loading="lazy">
+                <div class="ovrelay">
+                    <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="single_instagram omp-photo" data-omp-reveal>
+                <img src="img/provisional/wedding-03-thumb.webp" alt="Bridal portrait" loading="lazy">
+                <div class="ovrelay">
+                    <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
+                </div>
+            </div>
         </div>
         <!-- instagram_area_end -->
 
@@ -503,7 +551,7 @@
                         </p>
                     </div>
                     <div class="col-xl-5 col-md-4">
-                        <div class="socail_links">
+                        <div class="social_links">
                             <ul>
                                 <li><a href="https://www.facebook.com/orlinmonnarphotography" target="_blank" rel="noopener" aria-label="Facebook"><i class="ti-facebook"></i></a></li>
                                 <li><a href="https://www.instagram.com/orlinmonnar.photography" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa fa-instagram"></i></a></li>
