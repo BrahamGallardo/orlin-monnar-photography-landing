@@ -241,5 +241,46 @@
 
             $el.val('');
         },
+
+        /**
+         * Reads the real position of a carousel from an Owl event.
+         * @param {Object} event - Owl Carousel event received by the 'onChanged' callback.
+         * @returns {Object|null} Object with the zero-based index and the item count, or null when the event is not a position change.
+         * @remarks
+         * With loop enabled Owl clones the slides, so the index carried by the
+         * event counts clones as well: relative() maps it back to the real
+         * photograph. 'count' already excludes the clones, because Owl builds it
+         * from its original item list. The callback also fires for other
+         * properties, hence the guard.
+         */
+        carouselPosition: function (event) {
+            if (!event || !event.namespace || !event.property || event.property.name !== 'position') {
+                return null;
+            }
+
+            return {
+                index: event.relatedTarget.relative(event.item.index),
+                count: event.item.count
+            };
+        },
+
+        /**
+         * Moves a carousel one slide in the given direction.
+         * @param {string} selector - Container selector.
+         * @param {string} direction - Either 'prev' or 'next'.
+         * @returns {void}
+         * @remarks
+         * The hero renders its own arrows outside the carousel, so Owl's own
+         * navigation is off and the movement is requested through its events.
+         */
+        navigateCarousel: function (selector, direction) {
+            const $el = $(selector);
+
+            if (!$el.length) {
+                return;
+            }
+
+            $el.trigger(direction === 'prev' ? 'prev.owl.carousel' : 'next.owl.carousel');
+        },
     };
 })(jQuery);

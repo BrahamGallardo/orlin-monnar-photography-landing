@@ -89,17 +89,63 @@
     <div x-data="homePage" x-init="init()">
 
         <!-- slider_area_start -->
-        <div class="slider_area">
+        <div class="slider_area omp-hero" :class="{ 'omp-hero--ready': heroReady }">
+
+            <!-- Respaldo local, presente en el HTML inicial. Pinta antes de que
+                 responda /api/gallery/featured, así que es el LCP de la página, y
+                 es lo único que se ve si el script falla. Se retira en cuanto la
+                 primera fotografía del carrusel ha cargado. -->
+            <img class="omp-hero__poster"
+                 src="img/provisional/quinceanera-02-medium.webp"
+                 alt=""
+                 width="2500" height="1667"
+                 fetchpriority="high" decoding="async">
+
             <!-- Owl Carousel clona y reubica los slides, así que Alpine no debe
                  gestionar este subárbol: se puebla desde renderHeroSlides()
                  antes de inicializar el plugin. Sin x-cloak, porque x-ignore
                  impide que Alpine llegue a retirarlo. -->
             <div class="slider_active owl-carousel" x-ignore></div>
+
+            <!-- El rótulo no viaja dentro de los slides: la fotografía cambia
+                 debajo y el texto se queda quieto. Al estar fuera de x-ignore,
+                 Alpine sí puede gestionarlo. -->
+            <div class="omp-hero__caption">
+                <p class="omp-script omp-hero__script" x-text="content.heroScript"></p>
+                <h1 class="omp-hero__title" x-text="content.heroTitle"></h1>
+                <p class="omp-eyebrow omp-hero__meta" x-text="content.heroSubtitle"></p>
+            </div>
+
+            <!-- Pie del hero. Fuera de .slider_active para que Owl no lo clone. -->
+            <div class="omp-hero__footer">
+                <a class="omp-hero__scroll" href="#omp-intro">
+                    <span class="omp-hero__scroll-label" x-text="content.heroScrollLabel"></span>
+                    <span class="omp-hero__scroll-line" aria-hidden="true"></span>
+                </a>
+
+                <div class="omp-hero__controls" x-show="heroCount > 1" x-cloak>
+                    <button type="button" class="omp-hero__arrow" @click="heroPrev()"
+                            aria-label="Previous photograph">
+                        <i class="ti-angle-left" aria-hidden="true"></i>
+                    </button>
+
+                    <p class="omp-hero__counter" aria-live="polite">
+                        <span x-text="heroIndex + 1"></span>
+                        <span class="omp-hero__counter-sep" aria-hidden="true">/</span>
+                        <span x-text="heroCount"></span>
+                    </p>
+
+                    <button type="button" class="omp-hero__arrow" @click="heroNext()"
+                            aria-label="Next photograph">
+                        <i class="ti-angle-right" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
         </div>
         <!-- slider_area_end -->
 
         <!-- intro_area_start -->
-        <div class="omp-intro">
+        <div class="omp-intro" id="omp-intro">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-xl-8 col-lg-9">

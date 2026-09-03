@@ -23,8 +23,13 @@ window.SITE_CONTENT = {
     },
 
     home: {
-        heroTitle: 'Orlin Monnar Photography & Films',
-        heroSubtitle: 'Quinceañeras, weddings and portraits in the Dallas–Fort Worth metroplex',
+        // TODO: confirm with Orlin the script line and the services line.
+        heroScript: 'Moments that stay',
+        heroTitle: 'Orlin Monnar',
+        // The no-break space keeps the em dash on the first line when the tagline
+        // wraps on a phone, instead of leaving it stranded at the start of the second.
+        heroSubtitle: 'Photography & Films\u00a0— Dallas–Fort Worth',
+        heroScrollLabel: 'Scroll',
 
         // TODO: replace with the photographer's presentation in his own words.
         introTitle: 'Every celebration deserves to be remembered',
