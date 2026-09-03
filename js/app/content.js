@@ -45,15 +45,31 @@ window.SITE_CONTENT = {
             + 'preparations, the ceremony and the moments in between, edited into a piece you '
             + 'can watch years from now.',
 
-        // TODO: confirm the list of services offered and their order.
-        servicesTitle: 'What we photograph',
-        servicesSubtitle: 'Sessions built around the occasion',
+        // Category blocks. The names and the descriptions come from the gallery
+        // API; only the fixed label above each name and the link text live here.
+        // TODO: confirm the wording of the script label with Orlin.
+        categoriesTitle: 'What we photograph',
+        categoriesSubtitle: 'Sessions built around the occasion',
+        categoriesScript: 'The work',
+        categoriesCta: 'View album',
 
         testimonialsTitle: 'Client words',
         instagramTitle: 'Follow the latest work',
 
+        // TODO: replace with two or three lines of Orlin's own presentation;
+        // the long version lives in about.html.
+        aboutNoteTitle: 'Behind the camera',
+        aboutNoteText: 'One photographer, from the first call to the final gallery. '
+            + 'Sessions are planned in advance and photographed without rushing, so the '
+            + 'images feel like the day rather than a set of poses.',
+        aboutNoteCta: 'More about Orlin',
+
+        // The contact block closes the page: the booking link lives inside it
+        // instead of in a section of its own.
         contactTitle: 'Get in touch',
-        contactText: 'Tell us about your celebration and we will walk you through the options.'
+        contactText: 'Tell us about your celebration and we will walk you through the options.',
+        // TODO: confirm the wording of the booking link with the client.
+        contactCta: 'Book a session'
     },
 
     // TODO: pedir a Orlin su biografía, su retrato y los años que lleva

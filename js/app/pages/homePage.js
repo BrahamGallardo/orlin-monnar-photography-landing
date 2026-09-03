@@ -1,16 +1,34 @@
 /**
  * Alpine module for the Home page.
  *
- * Loads the featured photographs from the API and splits them between the hero
- * carousel and the featured work grid. If the API is unreachable or no photos
- * have been published yet, it falls back to the provisional images so the
- * landing is never rendered empty.
+ * Two independent endpoints feed the page: the featured photographs, split
+ * between the hero carousel and the featured grid, and the published
+ * categories, which drive the full-bleed blocks.
+ *
+ * The provisional set only covers an unreachable API. A successful but empty
+ * response is a published state and is rendered as such: the landing says it
+ * has nothing to show rather than showing photographs that do not exist.
  */
 document.addEventListener('alpine:init', () => {
     Alpine.data('homePage', () => ({
         loading: true,
         photos: [],
+
+        // Categories feeding the full-bleed blocks. They travel with their own
+        // loading flag: the two requests resolve together, but the sections are
+        // independent and one must not gate the other.
+        categoriesLoading: true,
+        categories: [],
+        categoriesNotice: '',
+
+        // While the fallback is in use the blocks are not navigable: the detail
+        // page has no fallback, so every link would land on "album not found".
+        usingPlaceholderCategories: false,
+
         content: window.SITE_CONTENT.home,
+        // The photograph count reuses the wording of the album index instead of
+        // duplicating it under home.
+        gallery: window.SITE_CONTENT.gallery,
         states: window.SITE_CONTENT.states,
         business: window.SITE_CONTENT.business,
 
@@ -39,20 +57,26 @@ document.addEventListener('alpine:init', () => {
         },
 
         /**
-         * Loads the featured photographs and wires up the jQuery plugins.
+         * Loads the featured photographs and the categories, then wires up the
+         * jQuery plugins.
          * @returns {Promise<void>}
          */
         async init() {
             const service = new GalleryService(createApiService());
-            const response = await service.getFeaturedPhotos(9);
 
-            // A public landing cannot be left without images: on error or on an
-            // empty gallery we fall back to the provisional set.
-            this.photos = (response.success && response.data && response.data.length)
-                ? response.data
-                : window.PLACEHOLDER_PHOTOS;
+            // Two independent endpoints: awaited in sequence they would add up
+            // their latencies and leave the second section spinning for no
+            // reason. Both are already inside the 60 req/min budget.
+            const [featured, categories] = await Promise.all([
+                service.getFeaturedPhotos(9),
+                service.getCategories()
+            ]);
+
+            this.applyFeaturedPhotos(featured);
+            this.applyCategories(categories);
 
             this.loading = false;
+            this.categoriesLoading = false;
             this.heroCount = this.heroPhotos.length;
 
             // The hero photograph is the LCP element. The preload is queued as
@@ -98,7 +122,98 @@ document.addEventListener('alpine:init', () => {
 
                 pluginBridge.initLightbox('#featured-grid', 'a.popup-image');
                 pluginBridge.refreshWow();
+
+                // The category blocks did not exist when the page loaded, so the
+                // observer never saw them. Registering twice is a no-op.
+                window.ompMotion.observe('.omp-categories');
             });
+        },
+
+        /**
+         * Applies the featured photographs, or the provisional set on failure.
+         * @param {Object} response - Normalized API response.
+         * @returns {void}
+         * @remarks
+         * The provisional set covers an unreachable API and nothing else. Once
+         * the backend has answered, what it says is what the page shows: an
+         * empty gallery renders the empty state instead of photographs that are
+         * not published. Without a hero photograph the local poster stays on
+         * screen, which is already the state that case needs.
+         */
+        applyFeaturedPhotos(response) {
+            if (response.success) {
+                this.photos = response.data || [];
+
+                if (!this.photos.length) {
+                    console.warn('[home] No featured photographs returned; the featured section stays empty.');
+                }
+
+                return;
+            }
+
+            console.error(
+                `[home] Featured photographs could not be loaded (status ${response.status}): ${response.error}`
+            );
+
+            this.photos = window.PLACEHOLDER_PHOTOS;
+        },
+
+        /**
+         * Applies the published categories, or the provisional albums on failure.
+         * @param {Object} response - Normalized API response.
+         * @returns {void}
+         * @remarks
+         * A backend that is down must not look like real content: the reason is
+         * always written to the console. 429 is the one case shown on screen,
+         * and discreetly, because the visitor can just wait a minute. Same
+         * criterion as galleryPage.
+         */
+        applyCategories(response) {
+            if (response.success) {
+                this.categories = response.data || [];
+
+                if (!this.categories.length) {
+                    console.warn('[home] No published categories returned; showing the empty state.');
+                }
+
+                return;
+            }
+
+            console.error(
+                `[home] Categories could not be loaded (status ${response.status}): ${response.error}`
+            );
+
+            if (response.status === 429) {
+                this.categoriesNotice = response.error;
+            }
+
+            this.categories = window.PLACEHOLDER_CATEGORIES;
+            this.usingPlaceholderCategories = true;
+        },
+
+        /**
+         * Link to the album detail, or null while the fallback is in use.
+         * @param {Object} category - GalleryCategoryDto.
+         * @returns {string|null} URL, or null to render the block without a link.
+         * @remarks
+         * The query parameter is 'c', which is what galleryDetailPage reads.
+         */
+        albumHref(category) {
+            return this.usingPlaceholderCategories
+                ? null
+                : `gallery-detail.html?c=${encodeURIComponent(category.slug)}`;
+        },
+
+        /**
+         * Photograph count of an album, in words.
+         * @param {Object} category - GalleryCategoryDto.
+         * @returns {string} Label shown next to the album name.
+         */
+        photoCountLabel(category) {
+            const count = category.photoCount || 0;
+            const noun = count === 1 ? this.gallery.photoCountOne : this.gallery.photoCountMany;
+
+            return `${count} ${noun}`;
         },
 
         /**

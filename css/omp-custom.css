@@ -270,6 +270,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Títulos sobre fotografía: el color lo manda el fondo, no la paleta de marca.
    El azul solo se sostiene sobre fondo claro; aquí el orden se invierte. */
 .omp-hero__title,
+.omp-category__name,
 .bradcam_area h3 {
     font-family: var(--omp-font-display);
     color: var(--omp-color-titulo-sobre-foto);
@@ -374,9 +375,11 @@ hr {
    Utilidades tipográficas
    -------------------------------------------------------------------------- */
 
-/* Registro script. Máximo tres apariciones por página y frases cortas: es un
-   acento, no un cuerpo de texto. Nunca en mayúsculas ni con tracking, que es
-   donde una script se vuelve ilegible. */
+/* Registro script. Un solo uso por pantalla y frases cortas: es un acento, no
+   un cuerpo de texto. El límite es visual, no por documento: los bloques de
+   categoría lo repiten porque cada uno ocupa una pantalla entera y nunca se
+   ven dos a la vez. Nunca en mayúsculas ni con tracking, que es donde una
+   script se vuelve ilegible. */
 .omp-script {
     font-family: var(--omp-font-script);
     font-weight: var(--omp-peso-normal);
@@ -401,6 +404,58 @@ hr {
        que el bloque quede alineado a la izquierda con el resto. */
     margin-right: calc(var(--omp-track-rotulo) * -1);
     color: var(--omp-color-titulo);
+}
+
+/* Enlace en el registro del sistema: un rótulo en versalitas sobre un filete
+   que se completa al pasar el cursor. Es lo que sustituye a los botones del
+   template, que esta hoja no usa en ninguna página. Se combina con
+   .omp-eyebrow, que ya pone la caja alta, el cuerpo y el tracking. */
+.omp-link-quiet {
+    position: relative;
+    padding-bottom: var(--omp-space-1);
+    color: var(--omp-color-titulo);
+    text-decoration: none;
+}
+
+.omp-link-quiet::after {
+    position: absolute;
+    content: "";
+    left: 0;
+    bottom: 0;
+    /* El tracking deja un hueco tras la última letra: el filete se recorta esa
+       misma medida para no sobresalir del rótulo. */
+    right: var(--omp-track-rotulo);
+    height: 1px;
+    background-color: currentColor;
+    opacity: 0.45;
+    transform: scaleX(0.4);
+    transform-origin: left center;
+    transition: transform var(--omp-dur-enlace) var(--omp-ease-suave),
+                opacity var(--omp-dur-enlace) var(--omp-ease-suave);
+}
+
+/* El filete responde también cuando el puntero o el foco están en el enlace
+   que envuelve al rótulo, no solo sobre el rótulo mismo. */
+a.omp-link-quiet:hover::after,
+a.omp-link-quiet:focus-visible::after,
+a:hover .omp-link-quiet::after,
+a:focus-visible .omp-link-quiet::after {
+    transform: scaleX(1);
+    opacity: 1;
+}
+
+/* En táctil no hay :hover: el filete nace completo o nunca se vería entero. */
+@media (hover: none) {
+    .omp-link-quiet::after {
+        transform: scaleX(1);
+        opacity: 0.7;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .omp-link-quiet::after {
+        transition: none;
+    }
 }
 
 /* --------------------------------------------------------------------------
@@ -1197,6 +1252,272 @@ header {
 .omp-intro .singnature_thumb img {
     max-width: 220px;
     height: auto;
+}
+
+/* --------------------------------------------------------------------------
+   Home — categorías a sangre completa
+
+   Una fotografía por categoría, del ancho de la ventana, con el rótulo encima
+   y el lado del texto alternando. Sin tarjeta, sin sombra y sin radio: lo
+   único que separa un bloque del siguiente es el aire.
+   -------------------------------------------------------------------------- */
+
+.omp-categories {
+    padding: var(--omp-space-11) 0 var(--omp-space-12);
+}
+
+.omp-categories__intro {
+    margin-bottom: var(--omp-space-10);
+}
+
+.omp-category {
+    position: relative;
+    /* Recorta el 2% que la aparición "scale" añade a lo que haya dentro: a
+       ancho completo, ese sobrante abriría barra horizontal en el documento. */
+    overflow: hidden;
+}
+
+.omp-category + .omp-category {
+    margin-top: var(--omp-space-12);
+}
+
+/* El enlace envuelve fotografía y rótulo: toda la pieza es el área de clic. */
+.omp-category__link {
+    display: block;
+    color: inherit;
+}
+
+.omp-category__link:hover,
+.omp-category__link:focus {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Apaisada y dominante. El tope en vh evita que en un monitor muy ancho el
+   bloque crezca por encima de lo que cabe de una mirada.
+
+   El ancho tiene que ser explícito. Con width: auto, aspect-ratio y max-height
+   a la vez, el motor resuelve el ancho a partir de la altura ya recortada
+   (738 × 16/9 = 1312 px en una ventana de 1440) y el bloque deja de llegar a
+   los bordes. Fijado el ancho, el ratio solo decide la altura y max-height la
+   recorta, que es lo que se buscaba. */
+.omp-category__photo {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 82vh;
+}
+
+.omp-category__photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Categoría sin fotografías activas (coverPhoto null): fondo de marca en vez
+   de una fotografía que no existe. El azul profundo sostiene el rótulo hueso;
+   .omp-cover-empty, que es gris claro, aquí lo dejaría ilegible. */
+.omp-category__photo--empty {
+    background-color: var(--omp-azul-profundo);
+}
+
+/* Velo direccional: denso del lado del rótulo y nulo del contrario, que es
+   donde se ve la fotografía. Va sobre el marco y no sobre la imagen, así que
+   el zoom del cursor no lo arrastra.
+
+   Las paradas no son decorativas. La portada la elige el cliente desde el
+   panel y puede venir muy clara: con este reparto el rótulo mantiene 4.7:1
+   sobre la más clara de las provisionales, y sobre una oscura la fotografía no
+   se apaga, porque el velo ya es nulo al 80% del ancho. */
+.omp-category__photo::after {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: linear-gradient(to right,
+        rgba(0, 0, 0, 0.82) 0%,
+        rgba(0, 0, 0, 0.74) 30%,
+        rgba(0, 0, 0, 0.34) 56%,
+        rgba(0, 0, 0, 0) 80%);
+}
+
+.omp-category--flip .omp-category__photo::after {
+    background: linear-gradient(to left,
+        rgba(0, 0, 0, 0.82) 0%,
+        rgba(0, 0, 0, 0.74) 30%,
+        rgba(0, 0, 0, 0.34) 56%,
+        rgba(0, 0, 0, 0) 80%);
+}
+
+/* Centrado por flex y no por translate: data-omp-reveal escribe transform en
+   el elemento que anima, y un translateY(-50%) de centrado se perdería en
+   cuanto la aparición lo sustituyera por `none`. */
+.omp-category__caption {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
+    padding: var(--omp-space-8) clamp(24px, 6vw, 110px);
+    text-align: left;
+    color: var(--omp-color-titulo-sobre-foto);
+}
+
+.omp-category--flip .omp-category__caption {
+    align-items: flex-end;
+    text-align: right;
+}
+
+.omp-category__text {
+    max-width: min(46ch, 100%);
+}
+
+.omp-category__script {
+    margin-bottom: var(--omp-space-2);
+    font-size: var(--omp-fs-500);
+    color: inherit;
+    opacity: 0.92;
+}
+
+/* El nombre es la pieza tipográfica grande del bloque: mismo peso y tracking
+   que el hero, un escalón por debajo en tamaño. */
+.omp-category__name {
+    margin-bottom: var(--omp-space-4);
+    font-size: var(--omp-fs-800);
+    font-weight: var(--omp-peso-ligero);
+    line-height: var(--omp-lh-apretado);
+    letter-spacing: 0.04em;
+    color: inherit;
+}
+
+/* La descripción la escribe el panel y puede no existir: x-show retira el
+   párrafo entero antes que dejar un hueco. */
+.omp-category__description {
+    margin-bottom: var(--omp-space-5);
+    color: inherit;
+    opacity: 0.88;
+}
+
+.omp-category__meta {
+    display: flex;
+    align-items: baseline;
+    gap: var(--omp-space-5);
+    margin-bottom: 0;
+    color: inherit;
+}
+
+.omp-category--flip .omp-category__meta {
+    justify-content: flex-end;
+}
+
+/* Sobre fotografía manda el claro: las dos utilidades traen el azul de marca
+   y aquí heredan el color del rótulo. */
+.omp-category__caption .omp-link-quiet {
+    color: inherit;
+}
+
+.omp-category--flip .omp-link-quiet::after {
+    transform-origin: right center;
+}
+
+.omp-category__count {
+    font-family: var(--omp-font-ui);
+    font-size: var(--omp-fs-100);
+    font-weight: var(--omp-peso-ligero);
+    letter-spacing: var(--omp-track-ui);
+    color: inherit;
+    opacity: 0.7;
+}
+
+@media (max-width: 767px) {
+    .omp-categories {
+        padding: var(--omp-space-9) 0 var(--omp-space-10);
+    }
+
+    .omp-categories__intro {
+        margin-bottom: var(--omp-space-8);
+    }
+
+    .omp-category + .omp-category {
+        margin-top: var(--omp-space-9);
+    }
+
+    /* Vertical: a lo ancho de un teléfono, un 16/9 deja una franja sin sitio
+       para el rótulo. */
+    .omp-category__photo {
+        aspect-ratio: 4 / 5;
+        max-height: none;
+    }
+
+    /* Sin columna que ceder, el rótulo se centra y el velo deja de ser lateral
+       para venir de abajo, que es donde ahora se apoya el texto. */
+    .omp-category__photo::after,
+    .omp-category--flip .omp-category__photo::after {
+        background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.30) 0%,
+            rgba(0, 0, 0, 0.12) 38%,
+            rgba(0, 0, 0, 0.58) 100%);
+    }
+
+    .omp-category__caption,
+    .omp-category--flip .omp-category__caption {
+        align-items: center;
+        justify-content: flex-end;
+        padding: var(--omp-space-6) var(--omp-space-5) var(--omp-space-8);
+        text-align: center;
+    }
+
+    .omp-category--flip .omp-category__meta {
+        justify-content: center;
+    }
+
+    .omp-category__meta {
+        justify-content: center;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Home — nota de presentación y cierre
+
+   La página no lleva una sección de cierre propia. El bloque de contacto ya es
+   el cierre —título, texto, teléfono, correo y mapa— y la llamada a la reserva
+   vive dentro de él. Una banda más, en niebla, quedaba pegada al footer, que es
+   de ese mismo tono: entre las dos sumaban 790 px de gris continuo y el footer
+   dejaba de leerse como banda. Así el final del Home es el de about.html.
+   -------------------------------------------------------------------------- */
+
+.omp-about-note {
+    padding: var(--omp-space-11) 0;
+}
+
+.omp-about-note__action {
+    margin-top: var(--omp-space-6);
+    margin-bottom: 0;
+}
+
+/* Llamada a la reserva, dentro del bloque de contacto. El margen superior
+   compensa que .section_title deja su párrafo a ras, y el inferior mantiene la
+   distancia que el template da a .address_info. */
+.omp-contact-action {
+    margin-top: var(--omp-space-5);
+    margin-bottom: 0;
+}
+
+@media (max-width: 767px) {
+    .omp-about-note {
+        padding: var(--omp-space-9) 0;
+    }
 }
 
 /* --------------------------------------------------------------------------
