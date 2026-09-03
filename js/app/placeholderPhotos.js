@@ -127,66 +127,6 @@ window.PLACEHOLDER_PHOTOS = [
         height: 1000,
         displayOrder: 10,
         isFeatured: true
-    },
-    {
-        id: -11,
-        title: 'Quinceañera Portrait',
-        altText: 'Vertical quinceañera portrait',
-        thumbUrl: 'img/provisional/quinceanera-07-thumb.webp',
-        mediumUrl: 'img/provisional/quinceanera-07-medium.webp',
-        largeUrl: 'img/provisional/quinceanera-07-large.webp',
-        width: 1500,
-        height: 2250,
-        displayOrder: 11,
-        isFeatured: true
-    },
-    {
-        id: -12,
-        title: 'Metal Print',
-        altText: 'Charro themed photograph printed on metal',
-        thumbUrl: 'img/provisional/metal-print-01-thumb.webp',
-        mediumUrl: 'img/provisional/metal-print-01-medium.webp',
-        largeUrl: 'img/provisional/metal-print-01-large.webp',
-        width: 1500,
-        height: 1004,
-        displayOrder: 12,
-        isFeatured: true
-    },
-    {
-        id: -13,
-        title: 'Metal Print',
-        altText: 'Portrait printed on a 20x30 metal panel',
-        thumbUrl: 'img/provisional/metal-print-02-thumb.webp',
-        mediumUrl: 'img/provisional/metal-print-02-medium.webp',
-        largeUrl: 'img/provisional/metal-print-02-large.webp',
-        width: 1500,
-        height: 1004,
-        displayOrder: 13,
-        isFeatured: true
-    },
-    {
-        id: -14,
-        title: 'Metal Print',
-        altText: 'Couple portrait printed on an 11x14 metal panel',
-        thumbUrl: 'img/provisional/metal-print-03-thumb.webp',
-        mediumUrl: 'img/provisional/metal-print-03-medium.webp',
-        largeUrl: 'img/provisional/metal-print-03-large.webp',
-        width: 1500,
-        height: 1900,
-        displayOrder: 14,
-        isFeatured: true
-    },
-    {
-        id: -15,
-        title: 'Metal Print',
-        altText: 'Portrait printed on a 24x36 metal panel',
-        thumbUrl: 'img/provisional/metal-print-04-thumb.webp',
-        mediumUrl: 'img/provisional/metal-print-04-medium.webp',
-        largeUrl: 'img/provisional/metal-print-04-large.webp',
-        width: 1500,
-        height: 2234,
-        displayOrder: 15,
-        isFeatured: true
     }
 ];
 
@@ -230,5 +170,70 @@ window.PLACEHOLDER_CATEGORIES = [
         coverPhoto: window.PLACEHOLDER_PHOTOS[8],
         photoCount: 4,
         photos: []
+    }
+];
+
+/**
+ * Provisional packages shaped exactly like PackageDto.
+ *
+ * investment.html renders them when the API is unreachable and when the
+ * catalogue is still empty, so the page is never a bare error message.
+ *
+ * TODO: replace the figures with the real minimum package once Orlin confirms
+ * duration, price and what it includes. Until then these are generic reference
+ * values, not the client's tariff.
+ *
+ * They are not navigable with a packageId: booking.html could never pre-select
+ * a package that does not exist in the database.
+ *
+ * Negative ids keep them from ever colliding with real records.
+ */
+window.PLACEHOLDER_PACKAGES = [
+    {
+        id: -201,
+        name: 'Portrait Session',
+        description: 'A short, unhurried session for one person or a couple, '
+            + 'on location at golden hour.',
+        includes: 'One hour of coverage\n'
+            + 'One location of your choice\n'
+            + '25 edited photographs\n'
+            + 'Private online gallery\n'
+            + 'Personal print release',
+        duration: '1 hour',
+        price: 500,
+        currency: 'USD',
+        displayOrder: 1
+    },
+    {
+        id: -202,
+        name: 'Quinceañera Session',
+        description: 'The preshoot and the celebration, from the first portrait '
+            + 'in the gown to the last dance of the night.',
+        includes: 'Three hours of coverage\n'
+            + 'Preshoot on location\n'
+            + 'Two changes of wardrobe\n'
+            + '80 edited photographs\n'
+            + 'Private online gallery\n'
+            + 'One 11x14 metal print',
+        duration: '3 hours',
+        price: 500,
+        currency: 'USD',
+        displayOrder: 2
+    },
+    {
+        id: -203,
+        name: 'Wedding Coverage',
+        description: 'Full day coverage, from getting ready to the closing of '
+            + 'the reception, with a second photographer.',
+        includes: 'Eight hours of coverage\n'
+            + 'Second photographer\n'
+            + 'Getting ready, ceremony and reception\n'
+            + '400 edited photographs\n'
+            + 'Private online gallery\n'
+            + 'Engagement session included',
+        duration: '8 hours',
+        price: 4000,
+        currency: 'USD',
+        displayOrder: 3
     }
 ];

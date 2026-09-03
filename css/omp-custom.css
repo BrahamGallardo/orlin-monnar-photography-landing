@@ -2882,60 +2882,177 @@ header {
 }
 
 /* --------------------------------------------------------------------------
-   Paquetes de la página Investment
+   Investment — el paquete como bloque editorial
+
+   No hay tarjeta de precio. Cada paquete es una franja con la fotografía a un
+   lado y el texto al otro, alternando el lado como los bloques de categoría del
+   Home, y lo único que separa un paquete del siguiente es un filete. La
+   jerarquía la fija el cuerpo: el nombre en Cormorant es la pieza grande y el
+   precio baja al registro del sistema, un escalón por debajo de la descripción.
    -------------------------------------------------------------------------- */
 
-/* El template no trae bloque de precios: la tarjeta reutiliza single_team y
-   solo se define lo que no existe (precio, duración y lista de conceptos). */
-.omp-package {
-    padding: 40px 25px;
-    border: 1px solid #E8E8E8;
-    height: calc(100% - 60px);
-    display: flex;
-    flex-direction: column;
+.omp-packages {
+    padding: var(--omp-space-11) 0;
 }
 
-.omp-package .team_info h3 {
-    margin-bottom: 10px;
+/* El filete separa, no encierra: solo entre bloques, nunca alrededor. */
+.omp-package + .omp-package {
+    margin-top: var(--omp-space-10);
+    padding-top: var(--omp-space-10);
+    border-top: 1px solid var(--omp-color-borde);
 }
 
-.omp-package-duration {
-    font-size: 13px;
-    font-weight: 300;
-    color: #888;
-    letter-spacing: 1px;
-    margin-bottom: 6px;
+/* El lado del texto alterna. Bootstrap trae .flex-row-reverse, pero la variante
+   sin punto de ruptura invertiría también el apilado de móvil, donde la
+   fotografía tiene que abrir el bloque y el texto seguirla. */
+@media (min-width: 992px) {
+    .omp-package--flip .omp-package__row {
+        flex-direction: row-reverse;
+    }
 }
 
-.omp-package-price {
+/* --- Fotografía ---------------------------------------------------------- */
+
+/* Vertical de retrato, como el resto de fotografías del sitio. El marco define
+   la proporción y la imagen lo rellena recortando por el centro; .omp-zoom, que
+   viaja en el marcado, es quien recorta y mueve solo la imagen. */
+.omp-package__photo {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+}
+
+@supports not (aspect-ratio: 4 / 5) {
+    .omp-package__photo {
+        height: 560px;
+    }
+}
+
+.omp-package__photo img {
     display: block;
-    font-size: 30px;
-    font-weight: 300;
-    color: #2C2C2C;
-    margin-bottom: 25px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
-.omp-package-description {
-    font-size: 14px;
-    font-weight: 300;
-    color: #666;
-    text-align: center;
+/* --- Texto --------------------------------------------------------------- */
+
+/* Medida de lectura dentro de la media columna. En el bloque volteado el texto
+   se apoya en el borde exterior, que es hacia donde mira la composición. */
+.omp-package__text {
+    max-width: 46ch;
 }
 
-.omp-package-includes {
+@media (min-width: 992px) {
+    .omp-package--flip .omp-package__text {
+        margin-left: auto;
+    }
+}
+
+/* La duración es el rótulo que abre el bloque: baja la voz para que el nombre
+   entre primero. */
+.omp-package__duration {
+    margin-bottom: var(--omp-space-3);
+    opacity: 0.7;
+}
+
+/* La pieza tipográfica grande del bloque. Cormorant y el peso ligero los hereda
+   de la regla base de los títulos; aquí solo sube de la escala y toma el
+   tracking corto que ya usa el nombre de categoría. */
+.omp-package__name {
+    margin: 0 0 var(--omp-space-2);
+    font-size: var(--omp-fs-700);
+    letter-spacing: 0.04em;
+}
+
+/* El precio no es el protagonista: sale del registro display y baja al del
+   sistema, dos escalones por debajo del nombre y sin llegar al gris de rótulo,
+   que no sostiene contraste sobre hueso. */
+.omp-package__price {
+    margin: 0 0 var(--omp-space-5);
+    font-family: var(--omp-font-ui);
+    font-size: var(--omp-fs-200);
+    font-weight: var(--omp-peso-normal);
+    letter-spacing: var(--omp-track-ui);
+    color: var(--omp-color-texto);
+    opacity: 0.8;
+}
+
+/* La descripción la escribe el panel y puede no existir: x-show retira el
+   párrafo entero antes que dejar el hueco de su margen. */
+.omp-package__description {
+    margin: 0 0 var(--omp-space-6);
+}
+
+/* --- Conceptos incluidos ------------------------------------------------- */
+
+/* Sin filete inferior por renglón: eso era la tabla de precios. La lista se
+   ordena por la sangría y por la viñeta, y el aire hace el resto. */
+.omp-package__includes {
     list-style: none;
+    margin: 0 0 var(--omp-space-7);
     padding: 0;
-    margin: 0 0 30px 0;
-    flex-grow: 1;
 }
 
-.omp-package-includes li {
-    font-size: 14px;
-    font-weight: 300;
-    color: #666;
-    padding: 8px 0;
-    border-bottom: 1px solid #F2F2F2;
-    text-align: center;
+.omp-package__includes li {
+    position: relative;
+    /* 32 px = los 18 del filete más el aire que lo separa del texto. */
+    padding-left: var(--omp-space-6);
+    margin-bottom: var(--omp-space-3);
+}
+
+.omp-package__includes li:last-child {
+    margin-bottom: 0;
+}
+
+/* La viñeta es el filete nude del sistema. Es decorativa —contraste 2:1—: nunca
+   lleva texto encima y su ausencia no cambia lo que se lee. Se alinea al centro
+   óptico de la primera línea, media altura de línea del cuerpo, para que no se
+   descoloque cuando un concepto ocupa dos renglones. */
+.omp-package__includes li::before {
+    position: absolute;
+    content: "";
+    left: 0;
+    top: calc(var(--omp-lh-cuerpo) * 0.5em);
+    width: 18px;
+    height: 1px;
+    background-color: var(--omp-color-filete);
+}
+
+/* --- Llamada a la acción ------------------------------------------------- */
+
+/* Sin regla de color: .omp-link-quiet ya la pone y cualquier selector de aquí
+   ganaría por especificidad, como advierte el mismo caso en index.html. El
+   hover es el filete que se completa, que es el del sistema. */
+.omp-package__action {
+    margin: 0;
+}
+
+/* --- Adaptación ---------------------------------------------------------- */
+
+@media (max-width: 991px) {
+    /* En una columna el retrato se acorta: a 4/5 y ancho completo ocuparía él
+       solo más de una pantalla de teléfono. */
+    .omp-package__photo {
+        aspect-ratio: 3 / 4;
+        margin-bottom: var(--omp-space-7);
+    }
+
+    .omp-package__text {
+        max-width: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .omp-packages {
+        padding: var(--omp-space-9) 0;
+    }
+
+    .omp-package + .omp-package {
+        margin-top: var(--omp-space-8);
+        padding-top: var(--omp-space-8);
+    }
 }
 
 /* --------------------------------------------------------------------------
@@ -2956,7 +3073,7 @@ header {
 }
 
 .omp-footer-top {
-    padding: var(--omp-space-10) 0 var(--omp-space-8);
+    padding: var(--omp-space-8) 0 var(--omp-space-8);
 }
 
 /* The logotype closes the page at the same weight it opens it, one step down. */

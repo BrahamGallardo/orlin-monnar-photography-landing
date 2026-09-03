@@ -87,69 +87,148 @@
     <!-- Toda la página comparte el módulo investmentPage. -->
     <div x-data="investmentPage" x-init="init()">
 
-        <!-- bradcam_area  -->
         <div class="bradcam_area breadcam_bg_3 black_overlay">
             <div class="container">
                 <div class="row">
                     <div class="col-xl-12">
-                        <div class="bradcam_text text-center">
-                            <h3 x-text="content.title"></h3>
-                            <p x-text="content.subtitle"></p>
+                        <div class="bradcam_text text-center" data-omp-reveal-stagger="120">
+                            <h3 x-text="content.title" data-omp-reveal="up"></h3>
+                            <p x-text="content.subtitle" data-omp-reveal="up"></p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- / bradcam_area  -->
 
         <!-- ================ investment section start ================= -->
-        <div class="team_area">
+        <section class="omp-packages">
             <div class="container">
 
                 <p class="omp-state" x-show="loading" x-text="states.loading"></p>
                 <p class="omp-state omp-state--error" x-cloak x-show="!loading && notice" x-text="notice"></p>
-                <p class="omp-state" x-cloak x-show="!loading && !notice && !packages.length"
+                <p class="omp-state" x-cloak x-show="!loading && !packages.length"
                     x-text="states.emptyPackages"></p>
 
-                <!-- .border_bottom es el contenedor bajo el que el template
-                     anida el CSS de single_team; su línea se anula en
-                     omp-custom.css. -->
-                <div class="border_bottom" x-cloak x-show="packages.length">
-                    <div class="row justify-content-center">
-                        <template x-for="package_ in packages" :key="package_.id">
-                            <div class="col-xl-4 col-lg-4 col-md-6">
-                                <div class="single_team omp-package">
-                                    <div class="team_info text-center">
-                                        <h3 x-text="package_.name"></h3>
-                                        <p class="omp-package-duration" x-show="package_.duration"
-                                            x-text="package_.duration"></p>
-                                        <span class="omp-package-price" x-text="formatPrice(package_)"></span>
+                <div x-cloak x-show="packages.length">
+                    <template x-for="(package_, index) in packages" :key="package_.id">
+                        <!-- Un paquete es una franja editorial, no una tarjeta: el
+                             lado del texto alterna con la posición, como los bloques
+                             de categoría del Home. El orden lo fija DisplayOrder en
+                             sortByDisplayOrder(). -->
+                        <article class="omp-package" :class="{ 'omp-package--flip': index % 2 === 1 }">
+                            <div class="row align-items-center omp-package__row">
+
+                                <!-- PackageDto no trae fotografía: la del bloque es
+                                     provisional. Sin ella el <template> no inserta
+                                     nada y la columna de texto pasa a ancho completo,
+                                     sin hueco que rellenar. -->
+                                <template x-if="packagePhoto(index)">
+                                    <div class="col-lg-6">
+                                        <div class="omp-package__photo omp-zoom" data-omp-reveal="scale">
+                                            <img :src="thumb(packagePhoto(index))"
+                                                 :srcset="srcset(packagePhoto(index))"
+                                                 sizes="(min-width: 992px) 50vw, 100vw"
+                                                 :alt="alt(packagePhoto(index))"
+                                                 loading="lazy" decoding="async">
+                                        </div>
                                     </div>
+                                </template>
 
-                                    <p class="omp-package-description" x-show="package_.description"
-                                        x-text="package_.description"></p>
+                                <div :class="packagePhoto(index) ? 'col-lg-6' : 'col-12'">
+                                    <!-- El escalonado es por bloque y no por página:
+                                         cada paquete entra con su propia cascada
+                                         cuando le toca, no con el retardo acumulado
+                                         de los que quedaron arriba. -->
+                                    <div class="omp-package__text" data-omp-reveal-stagger="110">
 
-                                    <!-- Includes es texto multilínea: un
-                                         concepto por renglón. -->
-                                    <ul class="omp-package-includes">
-                                        <template x-for="(item, index) in includesList(package_)" :key="index">
-                                            <li x-text="item"></li>
-                                        </template>
-                                    </ul>
+                                        <div class="omp-package__header" data-omp-reveal="up">
+                                            <p class="omp-eyebrow omp-package__duration"
+                                               x-show="package_.duration" x-text="package_.duration"></p>
+                                            <h3 class="omp-package__name" x-text="package_.name"></h3>
+                                            <p class="omp-package__price" x-text="formatPrice(package_)"></p>
+                                        </div>
 
-                                    <div class="text-center">
-                                        <a class="boxed-btn" :href="bookingHref(package_)"
-                                            x-text="content.ctaLabel"></a>
+                                        <p class="omp-package__description" x-show="package_.description"
+                                           x-text="package_.description" data-omp-reveal="up"></p>
+
+                                        <!-- Includes es texto multilínea: un concepto
+                                             por renglón. La viñeta es un filete nude
+                                             dibujado en CSS, no un carácter. -->
+                                        <ul class="omp-package__includes" data-omp-reveal="up">
+                                            <template x-for="(item, line) in includesList(package_)" :key="line">
+                                                <li x-text="item"></li>
+                                            </template>
+                                        </ul>
+
+                                        <p class="omp-package__action" data-omp-reveal="up">
+                                            <a class="omp-eyebrow omp-link-quiet" :href="bookingHref(package_)"
+                                               x-text="content.ctaLabel"></a>
+                                        </p>
+
                                     </div>
                                 </div>
+
                             </div>
-                        </template>
-                    </div>
+                        </article>
+                    </template>
                 </div>
 
             </div>
-        </div>
+        </section>
         <!-- ================ investment section end ================= -->
+
+        <!-- instagram_area_start -->
+        <section class="omp-instagram-heading">
+            <div class="container">
+                <div class="section_title  text-center" data-omp-reveal="up">
+                    <h3 x-text="content.instagramTitle"></h3>
+                    <p class="omp-about-follow__handle">
+                        <a class="omp-eyebrow omp-link-quiet" :href="business.instagram"
+                           target="_blank" rel="noopener" x-text="'@orlinmonnar.photography'"></a>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <div class="instragram_area" data-omp-reveal-stagger="90">
+            <div class="single_instagram omp-photo" data-omp-reveal>
+                <img src="img/provisional/quinceanera-02-thumb.webp" alt="Quinceañera session" loading="lazy">
+                <div class="ovrelay">
+                    <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="single_instagram omp-photo" data-omp-reveal>
+                <img src="img/provisional/wedding-02-thumb.webp" alt="Wedding session" loading="lazy">
+                <div class="ovrelay">
+                    <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="single_instagram omp-photo" data-omp-reveal>
+                <img src="img/provisional/quinceanera-06-thumb.webp" alt="Quinceañera session" loading="lazy">
+                <div class="ovrelay">
+                    <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="single_instagram omp-photo" data-omp-reveal>
+                <img src="img/provisional/portrait-01-thumb.webp" alt="Portrait session" loading="lazy">
+                <div class="ovrelay">
+                    <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="single_instagram omp-photo" data-omp-reveal>
+                <img src="img/provisional/orlin-portrait-thumb.webp" alt="Orlin Monnar at work during an event" loading="lazy">
+                <div class="ovrelay">
+                    <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="single_instagram omp-photo" data-omp-reveal>
+                <img src="img/provisional/wedding-03-thumb.webp" alt="Bridal portrait" loading="lazy">
+                <div class="ovrelay">
+                    <a :href="business.instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <!-- instagram_area_end -->
 
     </div>
 
@@ -186,7 +265,7 @@
                     <div class="col-xl-7 col-md-8">
                         <p class="copy_right">
                             <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank" rel="noopener">Colorlib</a>
+                            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with by <a href="https://colorlib.com" target="_blank" rel="noopener">Brahm</a>
                             <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                         </p>
                     </div>
@@ -235,6 +314,7 @@
     <script src="js/app/domHelpers.js"></script>
     <script src="js/app/pluginBridge.js"></script>
     <script src="js/app/packageService.js"></script>
+    <script src="js/app/placeholderPhotos.js"></script>
     <script src="js/app/pages/investmentPage.js"></script>
     <script defer src="js/vendor/alpine.min.js"></script>
 
