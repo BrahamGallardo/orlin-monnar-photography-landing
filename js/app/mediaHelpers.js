@@ -58,7 +58,50 @@ function photoAltText(photo) {
     return photo.altText || photo.title || '';
 }
 
+/**
+ * Builds the srcset of a photograph for the mosaic thumbnails.
+ * @param {Object} photo - PhotoDto returned by the API.
+ * @returns {string} Value of the srcset attribute.
+ * @remarks
+ * Thumb and medium only. The 2560 px derivative is never worth a thumbnail,
+ * and on a phone at 100vw a dense screen would pick it: the lightbox is the
+ * one place that asks for it.
+ */
+function buildGridSrcset(photo) {
+    if (!photo) {
+        return '';
+    }
+
+    return [
+        `${resolveMediaUrl(photo.thumbUrl)} 500w`,
+        `${resolveMediaUrl(photo.mediumUrl)} 1200w`
+    ].join(', ');
+}
+
+/**
+ * Aspect ratio of a photograph, as the mosaic can show it.
+ * @param {Object} photo - PhotoDto returned by the API, or null.
+ * @returns {number} Width divided by height.
+ * @remarks
+ * Width and Height travel in the DTO, so the frame reserves the exact box
+ * before the file arrives: Isotope never measures zero heights and nothing
+ * jumps when the images land. A missing dimension falls back to 3/2, and the
+ * extremes are clamped because a panorama or a very tall vertical would break
+ * the rhythm of the column; object-fit then crops only that leftover.
+ */
+function photoAspectRatio(photo) {
+    const fallback = 3 / 2;
+
+    if (!photo || !photo.width || !photo.height) {
+        return fallback;
+    }
+
+    return Math.min(Math.max(photo.width / photo.height, 0.55), 2.2);
+}
+
 // Exportar para uso global.
 window.resolveMediaUrl = resolveMediaUrl;
 window.buildPhotoSrcset = buildPhotoSrcset;
 window.photoAltText = photoAltText;
+window.buildGridSrcset = buildGridSrcset;
+window.photoAspectRatio = photoAspectRatio;

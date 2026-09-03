@@ -120,41 +120,51 @@
 
             <p class="omp-state" x-show="loading" x-text="states.loading"></p>
             <p class="omp-state" x-show="notice" x-text="notice" x-cloak></p>
+            <!-- La API respondió y no hay álbumes publicados: se dice, no se
+                 disfraza con las portadas provisionales. -->
+            <p class="omp-state" x-cloak
+               x-show="!loading && !notice && !categories.length"
+               x-text="states.emptyCategories"></p>
 
-            <div class="container-fluid p-0">
-                <div class="row no-gutters" x-cloak>
-                    <template x-for="category in categories" :key="category.id">
-                        <div class="col-xl-4 col-md-4">
-                            <div class="single_photography">
-                                <div class="thumb">
-                                    <!-- coverPhoto es null cuando la categoría no
-                                         tiene fotografías activas; entonces
-                                         photoCount vale 0. -->
-                                    <template x-if="category.coverPhoto">
-                                        <img :src="thumb(category.coverPhoto)"
-                                            :srcset="coverSrcset(category.coverPhoto)"
-                                            sizes="(max-width: 767px) 100vw, 33vw" :alt="alt(category.coverPhoto)"
-                                            loading="lazy">
-                                    </template>
-                                    <template x-if="!category.coverPhoto">
-                                        <div class="omp-cover-empty">
-                                            <span x-text="states.emptyGallery"></span>
-                                        </div>
-                                    </template>
-                                </div>
-                                <!-- Sin href durante el fallback: Alpine retira el
-                                     atributo con null y la tarjeta deja de ser
-                                     navegable. El detalle no tiene fallback. -->
-                                <a class="hover" :href="albumHref(category)">
-                                    <div class="hover_inner">
-                                        <h3 x-text="category.name"></h3>
-                                        <span x-text="photoCountLabel(category)"></span>
-                                    </div>
-                                </a>
+            <!-- Isotope solo reposiciona sus nodos, así que x-for es seguro.
+                 El sizer queda fuera del x-for y sin .grid-item: Isotope lo usa
+                 como medida de columna y no lo coloca. -->
+            <div class="omp-mosaic" id="gallery-grid" data-omp-reveal-stagger="70" x-cloak>
+                <div class="omp-mosaic__sizer" aria-hidden="true"></div>
+
+                <template x-for="category in categories" :key="category.id">
+                    <div class="omp-mosaic__item grid-item">
+                        <!-- Sin href durante el respaldo: Alpine retira el
+                             atributo con null y la tarjeta deja de ser
+                             navegable. El detalle no tiene respaldo.
+                             La aparición vive aquí y no en .grid-item, que es
+                             donde Isotope escribe su propio transform. -->
+                        <a class="omp-mosaic__link"
+                           :href="albumHref(category)"
+                           data-omp-reveal="scale">
+                            <div class="omp-mosaic__frame" :style="frameStyle(category.coverPhoto)">
+                                <!-- coverPhoto es null cuando la categoría no
+                                     tiene fotografías activas; entonces
+                                     photoCount vale 0. -->
+                                <template x-if="category.coverPhoto">
+                                    <img :src="thumb(category.coverPhoto)"
+                                         :srcset="srcset(category.coverPhoto)"
+                                         sizes="(max-width: 575px) 100vw, (max-width: 991px) 50vw, 33vw"
+                                         :alt="alt(category.coverPhoto)"
+                                         loading="lazy">
+                                </template>
+                                <template x-if="!category.coverPhoto">
+                                    <div class="omp-cover-empty" x-text="states.emptyGallery"></div>
+                                </template>
                             </div>
-                        </div>
-                    </template>
-                </div>
+
+                            <div class="omp-mosaic__caption">
+                                <h3 class="omp-mosaic__name" x-text="category.name"></h3>
+                                <span class="omp-mosaic__count" x-text="photoCountLabel(category)"></span>
+                            </div>
+                        </a>
+                    </div>
+                </template>
             </div>
         </div>
         <!-- /gallery_area  -->

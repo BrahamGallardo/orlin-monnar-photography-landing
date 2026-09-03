@@ -17,15 +17,14 @@ document.addEventListener('alpine:init', () => {
         categories: [],
         photos: [],
 
+        // Fade of the grid while one album is replaced by another. It is not
+        // the loading flag: on the first load there is nothing to fade out.
+        swapping: false,
+
         content: window.SITE_CONTENT.gallery,
         states: window.SITE_CONTENT.states,
 
         service: null,
-
-        // Ratio thresholds that map a photograph onto the three widths the
-        // template defines (39.5% / 35.7% / 24.8%).
-        landscapeRatio: 1.3,
-        portraitRatio: 0.85,
 
         /**
          * Loads the album menu and the requested album.
@@ -85,6 +84,7 @@ document.addEventListener('alpine:init', () => {
          * @returns {Promise<void>}
          */
         async loadAlbum(slug) {
+            this.swapping = this.photos.length > 0;
             this.loading = true;
             this.notFound = false;
             this.notice = '';
@@ -117,11 +117,8 @@ document.addEventListener('alpine:init', () => {
             // Already filtered by active and ordered by displayOrder in SQL:
             // filtering or sorting again here would only risk diverging from it.
             this.photos = response.data.photos || [];
-            this.loading = false;
 
-            this.$nextTick(() => {
-                pluginBridge.resetIsotope('#album-grid');
-            });
+            this.finish();
         },
 
         /**
@@ -132,11 +129,34 @@ document.addEventListener('alpine:init', () => {
             this.category = null;
             this.photos = [];
             this.notFound = true;
+
+            this.finish();
+        },
+
+        /**
+         * Closes a load: paints the mosaic and brings the grid back.
+         * @returns {void}
+         */
+        finish() {
             this.loading = false;
 
             this.$nextTick(() => {
-                pluginBridge.resetIsotope('#album-grid');
+                this.layout();
+                this.swapping = false;
             });
+        },
+
+        /**
+         * Lays the mosaic out and hands the new photographs to the observer.
+         * @returns {void}
+         * @remarks
+         * Switching album replaces the whole set, so Isotope is destroyed and
+         * built again: reloadItems keeps the positions of the previous set and
+         * leaves holes where the old photographs used to be.
+         */
+        layout() {
+            pluginBridge.resetIsotope('#album-grid');
+            window.ompMotion.observe('#album-grid');
         },
 
         /**
@@ -173,20 +193,24 @@ document.addEventListener('alpine:init', () => {
         },
 
         /**
-         * Album subtitle shown in the header.
-         * @returns {string} Description, photograph count, or the not found text.
+         * Album description shown under the name.
+         * @returns {string} Description written in the admin panel, or empty.
          */
-        get subtitle() {
-            if (this.loading) {
+        get description() {
+            if (this.loading || this.notFound || !this.category) {
                 return '';
             }
 
-            if (this.notFound) {
-                return this.content.notFoundText;
-            }
+            return this.category.description || '';
+        },
 
-            if (this.category.description) {
-                return this.category.description;
+        /**
+         * Photograph count of the album, in words.
+         * @returns {string} Label shown as a discreet piece of data.
+         */
+        get countLabel() {
+            if (this.loading || this.notFound || !this.photos.length) {
+                return '';
             }
 
             const count = this.photos.length;
@@ -196,46 +220,21 @@ document.addEventListener('alpine:init', () => {
         },
 
         /**
-         * Header background, taken from the album cover.
-         * @returns {string} Inline style, empty while there is no cover.
-         */
-        bradcamStyle() {
-            const cover = this.category && this.category.coverPhoto;
-
-            return cover ? `background-image: url('${resolveMediaUrl(cover.largeUrl)}')` : '';
-        },
-
-        /**
-         * Width class of a photograph inside the mosaic.
+         * Inline style that reserves the real box of a photograph.
          * @param {Object} photo - PhotoDto.
-         * @returns {string} 'large_img', 'mid_img' or 'small_img'.
-         * @remarks
-         * The template repeats a fixed pattern regardless of the photograph.
-         * Deriving it from the real aspect ratio keeps landscapes wide and
-         * portraits narrow, so object-fit crops as little as possible. Without
-         * dimensions the middle width is the safest guess.
+         * @returns {string} Inline style with the aspect ratio of the frame.
          */
-        sizeClass(photo) {
-            if (!photo.width || !photo.height) {
-                return 'mid_img';
-            }
-
-            const ratio = photo.width / photo.height;
-
-            if (ratio >= this.landscapeRatio) {
-                return 'large_img';
-            }
-
-            return ratio <= this.portraitRatio ? 'small_img' : 'mid_img';
+        frameStyle(photo) {
+            return `aspect-ratio: ${photoAspectRatio(photo)}`;
         },
 
         /**
-         * URL of the medium derivative, used in the mosaic.
+         * URL of the thumb derivative, used in the mosaic.
          * @param {Object} photo - PhotoDto.
          * @returns {string} Derivative URL.
          */
-        medium(photo) {
-            return resolveMediaUrl(photo.mediumUrl);
+        thumb(photo) {
+            return resolveMediaUrl(photo.thumbUrl);
         },
 
         /**
@@ -248,12 +247,12 @@ document.addEventListener('alpine:init', () => {
         },
 
         /**
-         * Srcset with the three derivatives.
+         * Srcset of a thumbnail: thumb and medium, never the 2560 px one.
          * @param {Object} photo - PhotoDto.
          * @returns {string} srcset attribute value.
          */
         srcset(photo) {
-            return buildPhotoSrcset(photo);
+            return buildGridSrcset(photo);
         },
 
         /**

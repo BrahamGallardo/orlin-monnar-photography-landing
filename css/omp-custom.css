@@ -1810,17 +1810,12 @@ header {
    Galería
    -------------------------------------------------------------------------- */
 
-/* Cabeceras. La del índice es una fotografía provisional; la del álbum la
-   pone el módulo desde coverPhoto y esta solo es el respaldo. */
+/* Cabecera del índice. Es una fotografía provisional. El detalle del álbum no
+   lleva cabecera fotográfica: sus fotografías empiezan justo debajo. */
 .omp-bradcam-gallery {
     background-image: url(../img/provisional/wedding-02-large.webp);
 }
 
-.omp-bradcam-album {
-    background-color: #111;
-    background-position: center;
-    background-size: cover;
-}
 
 /* El nombre del álbum solo aparece en :hover, y en táctil no hay :hover: sin
    esto el nombre nunca se ve y visibility:hidden impide tocar el enlace. */
@@ -1832,63 +1827,439 @@ header {
     }
 }
 
-/* Portada de una categoría sin fotografías activas (coverPhoto null). */
-.omp-cover-empty {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    text-align: center;
-    background: #EFEFEF;
-    color: #909090;
-    font-size: 14px;
-    letter-spacing: 1px;
-}
 
-/* Menú de álbumes: texto, sin caja ni color de marca. */
-.omp-album-menu button {
-    padding: 6px 18px;
-    border: none;
-    border-bottom: 1px solid transparent;
-    background: transparent;
-    color: #909090;
-    font-size: 13px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    transition: color 0.3s ease, border-color 0.3s ease;
-}
 
-.omp-album-menu button:hover,
-.omp-album-menu button.active {
-    color: #2C2C2C;
-}
-
-.omp-album-menu button.active {
-    border-bottom-color: #2C2C2C;
-}
-
-/* Mosaico. El template estira la imagen a 100% × 100% de un marco de 530px:
-   sin object-fit las verticales salen deformadas. */
-.baby_gallery_wrap .single_gallery img {
-    display: block;
-    object-fit: cover;
-    object-position: center;
-}
-
-/* Por debajo de 768px el template pasa el marco a altura automática: ahí la
-   fotografía manda su propia proporción y no hay nada que recortar. */
-@media (max-width: 767px) {
-    .baby_gallery_wrap .single_gallery img {
-        height: auto;
-    }
-}
 
 /* Enlace al índice desde el estado de álbum inexistente. */
 .omp-state a {
     color: #2C2C2C;
     text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   Página clara
+
+   Variante para las páginas que no abren con una fotografía bajo el header. El
+   reposo pinta la tinta en hueso —el header flota sobre la imagen— y sobre
+   fondo hueso eso es blanco sobre blanco hasta que main.js añade .sticky a los
+   400 px. Esta clase adelanta la tinta azul y el logo en su color, sin pintar
+   el fondo: el header sigue transparente hasta que se hace sólido.
+   -------------------------------------------------------------------------- */
+
+.omp-page-light .header-area .main-header-area .main-menu ul li a,
+.omp-page-light .header-area .main-header-area .social_links ul li a {
+    color: var(--omp-color-enlace);
+}
+
+.omp-page-light .header-area .main-header-area .main-menu ul li a:hover,
+.omp-page-light .header-area .main-header-area .main-menu ul li a.active,
+.omp-page-light .header-area .main-header-area .social_links ul li a:hover {
+    color: var(--omp-color-enlace-hover);
+}
+
+.omp-page-light .main-header-area .logo img {
+    filter: none;
+}
+
+.omp-page-light .slicknav_menu .slicknav_icon-bar {
+    background-color: var(--omp-azul);
+}
+
+/* --------------------------------------------------------------------------
+   Mosaico de fotografías
+
+   Componente compartido por el índice de álbumes y el detalle. Cada pieza
+   reserva la proporción real de su fotografía (Width y Height del PhotoDto),
+   así que la retícula está cuadrada antes de que llegue el primer archivo: no
+   hay salto al cargar ni alturas cero que medir.
+
+   Separaciones estrechas y a sangre: entre dos fotografías solo hay tres
+   píxeles de papel.
+   -------------------------------------------------------------------------- */
+
+.omp-mosaic {
+    --omp-mosaic-columna: 33.3333%;
+    --omp-mosaic-hueco: 3px;
+
+    /* Sin relleno lateral, a propósito. Isotope coloca las piezas en absoluto,
+       y un porcentaje sobre un elemento absoluto se resuelve contra la caja de
+       relleno del contenedor, mientras que el sizer, que sigue en el flujo, lo
+       resuelve contra la caja de contenido: con relleno el item mide dos
+       píxeles más que la columna, colSpan redondea a 2 y el mosaico entero se
+       apila en la primera columna. El aire de los bordes lo pone el relleno de
+       cada pieza. */
+
+    /* El fundido del cambio de álbum. Isotope anima la posición de las piezas
+       por su cuenta; esto solo evita ver el relevo del contenido. */
+    opacity: 1;
+    transition: opacity 240ms var(--omp-ease-suave);
+}
+
+.omp-mosaic.is-swapping {
+    opacity: 0;
+}
+
+/* Isotope mide aquí el ancho de columna. Sin .grid-item no es una pieza: se
+   queda en el flujo, con altura cero, y no se coloca. */
+.omp-mosaic__sizer,
+.omp-mosaic__item {
+    width: var(--omp-mosaic-columna);
+}
+
+.omp-mosaic__item {
+    padding: var(--omp-mosaic-hueco);
+}
+
+.omp-mosaic__link {
+    display: block;
+    color: inherit;
+}
+
+.omp-mosaic__link:hover,
+.omp-mosaic__link:focus {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* La proporción llega en línea, desde el DTO. El marco recorta lo poco que
+   sobra cuando la proporción real venía fuera del rango que el mosaico
+   admite. */
+.omp-mosaic__frame {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background-color: var(--omp-color-fondo-alt);
+}
+
+.omp-mosaic__frame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform var(--omp-dur-zoom) var(--omp-ease-suave);
+}
+
+/* Solo donde hay puntero: en táctil el :hover se queda pegado tras el toque. */
+@media (hover: hover) {
+    .omp-mosaic__link:hover .omp-mosaic__frame img,
+    .omp-mosaic__link:focus-visible .omp-mosaic__frame img {
+        transform: scale(var(--omp-zoom-escala));
+    }
+}
+
+/* Navegadores sin aspect-ratio: el marco no se queda sin altura. */
+@supports not (aspect-ratio: 3 / 2) {
+    .omp-mosaic__frame {
+        min-height: 280px;
+    }
+}
+
+/* Rótulo bajo la fotografía, no encima: el azul de marca solo se sostiene
+   sobre fondo claro, y así ninguna portada necesita velo. */
+.omp-mosaic__caption {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--omp-space-4);
+    padding: var(--omp-space-3) var(--omp-space-1) 0;
+}
+
+.omp-mosaic__name {
+    margin: 0;
+    font-family: var(--omp-font-ui);
+    font-size: var(--omp-fs-100);
+    font-weight: var(--omp-peso-medio);
+    line-height: 1.4;
+    letter-spacing: var(--omp-track-rotulo);
+    text-transform: uppercase;
+    color: var(--omp-color-titulo);
+}
+
+.omp-mosaic__count {
+    flex: none;
+    font-size: var(--omp-fs-100);
+    font-weight: var(--omp-peso-ligero);
+    letter-spacing: var(--omp-track-ui);
+    color: var(--omp-color-texto);
+    opacity: 0.6;
+}
+
+@media (max-width: 991px) {
+    .omp-mosaic {
+        --omp-mosaic-columna: 50%;
+    }
+}
+
+@media (max-width: 575px) {
+    .omp-mosaic {
+        --omp-mosaic-columna: 100%;
+        --omp-mosaic-hueco: 2px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .omp-mosaic,
+    .omp-mosaic__frame img {
+        transition: none;
+    }
+}
+
+/* Portada de una categoría sin fotografías activas (coverPhoto null). */
+.omp-cover-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: var(--omp-space-5);
+    text-align: center;
+    background-color: var(--omp-color-fondo-alt);
+    font-size: var(--omp-fs-100);
+    letter-spacing: var(--omp-track-ui);
+    color: var(--omp-color-texto);
+    opacity: 0.6;
+}
+
+/* --------------------------------------------------------------------------
+   Detalle del álbum — encabezado y filtros
+   -------------------------------------------------------------------------- */
+
+.omp-album-head {
+    padding: clamp(130px, 13vw, 190px) 0 var(--omp-space-7);
+    text-align: center;
+}
+
+.omp-album-head__name {
+    margin: var(--omp-space-3) 0 0;
+    font-size: var(--omp-fs-700);
+    letter-spacing: 0.04em;
+    color: var(--omp-color-titulo);
+}
+
+.omp-album-head__description {
+    max-width: 56ch;
+    margin: var(--omp-space-4) auto 0;
+}
+
+.omp-album-head__count {
+    margin: var(--omp-space-3) 0 0;
+    font-size: var(--omp-fs-100);
+    letter-spacing: var(--omp-track-ui);
+    opacity: 0.6;
+}
+
+/* El encabezado ya deja el aire de arriba. */
+.omp-album-body {
+    padding-top: 0;
+}
+
+/* Filtros por categoría: el mismo registro del menú del header —versalitas
+   falsas, tracking amplio y filete nude que crece desde el centro—, un punto
+   más discretos por ser navegación secundaria. */
+.omp-album-menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--omp-space-2) var(--omp-space-6);
+    margin-top: var(--omp-space-7);
+}
+
+.omp-album-menu button {
+    position: relative;
+    padding: 0 0 var(--omp-space-2);
+    border: none;
+    background: transparent;
+    font-family: var(--omp-font-ui);
+    font-size: var(--omp-fs-100);
+    font-weight: var(--omp-peso-normal);
+    line-height: 1;
+    letter-spacing: var(--omp-track-rotulo);
+    text-transform: uppercase;
+    color: var(--omp-color-enlace);
+    opacity: 0.55;
+    transition: opacity var(--omp-dur-enlace) var(--omp-ease-suave),
+                color var(--omp-dur-enlace) var(--omp-ease-suave);
+}
+
+/* El tracking deja un hueco tras la última letra: el filete se recorta esa
+   misma medida para quedar centrado bajo la palabra. */
+.omp-album-menu button::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: var(--omp-track-rotulo);
+    bottom: 0;
+    height: 1px;
+    background-color: var(--omp-color-filete);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform var(--omp-dur-enlace) var(--omp-ease-suave);
+}
+
+.omp-album-menu button:hover,
+.omp-album-menu button.active {
+    opacity: 1;
+    color: var(--omp-color-enlace-hover);
+}
+
+.omp-album-menu button:hover::after,
+.omp-album-menu button.active::after {
+    transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .omp-album-menu button,
+    .omp-album-menu button::after {
+        transition: none;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Lightbox
+
+   Magnific pinta un velo negro al 80% y una caja gris tras la imagen. Aquí el
+   velo es hueso llevado casi a negro y casi opaco, la caja desaparece y los
+   controles se reducen al trazo. La apertura funde y escala; el cierre lo
+   permite removalDelay, que mantiene el nodo vivo esos 300 ms.
+   -------------------------------------------------------------------------- */
+
+.omp-lightbox.mfp-bg {
+    background-color: #14150F;
+    opacity: 0;
+    transition: opacity 300ms var(--omp-ease-suave);
+}
+
+.omp-lightbox.mfp-bg.mfp-ready {
+    opacity: 0.97;
+}
+
+.omp-lightbox.mfp-bg.mfp-removing {
+    opacity: 0;
+}
+
+.omp-lightbox .mfp-figure {
+    opacity: 0;
+    transform: scale(0.96);
+    transition: opacity 300ms var(--omp-ease-suave),
+                transform 420ms var(--omp-ease-reveal);
+}
+
+.omp-lightbox.mfp-ready .mfp-figure {
+    opacity: 1;
+    transform: none;
+}
+
+.omp-lightbox.mfp-removing .mfp-figure {
+    opacity: 0;
+    transform: scale(0.98);
+}
+
+/* La caja gris con sombra que el plugin dibuja detrás de la imagen. */
+.omp-lightbox .mfp-figure:after {
+    display: none;
+}
+
+.omp-lightbox img.mfp-img {
+    padding: var(--omp-space-8) 0 var(--omp-space-9);
+}
+
+/* Título y contador: un solo renglón en versalitas, bajo la fotografía. */
+.omp-lightbox .mfp-bottom-bar {
+    margin-top: -30px;
+    padding: 0 var(--omp-space-5);
+}
+
+.omp-lightbox .mfp-title,
+.omp-lightbox .mfp-counter {
+    font-family: var(--omp-font-ui);
+    font-size: var(--omp-fs-100);
+    font-weight: var(--omp-peso-ligero);
+    line-height: 1.6;
+    letter-spacing: var(--omp-track-rotulo);
+    text-transform: uppercase;
+    color: var(--omp-hueso);
+    opacity: 0.65;
+}
+
+.omp-lightbox .mfp-title {
+    padding-right: 120px;
+}
+
+/* Flechas y cierre: solo el trazo, sin caja ni triángulos rellenos. */
+.omp-lightbox .mfp-arrow {
+    width: 60px;
+    height: 60px;
+    margin-top: -30px;
+    opacity: 0.5;
+    background: transparent;
+    border: none;
+    transition: opacity var(--omp-dur-enlace) var(--omp-ease-suave);
+}
+
+.omp-lightbox .mfp-arrow:active {
+    margin-top: -30px;
+}
+
+.omp-lightbox .mfp-arrow:hover,
+.omp-lightbox .mfp-arrow:focus {
+    opacity: 1;
+}
+
+.omp-lightbox .mfp-arrow:before {
+    display: none;
+}
+
+.omp-lightbox .mfp-arrow:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 14px;
+    height: 14px;
+    margin: -7px 0 0 -7px;
+    border: none;
+    border-top: 1px solid var(--omp-hueso);
+    border-left: 1px solid var(--omp-hueso);
+}
+
+.omp-lightbox .mfp-arrow-left:after {
+    transform: rotate(-45deg);
+}
+
+.omp-lightbox .mfp-arrow-right:after {
+    transform: rotate(135deg);
+}
+
+.omp-lightbox .mfp-close,
+.omp-lightbox .mfp-image-holder .mfp-close {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    font-family: var(--omp-font-ui);
+    font-size: var(--omp-fs-500);
+    font-weight: var(--omp-peso-ligero);
+    color: var(--omp-hueso);
+    opacity: 0.5;
+    transition: opacity var(--omp-dur-enlace) var(--omp-ease-suave);
+}
+
+.omp-lightbox .mfp-close:hover,
+.omp-lightbox .mfp-close:focus {
+    opacity: 1;
+}
+
+.omp-lightbox .mfp-arrow:focus-visible,
+.omp-lightbox .mfp-close:focus-visible {
+    outline: 1px solid var(--omp-hueso);
+    outline-offset: -4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .omp-lightbox.mfp-bg,
+    .omp-lightbox .mfp-figure {
+        transition: none;
+    }
 }
 
 @media (max-width: 991px) {

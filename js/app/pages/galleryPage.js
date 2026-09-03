@@ -2,7 +2,7 @@
  * Alpine module for the album index.
  *
  * Reads GET /api/gallery/categories, which already carries coverPhoto and
- * photoCount: one request paints the whole grid. Requesting each category to
+ * photoCount: one request paints the whole mosaic. Requesting each category to
  * derive its cover would burn the 60 req/min rate limit for nothing.
  */
 document.addEventListener('alpine:init', () => {
@@ -26,43 +26,56 @@ document.addEventListener('alpine:init', () => {
             const service = new GalleryService(createApiService());
             const response = await service.getCategories();
 
-            if (response.success && response.data && response.data.length) {
-                this.categories = response.data;
+            if (response.success) {
+                this.categories = response.data || [];
             } else {
-                this.applyFallback(response);
+                this.applyFailure(response);
             }
 
             this.loading = false;
 
             this.$nextTick(() => {
-                pluginBridge.refreshWow();
+                this.layout();
             });
         },
 
         /**
-         * Falls back to the provisional albums and reports why.
+         * Reports a failed request and decides whether the fallback applies.
          * @param {Object} response - Normalized API response.
          * @returns {void}
          * @remarks
-         * A backend that is down must not look like real content: the reason is
-         * always written to the console. 429 is the one case shown on screen,
-         * and discreetly, because the visitor can just wait a minute.
+         * status 0 is the only case where nothing came back at all —network
+         * down or timeout— and that is what the provisional albums are for.
+         * Anything the API did answer, an empty list included, is real
+         * information about the gallery: it is shown as it is instead of being
+         * dressed up with photographs the studio never published.
          */
-        applyFallback(response) {
-            if (response.success) {
-                console.warn('[gallery] No published categories returned; showing provisional albums.');
-            } else {
-                console.error(
-                    `[gallery] Categories could not be loaded (status ${response.status}): ${response.error}`
-                );
-            }
+        applyFailure(response) {
+            console.error(
+                `[gallery] Categories could not be loaded (status ${response.status}): ${response.error}`
+            );
 
-            if (response.status === 429) {
+            if (response.status !== 0) {
                 this.notice = response.error;
+
+                return;
             }
 
             this.categories = window.PLACEHOLDER_CATEGORIES;
             this.usingPlaceholders = true;
+        },
+
+        /**
+         * Lays the mosaic out and hands the new cards to the reveal observer.
+         * @returns {void}
+         * @remarks
+         * The whole set of cards is written at once, so Isotope is reset and
+         * not reloaded. Registering the reveal here and not in CSS is what
+         * makes the cards appear in cascade instead of as a single block.
+         */
+        layout() {
+            pluginBridge.resetIsotope('#gallery-grid');
+            window.ompMotion.observe('#gallery-grid');
         },
 
         /**
@@ -89,6 +102,15 @@ document.addEventListener('alpine:init', () => {
         },
 
         /**
+         * Inline style that reserves the real box of a cover.
+         * @param {Object} photo - PhotoDto, or null when the album has no cover.
+         * @returns {string} Inline style with the aspect ratio of the frame.
+         */
+        frameStyle(photo) {
+            return `aspect-ratio: ${photoAspectRatio(photo)}`;
+        },
+
+        /**
          * URL of the thumb derivative.
          * @param {Object} photo - PhotoDto.
          * @returns {string} Derivative URL.
@@ -98,16 +120,12 @@ document.addEventListener('alpine:init', () => {
         },
 
         /**
-         * Srcset for a cover: thumb as the base and medium as the denser
-         * descriptor. The 2560 px large is never worth loading in this grid.
+         * Srcset of a cover: thumb and medium, never the 2560 px derivative.
          * @param {Object} photo - PhotoDto.
          * @returns {string} srcset attribute value.
          */
-        coverSrcset(photo) {
-            return [
-                `${resolveMediaUrl(photo.thumbUrl)} 500w`,
-                `${resolveMediaUrl(photo.mediumUrl)} 1200w`
-            ].join(', ');
+        srcset(photo) {
+            return buildGridSrcset(photo);
         },
 
         /**

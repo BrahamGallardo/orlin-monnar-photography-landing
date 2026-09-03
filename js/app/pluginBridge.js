@@ -17,6 +17,21 @@
 (function ($) {
     'use strict';
 
+    /**
+     * Isotope options shared by every mosaic of the site.
+     * @remarks
+     * The column is measured by an element and not by a number. With
+     * percentPosition and columnWidth: 1 the grid has 100 columns of 1%, a
+     * 33.33% piece spans ceil(33.33) = 34 of them and the third one has no
+     * room left: it is laid on top of the second. The sizer gives Isotope the
+     * exact column, so the mosaic never breaks when filtering or reloading.
+     */
+    const MOSAIC_OPTIONS = {
+        itemSelector: '.grid-item',
+        percentPosition: true,
+        masonry: { columnWidth: '.omp-mosaic__sizer' }
+    };
+
     window.pluginBridge = {
         /**
          * Initializes Owl Carousel on a newly populated container.
@@ -53,11 +68,7 @@
             }
 
             if (!$grid.data('isotope')) {
-                $grid.isotope({
-                    itemSelector: '.grid-item',
-                    percentPosition: true,
-                    masonry: { columnWidth: 1 }
-                });
+                $grid.isotope(MOSAIC_OPTIONS);
             } else {
                 $grid.isotope('reloadItems');
             }
@@ -90,6 +101,12 @@
          * @remarks
          * 'delegate' is used because it is the only variant that continues to work
          * when Alpine replaces the child nodes.
+         *
+         * The look lives in CSS behind mainClass: the plugin only adds mfp-ready
+         * on opening and mfp-removing on closing, and removalDelay is what keeps
+         * the node alive long enough for the closing half to be seen. Keyboard
+         * navigation needs no options: the gallery module binds 37/39 and the
+         * core binds Escape.
          */
         initLightbox: function (containerSelector, itemSelector) {
             const $container = $(containerSelector);
@@ -101,8 +118,25 @@
             $container.magnificPopup({
                 delegate: itemSelector || 'a.popup-image',
                 type: 'image',
-                gallery: { enabled: true },
-                image: { titleSrc: 'data-title' }
+                mainClass: 'omp-lightbox',
+                removalDelay: 300,
+                closeOnContentClick: false,
+                gallery: {
+                    enabled: true,
+                    preload: [1, 1],
+                    tPrev: 'Previous (left arrow key)',
+                    tNext: 'Next (right arrow key)',
+                    tCounter: '%curr% / %total%'
+                },
+                image: {
+                    verticalFit: true,
+                    // The plugin writes the title with .html() (_parseMarkup) and
+                    // the title is typed in the admin panel: it is escaped here
+                    // for the same reason the hero escapes its captions.
+                    titleSrc: function (item) {
+                        return escapeHtml(item.el.attr('data-title') || '');
+                    }
+                }
             });
         },
 
@@ -138,11 +172,7 @@
                 $grid.isotope('destroy');
             }
 
-            $grid.isotope({
-                itemSelector: '.grid-item',
-                percentPosition: true,
-                masonry: { columnWidth: 1 }
-            });
+            $grid.isotope(MOSAIC_OPTIONS);
 
             // Without waiting for the images, the masonry calculates zero heights.
             $grid.imagesLoaded(function () {

@@ -34,7 +34,7 @@
     <script src="js/app/motion.js"></script>
 </head>
 
-<body>
+<body class="omp-page-light">
     <!--[if lte IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
@@ -87,36 +87,37 @@
 
     <div x-data="galleryDetailPage" x-init="init()">
 
-        <!-- bradcam_area  -->
-        <div class="bradcam_area black_overlay omp-bradcam-album" :style="bradcamStyle()">
+        <!-- Encabezado tipográfico. La página ya no abre con una fotografía
+             de cabecera: las del álbum empiezan justo debajo y dos capas de
+             fotografía seguidas se anulan. <section> y no <header>: omp-custom
+             posiciona en absoluto todo elemento <header> del documento. -->
+        <section class="omp-album-head">
             <div class="container">
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="bradcam_text text-center">
-                            <h3 x-text="title"></h3>
-                            <p x-text="subtitle"></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- / bradcam_area  -->
+                <p class="omp-eyebrow" x-text="content.title"></p>
+                <h1 class="omp-album-head__name" x-text="title"></h1>
+                <p class="omp-album-head__description" x-cloak
+                   x-show="description" x-text="description"></p>
+                <p class="omp-album-head__count" x-cloak
+                   x-show="countLabel" x-text="countLabel"></p>
 
-        <!-- gallery_area  -->
-        <div class="gallery_area baby_gallery_wrap">
-            <div class="container">
                 <!-- Menú de álbumes. Clase propia y no .portfolio-menu: el
                      template no la estila y main.js le engancha un filtro de
                      Isotope sobre esta misma grilla. -->
-                <div class="omp-album-menu text-center mb-50" x-cloak>
+                <nav class="omp-album-menu" aria-label="Albums" x-cloak>
                     <template x-for="item in categories" :key="item.id">
                         <button type="button"
                                 :class="{ 'active': item.slug === slug }"
+                                :aria-current="item.slug === slug ? 'true' : null"
                                 @click="select(item.slug)"
                                 x-text="item.name"></button>
                     </template>
-                </div>
+                </nav>
+            </div>
+        </section>
 
+        <!-- gallery_area  -->
+        <div class="gallery_area omp-album-body">
+            <div class="container">
                 <p class="omp-state" x-show="loading" x-text="states.loading"></p>
                 <p class="omp-state" x-show="notice" x-text="notice" x-cloak></p>
                 <p class="omp-state" x-cloak
@@ -129,24 +130,31 @@
                 </div>
             </div>
 
-            <div class="container-fluid p-0">
-                <!-- Isotope solo reposiciona sus nodos y Magnific abre un overlay
-                     aparte: ninguno los clona, así que x-for es seguro aquí. -->
-                <div class="row no-gutters grid" id="album-grid" x-cloak>
-                    <template x-for="photo in photos" :key="photo.id">
-                        <div class="single_gallery grid-item" :class="sizeClass(photo)">
-                            <a class="thumb popup-image"
-                               :href="large(photo)"
-                               :data-title="photo.title || ''">
-                                <img :src="medium(photo)"
+            <!-- Isotope solo reposiciona sus nodos y Magnific abre un overlay
+                 aparte: ninguno los clona, así que x-for es seguro aquí. -->
+            <div class="omp-mosaic" id="album-grid"
+                 :class="{ 'is-swapping': swapping }"
+                 data-omp-reveal-stagger="70" x-cloak>
+                <div class="omp-mosaic__sizer" aria-hidden="true"></div>
+
+                <template x-for="photo in photos" :key="photo.id">
+                    <div class="omp-mosaic__item grid-item">
+                        <!-- La aparición vive en el enlace y no en .grid-item,
+                             que es donde Isotope escribe su propio transform. -->
+                        <a class="omp-mosaic__link popup-image"
+                           :href="large(photo)"
+                           :data-title="photo.title || ''"
+                           data-omp-reveal="scale">
+                            <div class="omp-mosaic__frame" :style="frameStyle(photo)">
+                                <img :src="thumb(photo)"
                                      :srcset="srcset(photo)"
-                                     sizes="(max-width: 767px) 100vw, 40vw"
+                                     sizes="(max-width: 575px) 100vw, (max-width: 991px) 50vw, 33vw"
                                      :alt="alt(photo)"
                                      loading="lazy">
-                            </a>
-                        </div>
-                    </template>
-                </div>
+                            </div>
+                        </a>
+                    </div>
+                </template>
             </div>
         </div>
         <!-- /gallery_area  -->
